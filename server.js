@@ -728,20 +728,23 @@ app.post("/webhooks/lastlink", async (req, res) => {
     const metaResult = await sendPurchaseToMeta(normalized);
 
     console.log("[LASTLINK WEBHOOK] Evento recebido:", {
-      accepted: tokenIsValid,
-      event_name: normalized.event_name,
-      event_status: normalized.event_status,
-      payment_id: normalized.payment_id,
-      buyer_email: normalized.buyer_email,
-      payment_method: normalized.payment_method,
-      price_value: normalized.price_value,
-      is_test: normalized.is_test,
-      supabase_ok: supabaseResult.ok,
-      supabase_skipped: supabaseResult.skipped || false,
-      meta_ok: metaResult.ok,
-      meta_skipped: metaResult.skipped || false,
-      meta_reason: metaResult.reason || ""
-    });
+  accepted: tokenIsValid,
+  event_name: normalized.event_name,
+  event_status: normalized.event_status,
+  payment_id: normalized.payment_id,
+  buyer_email: normalized.buyer_email,
+  payment_method: normalized.payment_method,
+  price_value: normalized.price_value,
+  is_test: normalized.is_test,
+  supabase_ok: supabaseResult.ok,
+  supabase_skipped: supabaseResult.skipped || false,
+  meta_ok: metaResult.ok,
+  meta_skipped: metaResult.skipped || false,
+  meta_reason: metaResult.reason || "",
+  meta_status: metaResult.status || null,
+  meta_error: metaResult.error || null,
+  meta_response: metaResult.response || null
+});
 
     if (!tokenIsValid) {
       return res.status(401).json({
