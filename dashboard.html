@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Dashboard do Funil - Tai Chi</title>
+  <meta
+    name="description"
+    content="Dashboard local para analisar a jornada do lead no funil Tai Chi / Harno."
+  />
+  <style>
+    :root{
+      --bg:#eef2f4;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#dbe4ea;
+      --primary:#0f6158;
+      --primary-2:#18a84a;
+      --cyan:#16b8c2;
+      --cyan-dark:#0ea5b4;
+      --green-soft:#ddf3e4;
+      --blue-soft:#e3eefc;
+      --yellow-soft:#f8edd0;
+      --red-soft:#f8dede;
+      --shadow:0 18px 42px rgba(15,23,42,.08);
+      --radius:18px;
+      --radius-sm:14px;
+      --wrap:1380px;
+    }
+
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    button,input{
+      font:inherit;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+    }
+
+    .page{
+      width:100%;
+      min-height:100vh;
+      padding:26px 16px 40px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:var(--wrap);
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .title-box h1{
+      margin:0 0 8px;
+      font-size:34px;
+      line-height:1.08;
+      font-weight:900;
+      letter-spacing:-.03em;
+      font-style:italic;
+    }
+
+    .title-box p{
+      margin:0;
+      font-size:15px;
+      line-height:1.55;
+      color:#64748b;
+      max-width:760px;
+    }
+
+    .refresh-btn{
+      background:var(--cyan);
+      color:#03131b;
+      font-weight:900;
+      font-size:18px;
+      padding:16px 22px;
+      border-radius:18px;
+      box-shadow:0 14px 34px rgba(22,184,194,.24);
+      min-width:220px;
+    }
+
+    .refresh-btn:hover{
+      background:var(--cyan-dark);
+      color:#fff;
+    }
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+    }
+
+    .filter-panel{
+      padding:22px 22px 20px;
+      margin-bottom:22px;
+    }
+
+    .filter-title{
+      margin:0 0 4px;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .filter-subtitle{
+      margin:0 0 18px;
+      color:#64748b;
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    .filter-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      align-items:flex-end;
+    }
+
+    .quick-filters{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .quick-btn{
+      min-width:86px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid #a7dbe0;
+      background:#dff4f5;
+      color:#0b6b75;
+      font-weight:800;
+    }
+
+    .quick-btn.is-active{
+      background:var(--cyan);
+      color:#04252a;
+      border-color:transparent;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:210px;
+    }
+
+    .field label{
+      font-size:14px;
+      color:#64748b;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .field input{
+      width:100%;
+      height:56px;
+      border-radius:16px;
+      border:1px solid #d9e2e8;
+      background:#fff;
+      padding:0 16px;
+      font-size:18px;
+      font-weight:700;
+      color:#0f172a;
+      outline:none;
+    }
+
+    .apply-btn{
+      height:52px;
+      padding:0 22px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#061d26,#0f6158);
+      color:#fff;
+      font-size:18px;
+      font-weight:900;
+      min-width:180px;
+      align-self:flex-end;
+    }
+
+    .period-label{
+      margin-top:14px;
+      color:#64748b;
+      font-size:15px;
+      font-weight:700;
+    }
+
+    .kpi-grid{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:18px;
+      margin-bottom:22px;
+    }
+
+    .kpi-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px 20px;
+      min-height:154px;
+    }
+
+    .kpi-label{
+      color:#64748b;
+      font-size:14px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      margin-bottom:10px;
+    }
+
+    .kpi-value{
+      font-size:34px;
+      line-height:1.05;
+      font-weight:900;
+      margin-bottom:10px;
+      letter-spacing:-.02em;
+    }
+
+    .kpi-note{
+      color:#64748b;
+      font-size:15px;
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .content-grid{
+      display:grid;
+      grid-template-columns:1.35fr 1fr;
+      gap:18px;
+      margin-bottom:22px;
+    }
+
+    .table-panel,
+    .insights-panel,
+    .bottom-panel{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .section-title{
+      margin:0 0 6px;
+      font-size:24px;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .section-subtitle{
+      margin:0 0 18px;
+      color:#64748b;
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    .table-wrap{
+      width:100%;
+      overflow:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:780px;
+    }
+
+    th,td{
+      padding:16px 12px;
+      border-bottom:1px solid #e7edf1;
+      text-align:left;
+      vertical-align:middle;
+    }
+
+    th{
+      font-size:15px;
+      color:#64748b;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    td{
+      font-size:16px;
+      color:#0f172a;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:88px;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:14px;
+    }
+
+    .pill-green{
+      background:#dff1e3;
+      color:#0f7a2d;
+    }
+
+    .pill-yellow{
+      background:#f4ead7;
+      color:#b15b00;
+    }
+
+    .pill-red{
+      background:#f7dfdf;
+      color:#b42318;
+    }
+
+    .insights-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .insight-card{
+      background:#f8fbfc;
+      border:1px solid #dfe9ee;
+      border-radius:20px;
+      padding:18px 18px 16px;
+    }
+
+    .insight-card h3{
+      margin:0 0 8px;
+      font-size:18px;
+      line-height:1.25;
+      font-weight:900;
+    }
+
+    .insight-card p{
+      margin:0;
+      color:#4b5563;
+      font-size:15px;
+      line-height:1.55;
+    }
+
+    .bottom-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .empty-state{
+      padding:18px;
+      border-radius:18px;
+      border:1px dashed #c8d4dd;
+      background:#f8fbfd;
+      color:#64748b;
+      font-size:15px;
+      line-height:1.55;
+      font-weight:700;
+    }
+
+    .muted{
+      color:#64748b;
+    }
+
+    @media (max-width: 1260px){
+      .kpi-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .content-grid,
+      .bottom-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 780px){
+      .page{
+        padding:16px 12px 26px;
+      }
+
+      .title-box h1{
+        font-size:28px;
+      }
+
+      .refresh-btn{
+        width:100%;
+        min-width:unset;
+      }
+
+      .kpi-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:12px;
+      }
+
+      .kpi-card{
+        min-height:140px;
+        padding:16px;
+      }
+
+      .kpi-value{
+        font-size:28px;
+      }
+
+      .filter-panel,
+      .table-panel,
+      .insights-panel,
+      .bottom-panel{
+        padding:18px 16px;
+        border-radius:22px;
+      }
+
+      .field{
+        min-width:100%;
+      }
+
+      .apply-btn{
+        width:100%;
+      }
+    }
+
+    @media (max-width: 520px){
+      .kpi-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="container">
+      <header class="topbar">
+        <div class="title-box">
+          <h1>Dashboard do Funil Tai Chi</h1>
+          <p>
+            Leitura local da jornada do lead: entrada no quiz, avanço por etapa, chegada na etapa de venda,
+            clique no botão de compra, desempenho por campanha e por criativo.
+          </p>
+        </div>
+
+        <button id="refreshDashboardBtn" class="refresh-btn" type="button">
+          Atualizar dashboard
+        </button>
+      </header>
+
+      <section class="panel filter-panel">
+        <h2 class="filter-title">Filtro por período</h2>
+        <p class="filter-subtitle">
+          Use este intervalo para filtrar tanto a leitura do funil quanto campanhas, criativos e cliques na venda.
+        </p>
+
+        <div class="filter-row">
+          <div class="quick-filters">
+            <button type="button" class="quick-btn is-active" data-range="today">Hoje</button>
+            <button type="button" class="quick-btn" data-range="yesterday">Ontem</button>
+            <button type="button" class="quick-btn" data-range="7days">7 dias</button>
+            <button type="button" class="quick-btn" data-range="custom">Personalizada</button>
+          </div>
+
+          <div class="field">
+            <label for="startDate">Data inicial</label>
+            <input id="startDate" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="endDate">Data final</label>
+            <input id="endDate" type="date" />
+          </div>
+
+          <button id="applyFilterBtn" class="apply-btn" type="button">
+            Aplicar filtro
+          </button>
+        </div>
+
+        <div id="currentPeriodLabel" class="period-label">
+          Período atual: --
+        </div>
+      </section>
+
+      <section class="kpi-grid">
+        <article class="kpi-card">
+          <div class="kpi-label">Sessões iniciadas</div>
+          <div id="kpiSessions" class="kpi-value">0</div>
+          <div class="kpi-note">Leads que entraram no funil.</div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="kpi-label">Quiz completos</div>
+          <div id="kpiCompletes" class="kpi-value">0</div>
+          <div class="kpi-note">Leads que chegaram ao final do quiz.</div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="kpi-label">Etapa de venda</div>
+          <div id="kpiPitchViews" class="kpi-value">0</div>
+          <div class="kpi-note">Leads que visualizaram o pitch.</div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="kpi-label">Cliques no botão</div>
+          <div id="kpiBuyClicks" class="kpi-value">0</div>
+          <div class="kpi-note">Cliques no botão de compra.</div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="kpi-label">Taxa até venda</div>
+          <div id="kpiPitchRate" class="kpi-value">0%</div>
+          <div class="kpi-note">Etapa de venda ÷ sessões iniciadas.</div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="kpi-label">CTR do botão</div>
+          <div id="kpiBuyRate" class="kpi-value">0%</div>
+          <div class="kpi-note">Cliques no botão ÷ etapa de venda.</div>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="table-panel">
+          <h2 class="section-title">Abandono por etapa</h2>
+          <p class="section-subtitle">
+            Leitura do avanço do nosso funil usando apenas Etapa 1, Etapa 2, Etapa 3... e separado no final por Etapa de venda e Botão de compra.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Etapa</th>
+                  <th>Visualizações</th>
+                  <th>Avanços</th>
+                  <th>Abandono</th>
+                  <th>Taxa</th>
+                </tr>
+              </thead>
+              <tbody id="stepsTableBody">
+                <tr>
+                  <td colspan="5" class="muted">Nenhum dado encontrado ainda.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <aside class="insights-panel">
+          <h2 class="section-title">Insights rápidos</h2>
+          <p class="section-subtitle">
+            Leituras práticas para decidir o próximo ajuste do funil.
+          </p>
+
+          <div id="insightsList" class="insights-list">
+            <div class="insight-card">
+              <h3>Aguardando dados</h3>
+              <p>Navegue pelo funil e depois clique em “Atualizar dashboard”.</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="bottom-grid">
+        <article class="bottom-panel">
+          <h2 class="section-title">Desempenho por campanha</h2>
+          <p class="section-subtitle">
+            Ajuda a ver qual campanha traz mais sessões, chega mais na venda e clica mais no botão.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Campanha</th>
+                  <th>Sessões</th>
+                  <th>Venda</th>
+                  <th>Cliques</th>
+                  <th>CTR botão</th>
+                </tr>
+              </thead>
+              <tbody id="campaignTableBody">
+                <tr>
+                  <td colspan="5" class="muted">Nenhum dado encontrado ainda.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="bottom-panel">
+          <h2 class="section-title">Desempenho por criativo</h2>
+          <p class="section-subtitle">
+            Mostra qual criativo está trazendo mais leads para o funil e mais cliques no botão de compra.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Criativo</th>
+                  <th>Sessões</th>
+                  <th>Venda</th>
+                  <th>Cliques</th>
+                  <th>CTR botão</th>
+                </tr>
+              </thead>
+              <tbody id="creativeTableBody">
+                <tr>
+                  <td colspan="5" class="muted">Nenhum dado encontrado ainda.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <script src="dashboard.js"></script>
+    </main>
+  </div>
+</body>
+</html>

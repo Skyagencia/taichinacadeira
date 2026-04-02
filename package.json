@@ -1,0 +1,22 @@
+{
+  "name": "taichi-funil-node",
+  "version": "1.0.0",
+  "description": "Funil Tai Chi recriado em Node.js com arquivos na raiz",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "funnel",
+    "taichi"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.0",
+    "express": "^4.19.2"
+  }
+}

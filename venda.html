@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Oferta Especial - Tai Chi na Cadeira</title>
+  <meta
+    name="description"
+    content="Seu treino personalizado de Tai Chi na cadeira está pronto."
+  />
+  <style>
+    :root{
+      --bg:#efefef;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:#d8dee4;
+      --primary:#0f6158;
+      --primary-2:#18a84a;
+      --green-soft:#dff3e3;
+      --blue-soft:#dfeafb;
+      --yellow-soft:#f6edb8;
+      --red-soft:#f8dddd;
+      --orange-soft:#fff1db;
+      --shadow:0 16px 36px rgba(0,0,0,.08);
+      --radius:18px;
+      --radius-sm:14px;
+      --wrap:760px;
+    }
+
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    img{max-width:100%;display:block}
+    button{font:inherit}
+    a{text-decoration:none;color:inherit}
+
+    .page{
+      width:100%;
+      padding:18px 16px 44px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:var(--wrap);
+    }
+
+    .brand-wrap{
+      display:flex;
+      justify-content:center;
+      margin:8px 0 22px;
+    }
+
+    .brand-logo{
+      width:auto;
+      max-height:64px;
+      object-fit:contain;
+    }
+
+    .section{margin-bottom:18px}
+
+    .box{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .soft-green{background:var(--green-soft)}
+    .soft-blue{background:var(--blue-soft)}
+    .soft-yellow{background:var(--yellow-soft)}
+    .soft-red{background:var(--red-soft)}
+    .soft-orange{background:var(--orange-soft)}
+
+    .headline-box{
+      padding:18px 20px;
+      text-align:center;
+      border-radius:16px;
+      background:#d9f1dd;
+      border:1px solid #b9e2c2;
+    }
+
+    .headline-box h1{
+      margin:0;
+      font-size:28px;
+      line-height:1.2;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .headline-box .green{color:var(--primary-2)}
+
+    .hero-card{
+      overflow:hidden;
+      background:#cfe0f6;
+      border:1px solid #b9d0ee;
+      border-radius:18px;
+    }
+
+    .hero-top{
+      padding:12px 16px 0;
+    }
+
+    .hero-switch{
+      background:#ffffffd9;
+      border-radius:999px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      overflow:hidden;
+      font-weight:900;
+      color:#315f9e;
+      text-align:center;
+      font-size:18px;
+    }
+
+    .hero-switch span{
+      padding:12px 8px;
+    }
+
+    .hero-switch .divider{
+      border-left:1px solid #c6d4e7;
+    }
+
+    .hero-image{
+      padding:0 0 0;
+    }
+
+    .profile-grid{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+    }
+
+    .profile-card{
+      background:#f7f7f7;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .profile-card h3{
+      margin:0 0 14px;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .profile-card p{
+      margin:0;
+      font-size:18px;
+      line-height:1.4;
+      color:#1f2937;
+    }
+
+    .badge-box{
+      padding:14px 18px;
+      border-radius:14px;
+      font-weight:800;
+      text-align:center;
+      font-size:18px;
+      line-height:1.35;
+      border:1px solid var(--line);
+    }
+
+    .badge-box strong{color:var(--primary-2)}
+
+    .timer-box{
+      padding:16px 18px;
+      text-align:center;
+      border-radius:14px;
+      background:#efe6a8;
+      border:1px solid #e1d47b;
+      font-size:18px;
+      line-height:1.45;
+      font-weight:800;
+    }
+
+    .timer-box small{
+      display:block;
+      margin-top:6px;
+      font-size:16px;
+      color:#a16207;
+      font-weight:700;
+    }
+
+    .section-title-box{
+      padding:16px 18px;
+      text-align:center;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#f4f4f4;
+    }
+
+    .section-title-box h2{
+      margin:0 0 4px;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .section-title-box .green{color:var(--primary-2)}
+    .section-title-box p{
+      margin:0;
+      color:#1f2937;
+      font-size:15px;
+      font-weight:700;
+    }
+
+    .plan-card{
+      border:1px solid #cfd7df;
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:var(--shadow);
+    }
+
+    .plan-highlight{
+      background:#0f6158;
+      color:#fff;
+      text-align:center;
+      font-weight:900;
+      padding:8px 14px;
+      font-size:15px;
+    }
+
+    .plan-body{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      padding:18px 16px;
+      align-items:center;
+    }
+
+    .plan-main{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+    }
+
+    .radio{
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      border:2px solid #8dd4a2;
+      margin-top:8px;
+      flex:0 0 auto;
+      position:relative;
+      background:#fff;
+    }
+
+    .radio::after{
+      content:"";
+      position:absolute;
+      inset:4px;
+      border-radius:50%;
+      background:#18a84a;
+    }
+
+    .plan-name{
+      margin:0 0 6px;
+      font-size:22px;
+      font-weight:900;
+      line-height:1.15;
+    }
+
+    .plan-old{
+      display:block;
+      color:#ef4444;
+      font-size:22px;
+      text-decoration:line-through;
+      margin-bottom:2px;
+      font-weight:700;
+    }
+
+    .plan-new{
+      display:block;
+      color:#16a34a;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .price-pill{
+      min-width:120px;
+      background:#f3f4f6;
+      border-radius:14px;
+      padding:14px 12px;
+      text-align:center;
+      color:#475569;
+      border:1px solid #e5e7eb;
+    }
+
+    .price-pill small{
+      display:block;
+      font-size:18px;
+      margin-bottom:2px;
+    }
+
+    .price-pill strong{
+      display:block;
+      font-size:20px;
+      color:#334155;
+    }
+
+    .cta{
+      display:block;
+      width:100%;
+      border:none;
+      background:#18a84a;
+      color:#fff;
+      text-align:center;
+      font-weight:900;
+      font-size:28px;
+      line-height:1.2;
+      padding:20px 18px;
+      border-radius:14px;
+      box-shadow:0 6px 0 #14913f;
+      cursor:pointer;
+    }
+
+    .cta.small{
+      font-size:18px;
+      padding:16px 18px;
+      box-shadow:0 5px 0 #14913f;
+    }
+
+    .notice{
+      border-radius:14px;
+      padding:14px 16px;
+      font-size:16px;
+      line-height:1.5;
+      font-weight:800;
+      border:1px solid var(--line);
+    }
+
+    .payment-box{
+      padding:14px 18px;
+      text-align:center;
+      border-radius:14px;
+      background:#dff3e3;
+      border:1px solid #b7dfc2;
+      font-weight:900;
+      font-size:18px;
+    }
+
+    .payment-icons{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .payment-icons img{
+      height:30px;
+      width:auto;
+      object-fit:contain;
+    }
+
+    .guarantee-wrap{
+      text-align:center;
+      padding:10px 0 0;
+    }
+
+    .guarantee-seal{
+      max-width:220px;
+      margin:0 auto 14px;
+    }
+
+    .center-title{
+      margin:0 0 10px;
+      text-align:center;
+      font-size:22px;
+      line-height:1.2;
+      font-weight:900;
+    }
+
+    .center-title .green{color:var(--primary-2)}
+
+    .center-copy{
+      margin:0 auto;
+      max-width:620px;
+      text-align:center;
+      color:#334155;
+      font-size:17px;
+      line-height:1.65;
+    }
+
+    .compare-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+
+    .compare-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+    }
+
+    .compare-card img{
+      width:100%;
+      aspect-ratio:1/1.16;
+      object-fit:cover;
+    }
+
+    .compare-card .content{
+      padding:14px 14px 18px;
+      text-align:center;
+    }
+
+    .compare-card h3{
+      margin:0 0 10px;
+      font-size:18px;
+      color:#15803d;
+      font-weight:900;
+    }
+
+    .compare-card p{
+      margin:0;
+      font-size:16px;
+      line-height:1.55;
+    }
+
+    .before-after-head{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .before-after-head div{
+      text-align:center;
+      padding:12px 10px;
+      border-radius:10px;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .head-red{background:#f3d3d3;color:#dc2626}
+    .head-green{background:#d6efdb;color:#16a34a}
+
+    .before-after-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+      align-items:start;
+    }
+
+    .status-card img{
+      width:100%;
+      border-radius:10px;
+      aspect-ratio:1/1.25;
+      object-fit:cover;
+      margin-bottom:12px;
+    }
+
+    .meter{
+      margin-bottom:14px;
+    }
+
+    .meter strong{
+      display:block;
+      font-size:16px;
+      margin-bottom:4px;
+    }
+
+    .meter span{
+      display:block;
+      font-size:16px;
+      margin-bottom:6px;
+      color:#111827;
+    }
+
+    .meter-bar{
+      height:8px;
+      border-radius:999px;
+      background:#e5e7eb;
+      overflow:hidden;
+    }
+
+    .meter-fill{
+      height:100%;
+      border-radius:999px;
+    }
+
+    .red{background:#ef4444}
+    .green{background:#22c55e}
+
+    .stars{
+      text-align:center;
+      font-size:28px;
+      letter-spacing:4px;
+      margin:8px 0 14px;
+      color:#eab308;
+    }
+
+    .result-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      max-width:410px;
+      margin:0 auto;
+    }
+
+    .result-card img{
+      width:100%;
+      aspect-ratio:1/1.03;
+      object-fit:cover;
+    }
+
+    .result-content{
+      padding:16px 18px 18px;
+      text-align:center;
+    }
+
+    .result-content p{
+      margin:0 0 10px;
+      font-size:16px;
+      line-height:1.6;
+    }
+
+    .dots{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin:14px 0 4px;
+    }
+
+    .dot{
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#cbd5e1;
+    }
+
+    .dot.active{background:#0f6158}
+
+    .access-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+
+    .access-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:18px 16px;
+    }
+
+    .access-card .icon{
+      font-size:44px;
+      text-align:center;
+      margin-bottom:12px;
+    }
+
+    .access-card h3{
+      margin:0 0 12px;
+      text-align:center;
+      font-size:18px;
+      color:#1d4ed8;
+      line-height:1.2;
+      font-weight:900;
+    }
+
+    .access-card ul{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+
+    .access-card li{
+      margin-bottom:10px;
+      font-size:16px;
+      line-height:1.5;
+    }
+
+    .simple-box{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:18px 16px;
+      text-align:center;
+    }
+
+    .simple-box h3{
+      margin:0 0 8px;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .simple-box p{
+      margin:0;
+      font-size:16px;
+      line-height:1.55;
+    }
+
+    .bonus-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+
+    .bonus-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+    }
+
+    .bonus-card img{
+      width:100%;
+      aspect-ratio:1/1;
+      object-fit:cover;
+    }
+
+    .bonus-content{
+      padding:14px 16px 18px;
+      text-align:center;
+    }
+
+    .bonus-content h3{
+      margin:0 0 12px;
+      color:#1d4ed8;
+      font-size:18px;
+      line-height:1.2;
+      font-weight:900;
+    }
+
+    .bonus-content p{
+      margin:0 0 12px;
+      font-size:16px;
+      line-height:1.55;
+      color:#334155;
+    }
+
+    .bonus-old{
+      color:#ef4444;
+      text-decoration:line-through;
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .bonus-new{
+      color:#16a34a;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .testimonial-mini{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px 16px;
+      margin-top:12px;
+    }
+
+    .testimonial-mini .top{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:10px;
+    }
+
+    .avatar{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      object-fit:cover;
+      flex:0 0 auto;
+    }
+
+    .testimonial-mini strong{
+      display:block;
+      font-size:16px;
+      margin-bottom:4px;
+    }
+
+    .testimonial-mini p{
+      margin:0;
+      font-size:16px;
+      line-height:1.6;
+    }
+
+    .highlight-box{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:18px 16px;
+      text-align:center;
+    }
+
+    .highlight-box .icon{
+      font-size:40px;
+      margin-bottom:8px;
+    }
+
+    .highlight-box .big{
+      color:#16a34a;
+      font-size:34px;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .explain-box{
+      padding:18px 16px;
+      border-radius:14px;
+      margin-top:12px;
+      text-align:center;
+    }
+
+    .explain-box h3{
+      margin:0 0 10px;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .explain-box p{
+      margin:0;
+      font-size:16px;
+      line-height:1.65;
+    }
+
+    .attention-box{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:20px 18px;
+    }
+
+    .attention-box h3{
+      margin:0 0 6px;
+      text-align:center;
+      color:#dc2626;
+      font-size:26px;
+      font-weight:900;
+    }
+
+    .attention-box h4{
+      margin:0 0 12px;
+      text-align:center;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .attention-box p{
+      margin:0 0 12px;
+      font-size:16px;
+      line-height:1.6;
+    }
+
+    .faq-title{
+      text-align:center;
+      margin:28px 0 14px;
+      font-size:22px;
+      font-weight:900;
+      color:#0f6158;
+    }
+
+    .faq{
+      border-top:1px solid #d6dde3;
+    }
+
+    .faq-item{
+      border-bottom:1px solid #d6dde3;
+      padding:16px 0;
+    }
+
+    .faq-question{
+      width:100%;
+      border:none;
+      background:transparent;
+      padding:0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      text-align:left;
+      cursor:pointer;
+      color:#475569;
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .faq-left{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .faq-bullet{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, #77df95, #22c55e);
+      margin-top:4px;
+      flex:0 0 auto;
+    }
+
+    .faq-answer{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .3s ease;
+      color:#111827;
+      font-size:16px;
+      line-height:1.7;
+      padding-right:26px;
+    }
+
+    .faq-item.active .faq-answer{
+      max-height:220px;
+      margin-top:12px;
+    }
+
+    .goals-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px 18px;
+      margin-bottom:12px;
+    }
+
+    .goals-list{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+
+    .goals-list li{
+      margin-bottom:12px;
+      font-size:16px;
+      line-height:1.5;
+    }
+
+    .goal-image{
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      margin-bottom:12px;
+    }
+
+    .goal-note{
+      background:#f4f4f5;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:16px;
+      font-size:16px;
+      line-height:1.5;
+      margin-bottom:10px;
+    }
+
+    .arrow-box{
+      text-align:center;
+      color:#6b7280;
+      font-size:22px;
+      font-weight:800;
+      margin:18px 0 8px;
+    }
+
+    .green-line-box{
+      background:#d8f0dd;
+      border:1px solid #b6e0bf;
+      border-radius:12px;
+      padding:14px 16px;
+      text-align:center;
+      font-weight:800;
+      color:#166534;
+      margin-bottom:16px;
+    }
+
+    .big-social{
+      background:#f8f3e5;
+      border:1px solid #ead9b4;
+      border-radius:16px;
+      padding:18px 16px;
+      text-align:center;
+    }
+
+    .big-social .big{
+      font-size:26px;
+      font-weight:900;
+      color:#525252;
+      line-height:1.2;
+      margin-bottom:8px;
+    }
+
+    .big-social .small{
+      color:#78716c;
+      font-size:16px;
+      line-height:1.5;
+      margin-bottom:12px;
+    }
+
+    .social-strip{
+      background:#fff;
+      border:1px solid #e7e5e4;
+      border-radius:10px;
+      display:flex;
+      justify-content:center;
+      gap:24px;
+      flex-wrap:wrap;
+      padding:14px 10px;
+      margin-bottom:12px;
+      font-size:15px;
+      color:#57534e;
+      font-weight:700;
+    }
+
+    .center-strong{
+      text-align:center;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .floating-cta{
+      position:sticky;
+      bottom:10px;
+      z-index:40;
+      margin-top:16px;
+    }
+
+    .floating-cta .cta{
+      border-radius:16px;
+    }
+
+    @media (max-width: 700px){
+      .headline-box h1{font-size:24px}
+      .hero-switch{font-size:16px}
+      .cta{font-size:22px}
+      .profile-grid,
+      .compare-grid,
+      .before-after-grid,
+      .access-grid,
+      .bonus-grid{
+        grid-template-columns:1fr;
+      }
+      .before-after-head{
+        grid-template-columns:1fr 1fr;
+      }
+      .plan-body{
+        grid-template-columns:1fr;
+      }
+      .price-pill{
+        width:100%;
+      }
+      .center-title{font-size:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="container">
+
+      <section class="section">
+        <div class="brand-wrap">
+          <img class="brand-logo" src="logo-harno.png" alt="Harno" />
+        </div>
+
+        <div class="headline-box section">
+          <h1>Seu <span class="green">treino personalizado</span> de Tai Chi <span class="green">na cadeira</span> está pronto ✅</h1>
+        </div>
+
+        <div class="hero-card section">
+          <div class="hero-top">
+            <div class="hero-switch">
+              <span>AGORA</span>
+              <span class="divider">APÓS O PROGRAMA</span>
+            </div>
+          </div>
+          <div class="hero-image">
+            <img src="venda-01-transformacao.png" alt="Transformação principal" />
+          </div>
+        </div>
+
+        <div class="profile-grid section">
+          <div class="profile-card">
+            <h3>🎯 Objetivo</h3>
+            <p id="objetivoBox">Perder barriga e emagrecer</p>
+          </div>
+          <div class="profile-card">
+            <h3>🏋️ Intensidade</h3>
+            <p id="intensidadeBox">Alta</p>
+          </div>
+          <div class="profile-card">
+            <h3>⚖️ Peso Atual</h3>
+            <p id="pesoAtualBox">-- kg</p>
+          </div>
+          <div class="profile-card">
+            <h3>🔥 Meta de Peso</h3>
+            <p id="pesoMetaBox">-- kg</p>
+          </div>
+        </div>
+
+        <div class="box section" id="analysisSummaryCard" style="padding:16px 18px;">
+          <h2 class="center-title" style="font-size:20px;margin-bottom:8px;">Resumo da sua <span class="green">análise</span></h2>
+          <p class="center-copy" id="analysisHeadlineBox">Com base nas suas respostas, montamos um plano progressivo e seguro para o seu objetivo.</p>
+          <p class="center-copy" id="analysisResumoBox" style="margin-top:10px;">Seu resultado será ajustado automaticamente conforme a análise final do quiz.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="badge-box soft-green section">
+          🎉 Parabéns, você ganhou um desconto exclusivo de <strong>61%</strong>
+        </div>
+
+        <div class="timer-box section">
+          Seu desconto expira em: <span id="countdown">14:05</span>
+          <small>Garanta sua vaga 👇</small>
+        </div>
+
+        <div class="section-title-box section">
+          <h2><span class="green">Escolha seu plano</span> 👇</h2>
+          <p>Não é assinatura, você paga somente uma vez.</p>
+        </div>
+
+        <div class="plan-card section">
+          <div class="plan-highlight">⭐ OFERTA ESPECIAL DE HOJE</div>
+          <div class="plan-body">
+            <div class="plan-main">
+              <div class="radio"></div>
+              <div>
+                <h3 class="plan-name">Plano Completo</h3>
+                <span class="plan-old">De R$ 97,00</span>
+                <span class="plan-new">Por R$ 29,00</span>
+              </div>
+            </div>
+            <div class="price-pill">
+              <small>Apenas</small>
+              <strong>R$ 29,00</strong>
+              <small>pagamento único</small>
+            </div>
+          </div>
+        </div>
+
+        <a class="cta small buy-btn section" href="SEU_LINK_CHECKOUT_AQUI" data-buy-location="cta_topo">
+          👉 QUERO GARANTIR MEU ACESSO AGORA →
+        </a>
+
+        <div class="notice soft-orange section">
+          ⬆️ Conforme análise do seu perfil, este é o plano mais indicado para atingir seu objetivo com segurança.
+        </div>
+
+        <div class="payment-box section">
+          🛡️ Pagamento seguro e confiável
+        </div>
+
+        <div class="payment-icons section">
+          <img src="paypal.png" alt="PayPal" />
+          <img src="apple-pay.png" alt="Apple Pay" />
+          <img src="google-pay.png" alt="Google Pay" />
+          <img src="visa.png" alt="Visa" />
+          <img src="mastercard.png" alt="Mastercard" />
+          <img src="discover.png" alt="Discover" />
+          <img src="amex.png" alt="American Express" />
+        </div>
+      </section>
+
+      <section class="section guarantee-wrap">
+        <img class="guarantee-seal" src="garantia-30-dias.png" alt="Garantia de 30 dias" />
+        <h2 class="center-title">Garantia de devolução de <span class="green">100% do dinheiro</span></h2>
+        <p class="center-copy">
+          Temos confiança de que você pode atingir resultados visíveis com o Tai Chi.
+          Se você não notar nenhum resultado e puder provar que seguiu seu plano à risca,
+          devolveremos seu dinheiro.
+        </p>
+      </section>
+
+      <section class="section">
+        <div class="box" style="padding:18px 18px 20px;">
+          <h2 class="center-title">Transforme seu <span class="green">corpo</span> e sua <span class="green">mente</span><br>com <span class="green">Tai Chi.</span></h2>
+          <p class="center-copy">
+            É exatamente pra você que não se exercita há anos, não gosta de academia
+            e odeia sofrer fazendo exercícios pesados, mas quer transformar seu corpo
+            de uma forma leve e eficiente.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="compare-grid">
+          <div class="compare-card">
+            <img src="venda-02-forca-bruta.png" alt="Você não precisa de força bruta" />
+            <div class="content">
+              <h3>Você não precisa de Força Bruta</h3>
+              <p>
+                O treino pesado da academia é um veneno para você depois dos 40,
+                só traz dor e lesão. O Tai Chi é a forma inteligente e segura
+                de atingir suas metas e sonhos, sem sofrer por isso.
+              </p>
+            </div>
+          </div>
+
+          <div class="compare-card">
+            <img src="venda-03-evolua-conforto.png" alt="Evolua com conforto" />
+            <div class="content">
+              <h3>Evolua com Conforto</h3>
+              <p>
+                Ninguém precisa ver você treinando. Mas todos vão notar os resultados:
+                sua energia de volta, sua barriga diminuindo e o retorno do homem forte
+                e masculino que sua família precisa.
+              </p>
+            </div>
+          </div>
+
+          <div class="compare-card">
+            <img src="venda-04-evolucao-perceptivel.png" alt="Evolução perceptível" />
+            <div class="content">
+              <h3>Evolução perceptível</h3>
+              <p>
+                Nada motiva mais do que ver resultado sem sentir dor.
+                É essa motivação que vai acabar com a sua frustração no espelho
+                e fazer você transformar seu corpo muito mais rápido.
+              </p>
+            </div>
+          </div>
+
+          <div class="compare-card">
+            <img src="venda-05-nao-so-corpo.png" alt="Não é só sobre o corpo" />
+            <div class="content">
+              <h3>Não é só sobre o corpo.</h3>
+              <p>
+                Além da estética, de perder barriga, ganhar músculos e tudo mais,
+                você também vai resgatar o homem que você era: com energia,
+                clareza para decidir e a força para ser o pilar da sua família.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="before-after-head">
+          <div class="head-red">Sem Tai Chi</div>
+          <div class="head-green">Com Tai Chi</div>
+        </div>
+
+        <div class="before-after-grid">
+          <div class="status-card">
+            <img src="venda-06-sem-taichi.png" alt="Sem Tai Chi" />
+
+            <div class="meter">
+              <strong>Energia Diária</strong>
+              <span>Acaba ao meio-dia</span>
+              <div class="meter-bar"><div class="meter-fill red" style="width:16%"></div></div>
+            </div>
+
+            <div class="meter">
+              <strong>Dores Corporais</strong>
+              <span>Acorda travado</span>
+              <div class="meter-bar"><div class="meter-fill red" style="width:16%"></div></div>
+            </div>
+
+            <div class="meter">
+              <strong>Clareza Mental</strong>
+              <span>Explode fácil</span>
+              <div class="meter-bar"><div class="meter-fill red" style="width:20%"></div></div>
+            </div>
+
+            <div class="meter">
+              <strong>Confiança no Espelho</strong>
+              <span>Evita se olhar</span>
+              <div class="meter-bar"><div class="meter-fill red" style="width:30%"></div></div>
+            </div>
+
+            <div class="meter" style="margin-bottom:0;">
+              <strong>Força e Definição</strong>
+              <span>Corpo fraco e mole</span>
+              <div class="meter-bar"><div class="meter-fill red" style="width:26%"></div></div>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <img src="venda-07-com-taichi.png" alt="Com Tai Chi" />
+
+            <div class="meter">
+              <strong>Energia Diária</strong>
+              <span>Pilha o dia todo</span>
+              <div class="meter-bar"><div class="meter-fill green" style="width:90%"></div></div>
+            </div>
+
+            <div class="meter">
+              <strong>Dores Corporais</strong>
+              <span>Corpo leve e sem dor</span>
+              <div class="meter-bar"><div class="meter-fill green" style="width:95%"></div></div>
+            </div>
+
+            <div class="meter">
+              <strong>Clareza Mental</strong>
+              <span>Tranquilidade e foco</span>
+              <div class="meter-bar"><div class="meter-fill green" style="width:99%"></div></div>
+            </div>
+
+            <div class="meter">
+              <strong>Confiança no Espelho</strong>
+              <span>Postura de líder</span>
+              <div class="meter-bar"><div class="meter-fill green" style="width:97%"></div></div>
+            </div>
+
+            <div class="meter" style="margin-bottom:0;">
+              <strong>Força e Definição</strong>
+              <span>Corpo forte e definido</span>
+              <div class="meter-bar"><div class="meter-fill green" style="width:99%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stars">⭐ ⭐ ⭐ ⭐ ⭐</div>
+      </section>
+
+      <section class="section">
+        <h2 class="center-title">Resultados que nos <span class="green">orgulham</span>:</h2>
+
+        <div class="result-card">
+          <img src="venda-08-depoimento-grande.png" alt="Resultado de aluno" />
+          <div class="result-content">
+            <div class="stars" style="font-size:20px;letter-spacing:2px;margin-top:0;">⭐ ⭐ ⭐ ⭐ ⭐</div>
+            <p>
+              "Comprei desconfiado, mas garantia 30 dias convenceu.
+              Se não desse certo, pelo menos nao ia perder dinheiro.
+              Hoje agradeço ter arriscado. Mudou vida."
+            </p>
+            <p><strong>— Paulo R., 55 anos, Santa Catarina</strong></p>
+            <p>🗓️ Resultado: 90 dias</p>
+          </div>
+        </div>
+
+        <div class="dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot active"></span>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="center-title">O que você terá <span class="green">acesso imediato</span>?</h2>
+
+        <div class="access-grid">
+          <div class="access-card">
+            <div class="icon">📲</div>
+            <h3>Método Tai Chi Completo</h3>
+            <ul>
+              <li>· Vídeo-aulas em Full HD</li>
+              <li>· Aulas em português com instrutor brasileiro</li>
+              <li>· Acesso vitalício (assista quando e quantas vezes quiser)</li>
+              <li>· Funciona em celular, tablet e computador</li>
+            </ul>
+          </div>
+
+          <div class="access-card">
+            <div class="icon">🍽️</div>
+            <h3>Plano alimentar para Testosterona</h3>
+            <ul>
+              <li>· 40 alimentos que aumentam testosterona naturalmente</li>
+              <li>· 30 alimentos que você DEVE evitar</li>
+              <li>· 21 receitas práticas e rápidas</li>
+              <li>· Guia de suplementação natural</li>
+            </ul>
+          </div>
+
+          <div class="access-card">
+            <div class="icon">📊</div>
+            <h3>Planilha de acompanhamento</h3>
+            <ul>
+              <li>· Registre seu peso, medidas e progresso semanal</li>
+              <li>· Gráficos automáticos de evolução</li>
+              <li>· Registro de treinos e alimentação</li>
+            </ul>
+          </div>
+
+          <div class="access-card">
+            <div class="icon">🗓️</div>
+            <h3>Rotina para Iniciantes</h3>
+            <ul>
+              <li>· Passo a passo de tudo que você precisa fazer para entrar em forma</li>
+              <li>· Lembretes e check-ins</li>
+              <li>· Marcos de progresso</li>
+              <li>· Ajuste conforme sua rotina</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="stars">⭐ ⭐ ⭐ ⭐ ⭐</div>
+        <h2 class="center-title">Aplicativo completo</h2>
+
+        <div class="simple-box section">
+          <h3><span style="color:#16a34a;">+1.500 treinos guiados em casa</span></h3>
+          <p>Desenvolvido pelos melhores profissionais para que você possa trabalhar todos os músculos do corpo</p>
+        </div>
+
+        <h2 class="center-title">Além de tudo você <span class="green">também</span> vai receber...</h2>
+        <p class="center-copy" style="margin-bottom:12px;"><strong>🎁 Presentes exclusivos iniciando o Tai Chi hoje:</strong></p>
+
+        <div class="bonus-grid">
+          <div class="bonus-card">
+            <img src="venda-09-bonus-alimentacao.png" alt="Alimentação anti-inflamatória" />
+            <div class="bonus-content">
+              <h3>Alimentação Anti-Inflamatória</h3>
+              <p>
+                Receba um plano alimentar baseado no seu IMC para comer alimentos certos
+                que desinflamam seu corpo, fazendo você se recuperar mais rápido e queimar mais gordura.
+              </p>
+              <div class="bonus-old">De: R$97</div>
+              <div class="bonus-new">Por: R$0</div>
+            </div>
+          </div>
+
+          <div class="bonus-card">
+            <img src="venda-10-bonus-respiracao.png" alt="Protocolo de respiração" />
+            <div class="bonus-content">
+              <h3>Protocolo de Respiração</h3>
+              <p>
+                O complemento perfeito. Para os dias de alta pressão, use essa técnica para acalmar a mente,
+                baixar o cortisol e aumentar o foco instantaneamente.
+              </p>
+              <div class="bonus-old">De: R$147</div>
+              <div class="bonus-new">Por: R$0</div>
+            </div>
+          </div>
+
+          <div class="bonus-card">
+            <img src="venda-11-bonus-mentor.png" alt="Contato com mentor" />
+            <div class="bonus-content">
+              <h3>Contato com o Mentor</h3>
+              <p>
+                Tenha suporte pelo WhatsApp para tirar dúvidas e seguir no caminho certo
+                com a orientação que você precisa.
+              </p>
+              <div class="bonus-old">De: R$97</div>
+              <div class="bonus-new">Por: R$0</div>
+            </div>
+          </div>
+
+          <div class="bonus-card">
+            <img src="venda-12-bonus-sorteio.png" alt="Sorteio relâmpago" />
+            <div class="bonus-content">
+              <h3>🎉 Sorteio Relâmpago</h3>
+              <p>
+                Você participa do sorteio do conjunto de vestes de treino de Tai Chi,
+                de altíssima qualidade e feito sob medida.
+              </p>
+              <div class="bonus-old" style="text-decoration:none;">Valor inestimável</div>
+              <div class="bonus-new">Bônus ativo hoje</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-mini">
+          <div class="top">
+            <img class="avatar" src="avatar-carlos.png" alt="Carlos" />
+            <div>
+              <div style="color:#eab308;font-size:16px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <strong>Carlos M., 55 anos</strong>
+            </div>
+          </div>
+          <p>
+            Achei que Tai Chi era muito parado, mas estava sempre estressado e com dores.
+            Em poucos dias, minha mente ficou mais calma e meu corpo mais leve.
+            Hoje, me sinto mais produtivo e disposto
+          </p>
+        </div>
+
+        <div class="testimonial-mini">
+          <div class="top">
+            <img class="avatar" src="avatar-joao.png" alt="João" />
+            <div>
+              <div style="color:#eab308;font-size:16px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <strong>João B., 67 anos</strong>
+            </div>
+          </div>
+          <p>
+            Minha agenda é super apertada, e eu nunca conseguia ir para academias.
+            O curso online me permitiu praticar no meu tempo, do conforto de casa.
+            Não preciso mais me preocupar em faltar às aulas – posso praticar quando for melhor para mim!
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="notice soft-yellow section" style="text-align:center;">
+          🏅 Nossos dados mostram que quem segue o plano por <strong>3 meses</strong> conquista o dobro de resultados
+          em comparação com quem usa por apenas <strong>1 mês</strong>.
+        </div>
+
+        <div class="guarantee-wrap">
+          <img class="guarantee-seal" src="garantia-30-dias-dourada.png" alt="Garantia dourada" />
+          <h2 class="center-title"><span class="green">Garantia de devolução de dinheiro</span></h2>
+          <p class="center-copy">
+            Acreditamos de verdade que o Tai chi vai funcionar para você.
+            E, se por qualquer motivo você não ficar satisfeito, ofereceremos
+            um reembolso integral do seu dinheiro em até 30 dias após a compra.
+          </p>
+          <p class="center-copy" style="margin-top:8px;">
+            Sem burocracia, sem complicação. Apenas resultados, ou seu dinheiro de volta.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="highlight-box section">
+          <div class="icon">📊</div>
+          <div class="big">94%</div>
+          <div style="font-size:18px;font-weight:800;">Dos alunos veem resultados já na primeira semana.</div>
+        </div>
+
+        <h2 class="center-title">Por que o <span class="green">Tai Chi</span>?</h2>
+        <p class="center-copy">
+          Une a sabedoria milenar com a necessidade moderna de cuidar do corpo sem precisar sofrer.
+        </p>
+        <p class="center-copy" style="margin-top:8px;">
+          É a maneira perfeita de moldar seu corpo com inteligência, suavidade e segurança.
+        </p>
+
+        <div class="explain-box soft-yellow">
+          <h3>Por que funciona tão bem?</h3>
+          <p>
+            O estresse envia um sinal para o seu corpo estocar gordura na barriga.
+            <br><br>
+            O Tai Chi faz o oposto: ele acalma o sistema, reduz o cortisol e ativa
+            o comando natural de queima dessa gordura acumulada.
+          </p>
+        </div>
+
+        <div class="explain-box soft-blue">
+          <h3>E como funciona?</h3>
+          <p>
+            É um plano, onde cada fase prepara seu corpo para a próxima,
+            garantindo um resultado seguro e duradouro.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="attention-box">
+          <h3>🚨 Atenção 🚨</h3>
+          <h4>Para quem é o Tai Chi?</h4>
+          <p>✓ <strong>Para Homens de 40+</strong> que estão parados há anos, sentem o corpo travado e não querem ir para a academia e sofrer pegando peso.</p>
+          <p>✓ <strong>Para quem busca um método eficaz</strong>, que possa ser feito em casa e seja 100% seguro para o corpo e principalmente traga resultados.</p>
+          <p style="margin-bottom:0;">✓ <strong>E, principalmente, para quem quer o resultado final:</strong> menos estresse, menos dores e, de uma vez por todas, um corpo incrível e forte!</p>
+        </div>
+
+        <h2 class="faq-title">Perguntas Frequentes</h2>
+
+        <div class="faq">
+          <div class="faq-item active">
+            <button class="faq-question" type="button">
+              <span class="faq-left"><span class="faq-bullet"></span><span>Eu nunca fiz Tai Chi, é para iniciantes?</span></span>
+              <span>⌃</span>
+            </button>
+            <div class="faq-answer">
+              Sim, as aulas foram desenhadas para iniciantes. Os movimentos são simples,
+              explicados passo a passo em vídeo, e focados em resultados, não em filosofia complexa.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span class="faq-left"><span class="faq-bullet"></span><span>Quanto tempo preciso me dedicar para ver resultados?</span></span>
+              <span>⌄</span>
+            </button>
+            <div class="faq-answer">
+              A maioria das pessoas percebe melhora já na primeira semana praticando poucos minutos por dia.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span class="faq-left"><span class="faq-bullet"></span><span>Preciso de algum equipamento?</span></span>
+              <span>⌄</span>
+            </button>
+            <div class="faq-answer">
+              Não. Você pode começar usando apenas o corpo e, quando indicado, uma cadeira simples.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span class="faq-left"><span class="faq-bullet"></span><span>Como vou receber as aulas?</span></span>
+              <span>⌄</span>
+            </button>
+            <div class="faq-answer">
+              O acesso chega por e-mail e WhatsApp logo após a confirmação do pagamento.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span class="faq-left"><span class="faq-bullet"></span><span>E se eu tiver alguma dúvida sobre os exercícios?</span></span>
+              <span>⌄</span>
+            </button>
+            <div class="faq-answer">
+              Você terá orientação e materiais complementares para seguir o método corretamente.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="center-title">As metas reais que você vai alcançar <span class="green">incluem:</span></h2>
+
+        <div class="goals-card">
+          <ul class="goals-list">
+            <li>✅ Acabar com as dores no corpo</li>
+            <li>✅ Mais energia e menos cansaço</li>
+            <li>✅ Autodisciplina</li>
+            <li>✅ Dormir melhor</li>
+            <li>✅ Acelerar o metabolismo</li>
+            <li>✅ Recuperar flexibilidade e mobilidade</li>
+            <li>✅ Criar um hábito físico leve e fácil de manter</li>
+            <li style="margin-bottom:0;">✅ Fortalece o corpo e músculos</li>
+          </ul>
+        </div>
+
+        <div class="goal-image">
+          <img src="venda-13-plano-semanal.png" alt="Plano semanal" />
+        </div>
+
+        <div class="goal-note">✓ Aulas organizadas em um caminho simples e fácil de seguir</div>
+        <div class="goal-note">✓ Interface intuitiva, pensada para quem não entende de tecnologia</div>
+      </section>
+
+      <section class="section">
+        <a class="cta buy-btn section" href="SEU_LINK_CHECKOUT_AQUI" data-buy-location="cta_meio">
+          👉 QUERO COMEÇAR HOJE POR R$ 29,00 →
+        </a>
+
+        <div class="arrow-box">⬆️ O melhor plano para você atingir seu objetivo</div>
+        <div class="green-line-box">Garantia de 30 dias para ter seu dinheiro de volta</div>
+
+        <div class="big-social">
+          <div class="big">Mais de<br>1.7 milhões</div>
+          <div class="small">Começaram sua jornada de Tai Chi conosco</div>
+          <div class="social-strip">
+            <span>⭐⭐⭐⭐⭐ 4.7 de 5</span>
+            <span> Loja de aplicativos</span>
+            <span>Google Play</span>
+          </div>
+          <div class="center-strong">Mais de 300.000 avaliações de 5 estrelas de usuários satisfeitos</div>
+        </div>
+      </section>
+
+      <div class="floating-cta">
+        <a class="cta buy-btn" href="SEU_LINK_CHECKOUT_AQUI" data-buy-location="cta_fixo">
+          GARANTIR ACESSO POR R$ 29,00
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+  (function () {
+    const TRACKING_STORAGE_KEY = "taichiHarnoTracking";
+    const SALES_STORAGE_KEY = "taichiHarnoSalesData";
+    const TRACKING_CONTEXT_STORAGE_KEY = "taichiHarnoTrackingContext";
+    const CHECKOUT_BASE_URL = "https://lastlink.com/p/CB7C4A9EE/checkout-payment/";
+
+    function safeParse(raw, fallback) {
+      try {
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (err) {
+        return fallback;
+      }
+    }
+
+    function normalizeString() {
+      for (let i = 0; i < arguments.length; i += 1) {
+        const text = String(arguments[i] || "").trim();
+        if (text) return text;
+      }
+      return "";
+    }
+
+    function generateId(prefix) {
+      const random = Math.random().toString(36).slice(2, 10);
+      const time = Date.now().toString(36);
+      return `${prefix}_${time}_${random}`;
+    }
+
+    function getOrCreateStorageValue(key, prefix) {
+      try {
+        const existing = localStorage.getItem(key);
+        if (existing) return existing;
+        const created = generateId(prefix);
+        localStorage.setItem(key, created);
+        return created;
+      } catch (error) {
+        return generateId(prefix);
+      }
+    }
+
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        utm_source: params.get("utm_source") || "",
+        utm_medium: params.get("utm_medium") || "",
+        utm_campaign: params.get("utm_campaign") || "",
+        utm_content: params.get("utm_content") || "",
+        utm_term: params.get("utm_term") || "",
+        fbp: params.get("fbp") || "",
+        fbc: params.get("fbc") || "",
+        lead_id: params.get("lead_id") || "",
+        session_id: params.get("session_id") || ""
+      };
+    }
+
+    function getSalesData() {
+      const salesData = safeParse(localStorage.getItem(SALES_STORAGE_KEY), null);
+      if (salesData && typeof salesData === "object") return salesData;
+      return { answers: {}, salesView: {}, profile: {}, tracking: {} };
+    }
+
+    function getStoredTrackingContext() {
+      const parsed = safeParse(localStorage.getItem(TRACKING_CONTEXT_STORAGE_KEY), null);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    }
+
+    function saveTrackingContext(context) {
+      try {
+        localStorage.setItem(
+          TRACKING_CONTEXT_STORAGE_KEY,
+          JSON.stringify(context || {})
+        );
+      } catch (error) {
+        console.warn("Não foi possível salvar o contexto de tracking da venda.", error);
+      }
+    }
+
+    function getTrackingContext() {
+      const salesData = getSalesData();
+      const salesTracking = salesData.tracking || {};
+      const storedTracking = getStoredTrackingContext();
+      const urlData = getUrlParams();
+
+      const tracking = {
+        lead_id: normalizeString(
+          urlData.lead_id,
+          salesTracking.lead_id,
+          storedTracking.lead_id,
+          getOrCreateStorageValue("taichiHarnoLeadId", "lead")
+        ),
+        session_id: normalizeString(
+          urlData.session_id,
+          salesTracking.session_id,
+          storedTracking.session_id,
+          getOrCreateStorageValue("taichiHarnoSessionId", "sess")
+        ),
+        utm_source: normalizeString(urlData.utm_source, salesTracking.utm_source, storedTracking.utm_source),
+        utm_medium: normalizeString(urlData.utm_medium, salesTracking.utm_medium, storedTracking.utm_medium),
+        utm_campaign: normalizeString(urlData.utm_campaign, salesTracking.utm_campaign, storedTracking.utm_campaign),
+        utm_content: normalizeString(urlData.utm_content, salesTracking.utm_content, storedTracking.utm_content),
+        utm_term: normalizeString(urlData.utm_term, salesTracking.utm_term, storedTracking.utm_term),
+        fbp: normalizeString(urlData.fbp, salesTracking.fbp, storedTracking.fbp),
+        fbc: normalizeString(urlData.fbc, salesTracking.fbc, storedTracking.fbc)
+      };
+
+      saveTrackingContext(tracking);
+      return tracking;
+    }
+
+    function getStoredEvents() {
+      const parsed = safeParse(localStorage.getItem(TRACKING_STORAGE_KEY), []);
+      return Array.isArray(parsed) ? parsed : [];
+    }
+
+    function saveStoredEvents(events) {
+      try {
+        localStorage.setItem(TRACKING_STORAGE_KEY, JSON.stringify(events));
+      } catch (error) {
+        console.warn("Não foi possível salvar eventos do tracking da venda.", error);
+      }
+    }
+
+    function trackEvent(eventName, extra = {}) {
+      const tracking = getTrackingContext();
+
+      const event = {
+        event_name: normalizeString(eventName),
+        created_at: new Date().toISOString(),
+        page_url: window.location.href,
+        page_path: window.location.pathname,
+        page_type: "pitch",
+        lead_id: tracking.lead_id,
+        session_id: tracking.session_id,
+        utm_source: tracking.utm_source,
+        utm_medium: tracking.utm_medium,
+        utm_campaign: tracking.utm_campaign,
+        utm_content: tracking.utm_content,
+        utm_term: tracking.utm_term,
+        fbp: tracking.fbp,
+        fbc: tracking.fbc,
+        ...extra
+      };
+
+      const events = getStoredEvents();
+      events.push(event);
+      saveStoredEvents(events);
+    }
+
+    function trackPitchViewOnce() {
+      const tracking = getTrackingContext();
+      const events = getStoredEvents();
+
+      const alreadyTracked = events.some((event) => {
+        return normalizeString(event.event_name) === "pitch_view" &&
+          normalizeString(event.page_path) === normalizeString(window.location.pathname) &&
+          normalizeString(event.lead_id) === normalizeString(tracking.lead_id);
+      });
+
+      if (!alreadyTracked) {
+        trackEvent("pitch_view", {
+          step_label: "Etapa de venda"
+        });
+      }
+    }
+
+    function formatKg(value) {
+      const number = Number(
+        String(value || "").replace(" kg", "").replace(",", ".").trim()
+      );
+      return Number.isFinite(number) && number > 0 ? `${number} kg` : "-- kg";
+    }
+
+    function textOrFallback(value, fallback) {
+      const text = String(value || "").trim();
+      return text || fallback;
+    }
+
+    function fillPersonalization() {
+      const salesData = getSalesData();
+      const salesView = salesData.salesView || {};
+      const profile = salesData.profile || {};
+      const answers = salesData.answers || {};
+
+      const objetivoBox = document.getElementById("objetivoBox");
+      const intensidadeBox = document.getElementById("intensidadeBox");
+      const pesoAtualBox = document.getElementById("pesoAtualBox");
+      const pesoMetaBox = document.getElementById("pesoMetaBox");
+      const analysisHeadlineBox = document.getElementById("analysisHeadlineBox");
+      const analysisResumoBox = document.getElementById("analysisResumoBox");
+
+      if (objetivoBox) {
+        objetivoBox.textContent = textOrFallback(
+          salesView.objetivo || answers.objetivo_principal,
+          "Perder barriga e emagrecer"
+        );
+      }
+
+      if (intensidadeBox) {
+        intensidadeBox.textContent = textOrFallback(
+          salesView.intensidade || answers.preferencia_inicio_treino,
+          "Média"
+        );
+      }
+
+      if (pesoAtualBox) {
+        pesoAtualBox.textContent = formatKg(
+          salesView.pesoAtual || profile.pesoAtual || answers.peso_atual
+        );
+      }
+
+      if (pesoMetaBox) {
+        pesoMetaBox.textContent = formatKg(
+          salesView.pesoMeta || profile.pesoMeta || answers.peso_meta
+        );
+      }
+
+      if (analysisHeadlineBox) {
+        analysisHeadlineBox.textContent = textOrFallback(
+          salesView.headlineResumo,
+          "Com base nas suas respostas, identificamos um plano progressivo e seguro para o seu objetivo, respeitando seu nível atual e sua meta de peso."
+        );
+      }
+
+      if (analysisResumoBox) {
+        analysisResumoBox.textContent = textOrFallback(
+          salesView.resumo || profile.resumo,
+          "Seu resultado indica que você precisa de uma estratégia prática, segura e ajustada ao seu momento atual para evoluir com constância."
+        );
+      }
+    }
+
+    function bindFaq() {
+      const faqItems = Array.from(document.querySelectorAll(".faq-item"));
+
+      faqItems.forEach((item) => {
+        const btn = item.querySelector(".faq-question");
+        if (!btn) return;
+
+        btn.addEventListener("click", () => {
+          const isActive = item.classList.contains("active");
+          faqItems.forEach((el) => el.classList.remove("active"));
+          if (!isActive) item.classList.add("active");
+        });
+      });
+    }
+
+    function startCountdown() {
+      let totalSeconds = 14 * 60 + 5;
+      const countdownEl = document.getElementById("countdown");
+
+      function tick() {
+        const min = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+        const sec = String(totalSeconds % 60).padStart(2, "0");
+        if (countdownEl) countdownEl.textContent = `${min}:${sec}`;
+        if (totalSeconds > 0) totalSeconds -= 1;
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    function buildCheckoutUrl() {
+      const tracking = getTrackingContext();
+      const checkoutUrl = new URL(CHECKOUT_BASE_URL);
+
+      if (tracking.utm_source) checkoutUrl.searchParams.set("utm_source", tracking.utm_source);
+      if (tracking.utm_medium) checkoutUrl.searchParams.set("utm_medium", tracking.utm_medium);
+      if (tracking.utm_campaign) checkoutUrl.searchParams.set("utm_campaign", tracking.utm_campaign);
+      if (tracking.utm_content) checkoutUrl.searchParams.set("utm_content", tracking.utm_content);
+      if (tracking.utm_term) checkoutUrl.searchParams.set("utm_term", tracking.utm_term);
+      if (tracking.lead_id) checkoutUrl.searchParams.set("lead_id", tracking.lead_id);
+      if (tracking.session_id) checkoutUrl.searchParams.set("session_id", tracking.session_id);
+      if (tracking.fbp) checkoutUrl.searchParams.set("fbp", tracking.fbp);
+      if (tracking.fbc) checkoutUrl.searchParams.set("fbc", tracking.fbc);
+
+      return checkoutUrl.toString();
+    }
+
+    function prepareBuyButtons() {
+      const buttons = Array.from(document.querySelectorAll(".buy-btn"));
+      const checkoutUrl = buildCheckoutUrl();
+
+      buttons.forEach((button) => {
+        button.setAttribute("href", checkoutUrl);
+      });
+    }
+
+    function bindBuyButtons() {
+      const buttons = Array.from(document.querySelectorAll(".buy-btn"));
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+
+          const buyLocation = button.getAttribute("data-buy-location") || "cta";
+          const checkoutUrl = buildCheckoutUrl();
+
+          button.setAttribute("href", checkoutUrl);
+
+          trackEvent("buy_click", {
+            step_label: "Etapa de venda",
+            buy_location: buyLocation,
+            checkout_url: checkoutUrl
+          });
+
+          window.location.href = checkoutUrl;
+        });
+      });
+    }
+
+    function init() {
+      fillPersonalization();
+      bindFaq();
+      startCountdown();
+      trackPitchViewOnce();
+      prepareBuyButtons();
+      bindBuyButtons();
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>
