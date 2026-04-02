@@ -17,6 +17,13 @@ const LASTLINK_SKIP_TOKEN_VALIDATION =
 const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim();
 const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
 
+const META_PIXEL_ID = String(process.env.META_PIXEL_ID || "").trim();
+const META_ACCESS_TOKEN = String(process.env.META_ACCESS_TOKEN || "").trim();
+const META_TEST_EVENT_CODE = String(process.env.META_TEST_EVENT_CODE || "").trim();
+const META_ALLOW_TEST_EVENTS =
+  String(process.env.META_ALLOW_TEST_EVENTS || "true").trim().toLowerCase() === "true";
+const META_CURRENCY = String(process.env.META_CURRENCY || "BRL").trim().toUpperCase();
+
 const WEBHOOK_LOG_DIR = path.join(ROOT_DIR, "data");
 const WEBHOOK_LOG_FILE = path.join(WEBHOOK_LOG_DIR, "lastlink-webhooks.jsonl");
 
@@ -160,6 +167,44 @@ function normalizePhone(value) {
   return String(value || "").replace(/\D+/g, "");
 }
 
+function normalizeDocument(value) {
+  return String(value || "").replace(/\D+/g, "");
+}
+
+function normalizeText(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function sha256Hex(value) {
+  return crypto.createHash("sha256").update(String(value || "").trim().toLowerCase()).digest("hex");
+}
+
+function splitName(fullName) {
+  const parts = String(fullName || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (parts.length === 0) {
+    return { firstName: "", lastName: "" };
+  }
+
+  if (parts.length === 1) {
+    return { firstName: parts[0], lastName: "" };
+  }
+
+  return {
+    firstName: parts[0],
+    lastName: parts.slice(1).join(" ")
+  };
+}
+
+function addHashedField(target, field, rawValue) {
+  const clean = String(rawValue || "").trim();
+  if (!clean) return;
+  target[field] = [sha256Hex(clean)];
+}
+
 function getFirstProduct(data) {
   return Array.isArray(data?.Products) && data.Products.length > 0 ? data.Products[0] || {} : {};
 }
@@ -220,7 +265,7 @@ function buildEventSummary(payload) {
     buyer_name: String(buyer.Name || ""),
     buyer_email: String(buyer.Email || ""),
     buyer_phone: normalizePhone(buyer.PhoneNumber),
-    buyer_document: String(buyer.Document || ""),
+    buyer_document: normalizeDocument(buyer.Document),
 
     buyer_zipcode: String(address.ZipCode || ""),
     buyer_street: String(address.Street || ""),
@@ -299,6 +344,10 @@ function buildNormalizedEvent(payload, requestMeta = {}) {
     buyer_email: summary.buyer_email,
     buyer_phone: summary.buyer_phone,
     buyer_document: summary.buyer_document,
+
+    buyer_city: summary.buyer_city,
+    buyer_state: summary.buyer_state,
+    buyer_zipcode: summary.buyer_zipcode,
 
     payment_id: summary.payment_id,
     payment_date: summary.payment_date,
@@ -452,6 +501,153 @@ async function saveEventToSupabase(record) {
   return { ok: true, skipped: false, data };
 }
 
+function getMetaEventTime(normalized) {
+  const candidates = [
+    normalized.payment_date,
+    normalized.created_at,
+    normalized.received_at
+  ];
+
+  for (const value of candidates) {
+    if (!value) continue;
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+      return Math.floor(parsed.getTime() / 1000);
+    }
+  }
+
+  return Math.floor(Date.now() / 1000);
+}
+
+function buildMetaUserData(normalized) {
+  const userData = {};
+  const { firstName, lastName } = splitName(normalized.buyer_name);
+
+  addHashedField(userData, "em", normalizeText(normalized.buyer_email));
+  addHashedField(userData, "ph", normalizePhone(normalized.buyer_phone));
+  addHashedField(userData, "fn", normalizeText(firstName));
+  addHashedField(userData, "ln", normalizeText(lastName));
+  addHashedField(userData, "zp", normalizeDocument(normalized.buyer_zipcode));
+  addHashedField(userData, "ct", normalizeText(normalized.buyer_city));
+  addHashedField(userData, "st", normalizeText(normalized.buyer_state));
+
+  const externalBase =
+    normalized.lead_id ||
+    normalized.session_id ||
+    normalized.payment_id ||
+    normalized.event_id ||
+    normalized.buyer_document ||
+    normalized.buyer_id;
+
+  addHashedField(userData, "external_id", externalBase);
+
+  if (normalized.request_ip || normalized.device_ip) {
+    userData.client_ip_address = normalized.request_ip || normalized.device_ip;
+  }
+
+  if (normalized.device_user_agent) {
+    userData.client_user_agent = normalized.device_user_agent;
+  }
+
+  return userData;
+}
+
+function shouldSendPurchaseToMeta(normalized) {
+  if (!META_PIXEL_ID || !META_ACCESS_TOKEN) {
+    return { ok: false, skipped: true, reason: "Meta não configurada." };
+  }
+
+  if (normalized.event_name !== "Purchase_Order_Confirmed") {
+    return { ok: false, skipped: true, reason: "Evento não é compra confirmada." };
+  }
+
+  if (normalized.is_test && !META_ALLOW_TEST_EVENTS) {
+    return { ok: false, skipped: true, reason: "Eventos de teste estão desativados para Meta." };
+  }
+
+  return { ok: true, skipped: false };
+}
+
+async function sendPurchaseToMeta(normalized) {
+  const validation = shouldSendPurchaseToMeta(normalized);
+  if (!validation.ok) {
+    return validation;
+  }
+
+  const eventId = `lastlink_purchase_${normalized.payment_id || normalized.event_id}`;
+  const eventTime = getMetaEventTime(normalized);
+  const userData = buildMetaUserData(normalized);
+
+  const payload = {
+    data: [
+      {
+        event_name: "Purchase",
+        event_time: eventTime,
+        event_id: eventId,
+        action_source: "website",
+        event_source_url: normalized.offer_url || "https://lastlink.com",
+        user_data: userData,
+        custom_data: {
+          currency: META_CURRENCY,
+          value: normalized.price_value != null ? Number(normalized.price_value) : 0,
+          content_name: normalized.product_name || normalized.offer_name || "Produto Lastlink",
+          content_type: "product",
+          content_ids: normalized.product_id ? [normalized.product_id] : [],
+          order_id: normalized.payment_id || normalized.event_id,
+          num_items: 1
+        }
+      }
+    ]
+  };
+
+  if (normalized.is_test && META_TEST_EVENT_CODE) {
+    payload.test_event_code = META_TEST_EVENT_CODE;
+  }
+
+  const url = `https://graph.facebook.com/v23.0/${encodeURIComponent(
+    META_PIXEL_ID
+  )}/events?access_token=${encodeURIComponent(META_ACCESS_TOKEN)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const responseText = await response.text();
+    const responseJson = safeJsonParse(responseText, { raw: responseText });
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        skipped: false,
+        status: response.status,
+        error: responseJson
+      };
+    }
+
+    return {
+      ok: true,
+      skipped: false,
+      status: response.status,
+      event_id: eventId,
+      payload,
+      response: responseJson
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      skipped: false,
+      error: {
+        message: error.message || "Erro desconhecido ao enviar para Meta."
+      }
+    };
+  }
+}
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(ROOT_DIR, "index.html"));
 });
@@ -468,6 +664,11 @@ app.get("/health", (req, res) => {
     },
     supabase: {
       configured: Boolean(supabase)
+    },
+    meta: {
+      configured: Boolean(META_PIXEL_ID && META_ACCESS_TOKEN),
+      allow_test_events: META_ALLOW_TEST_EVENTS,
+      has_test_event_code: Boolean(META_TEST_EVENT_CODE)
     }
   });
 });
@@ -524,6 +725,7 @@ app.post("/webhooks/lastlink", async (req, res) => {
     saveWebhookEvent(record);
 
     const supabaseResult = await saveEventToSupabase(record);
+    const metaResult = await sendPurchaseToMeta(normalized);
 
     console.log("[LASTLINK WEBHOOK] Evento recebido:", {
       accepted: tokenIsValid,
@@ -535,7 +737,10 @@ app.post("/webhooks/lastlink", async (req, res) => {
       price_value: normalized.price_value,
       is_test: normalized.is_test,
       supabase_ok: supabaseResult.ok,
-      supabase_skipped: supabaseResult.skipped || false
+      supabase_skipped: supabaseResult.skipped || false,
+      meta_ok: metaResult.ok,
+      meta_skipped: metaResult.skipped || false,
+      meta_reason: metaResult.reason || ""
     });
 
     if (!tokenIsValid) {
@@ -546,7 +751,8 @@ app.post("/webhooks/lastlink", async (req, res) => {
           token_present: Boolean(requestToken),
           signature_present: Boolean(signature)
         },
-        supabase: supabaseResult
+        supabase: supabaseResult,
+        meta: metaResult
       });
     }
 
@@ -554,7 +760,8 @@ app.post("/webhooks/lastlink", async (req, res) => {
       ok: true,
       message: "Webhook recebido com sucesso.",
       normalized,
-      supabase: supabaseResult
+      supabase: supabaseResult,
+      meta: metaResult
     });
   } catch (error) {
     console.error("[LASTLINK WEBHOOK] Erro ao processar:", error);
@@ -639,4 +846,7 @@ app.listen(PORT, () => {
   console.log(`Eventos normalizados: http://localhost:${PORT}/api/webhooks/lastlink/normalized`);
   console.log(`LASTLINK_SKIP_TOKEN_VALIDATION=${LASTLINK_SKIP_TOKEN_VALIDATION}`);
   console.log(`SUPABASE_CONFIGURED=${Boolean(supabase)}`);
+  console.log(`META_CONFIGURED=${Boolean(META_PIXEL_ID && META_ACCESS_TOKEN)}`);
+  console.log(`META_ALLOW_TEST_EVENTS=${META_ALLOW_TEST_EVENTS}`);
+  console.log(`META_HAS_TEST_EVENT_CODE=${Boolean(META_TEST_EVENT_CODE)}`);
 });
