@@ -10,6 +10,9 @@ const PORT = process.env.PORT || 3000;
 const ROOT_DIR = __dirname;
 
 const LASTLINK_WEBHOOK_TOKEN = String(process.env.LASTLINK_WEBHOOK_TOKEN || "").trim();
+const LASTLINK_SKIP_TOKEN_VALIDATION =
+  String(process.env.LASTLINK_SKIP_TOKEN_VALIDATION || "true").trim().toLowerCase() === "true";
+
 const WEBHOOK_LOG_DIR = path.join(ROOT_DIR, "data");
 const WEBHOOK_LOG_FILE = path.join(WEBHOOK_LOG_DIR, "lastlink-webhooks.jsonl");
 
@@ -42,7 +45,6 @@ app.use(
   })
 );
 
-// Serve todos os arquivos estáticos direto da raiz
 app.use(express.static(ROOT_DIR));
 
 function safeJsonParse(value, fallback = null) {
@@ -84,6 +86,9 @@ function getRequestToken(req) {
     String(req.headers["x-lastlink-token"] || "").trim() ||
     String(req.headers["lastlink-token"] || "").trim() ||
     String(req.headers["x-webhook-token"] || "").trim() ||
+    String(req.headers["x-api-key"] || "").trim() ||
+    String(req.headers["x-api-token"] || "").trim() ||
+    String(req.headers["token"] || "").trim() ||
     String(req.query.token || "").trim() ||
     String(req.body?.token || "").trim() ||
     String(req.body?.webhook_token || "").trim() ||
@@ -95,7 +100,8 @@ function getRequestSignature(req) {
   return (
     String(req.headers["x-lastlink-signature"] || "").trim() ||
     String(req.headers["lastlink-signature"] || "").trim() ||
-    String(req.headers["x-signature"] || "").trim()
+    String(req.headers["x-signature"] || "").trim() ||
+    String(req.headers["signature"] || "").trim()
   );
 }
 
@@ -108,6 +114,10 @@ function secureCompare(a, b) {
 }
 
 function isTokenValid(req) {
+  if (LASTLINK_SKIP_TOKEN_VALIDATION) {
+    return true;
+  }
+
   if (!LASTLINK_WEBHOOK_TOKEN) {
     return true;
   }
@@ -131,9 +141,12 @@ function sanitizeHeaders(headers) {
       normalizedKey === "x-lastlink-token" ||
       normalizedKey === "lastlink-token" ||
       normalizedKey === "x-webhook-token" ||
+      normalizedKey === "x-api-key" ||
+      normalizedKey === "x-api-token" ||
+      normalizedKey === "token" ||
       normalizedKey === "cookie"
     ) {
-      result[normalizedKey] = "[redacted]";
+      result[normalizedKey] = value ? "[redacted]" : "";
       return;
     }
 
@@ -146,61 +159,73 @@ function sanitizeHeaders(headers) {
 function buildEventSummary(payload) {
   const body = payload && typeof payload === "object" ? payload : {};
 
-  const customer = body.customer || body.client || body.buyer || {};
-  const product = body.product || body.offer || {};
-  const transaction = body.transaction || body.purchase || body.payment || {};
+  const customer = body.customer || body.client || body.buyer || body.Customer || {};
+  const product = body.product || body.offer || body.Products || body.Product || {};
+  const transaction = body.transaction || body.purchase || body.payment || body.Payment || {};
 
   return {
+    raw_event_keys: Object.keys(body || {}),
     event_name:
       body.event ||
       body.event_name ||
       body.type ||
       body.status ||
+      body.Event ||
+      body.Type ||
       "unknown",
     event_id:
       body.id ||
       body.event_id ||
       transaction.id ||
       transaction.transaction_id ||
+      body.EventId ||
       "",
     order_id:
       body.order_id ||
       transaction.order_id ||
       transaction.id ||
+      body.OrderId ||
       "",
     transaction_id:
       transaction.transaction_id ||
       transaction.id ||
       body.transaction_id ||
+      body.TransactionId ||
       "",
     status:
       body.status ||
       transaction.status ||
       body.payment_status ||
+      body.Status ||
       "",
     product_id:
       product.id ||
       product.product_id ||
       body.product_id ||
+      product.ID ||
       "",
     product_name:
       product.name ||
       product.title ||
       body.product_name ||
+      product.Name ||
       "",
     customer_name:
       customer.name ||
       customer.full_name ||
       body.customer_name ||
+      customer.Name ||
       "",
     customer_email:
       customer.email ||
       body.customer_email ||
+      customer.Email ||
       "",
     customer_phone:
       customer.phone ||
       customer.mobile ||
       body.customer_phone ||
+      customer.Phone ||
       "",
     lead_id:
       body.lead_id ||
@@ -259,12 +284,10 @@ function readWebhookEvents(limit = 50) {
     .filter(Boolean);
 }
 
-// Rota principal
 app.get("/", (req, res) => {
   res.sendFile(path.join(ROOT_DIR, "index.html"));
 });
 
-// Healthcheck simples
 app.get("/health", (req, res) => {
   res.status(200).json({
     ok: true,
@@ -272,41 +295,34 @@ app.get("/health", (req, res) => {
     time: new Date().toISOString(),
     webhook: {
       route: "/webhooks/lastlink",
-      token_configured: Boolean(LASTLINK_WEBHOOK_TOKEN)
+      token_configured: Boolean(LASTLINK_WEBHOOK_TOKEN),
+      skip_token_validation: LASTLINK_SKIP_TOKEN_VALIDATION
     }
   });
 });
 
-// Inspeção rápida do webhook no navegador
 app.get("/webhooks/lastlink", (req, res) => {
   res.status(200).json({
     ok: true,
     message: "Webhook da Lastlink disponível. Use POST para enviar eventos.",
     route: "/webhooks/lastlink",
-    token_configured: Boolean(LASTLINK_WEBHOOK_TOKEN)
+    token_configured: Boolean(LASTLINK_WEBHOOK_TOKEN),
+    skip_token_validation: LASTLINK_SKIP_TOKEN_VALIDATION
   });
 });
 
-// Recebe eventos da Lastlink
 app.post("/webhooks/lastlink", (req, res) => {
   try {
-    const tokenIsValid = isTokenValid(req);
-
-    if (!tokenIsValid) {
-      return res.status(401).json({
-        ok: false,
-        error: "Token do webhook inválido ou ausente."
-      });
-    }
-
     const requestToken = getRequestToken(req);
     const signature = getRequestSignature(req);
     const payload = req.body && typeof req.body === "object" ? req.body : {};
     const summary = buildEventSummary(payload);
+    const tokenIsValid = isTokenValid(req);
 
     const record = {
       received_at: new Date().toISOString(),
       source: "lastlink",
+      accepted: tokenIsValid,
       request: {
         method: req.method,
         original_url: req.originalUrl,
@@ -317,6 +333,7 @@ app.post("/webhooks/lastlink", (req, res) => {
         token_present: Boolean(requestToken),
         token_preview: requestToken ? maskValue(requestToken) : "",
         signature_present: Boolean(signature),
+        signature_preview: signature ? maskValue(signature) : "",
         raw_body: req.rawBody || ""
       },
       summary,
@@ -326,13 +343,27 @@ app.post("/webhooks/lastlink", (req, res) => {
     saveWebhookEvent(record);
 
     console.log("[LASTLINK WEBHOOK] Evento recebido:", {
+      accepted: tokenIsValid,
       received_at: record.received_at,
       event_name: summary.event_name,
       status: summary.status,
       transaction_id: summary.transaction_id,
       lead_id: summary.lead_id,
-      session_id: summary.session_id
+      session_id: summary.session_id,
+      token_present: Boolean(requestToken),
+      signature_present: Boolean(signature)
     });
+
+    if (!tokenIsValid) {
+      return res.status(401).json({
+        ok: false,
+        error: "Token do webhook inválido ou ausente.",
+        debug: {
+          token_present: Boolean(requestToken),
+          signature_present: Boolean(signature)
+        }
+      });
+    }
 
     return res.status(200).json({
       ok: true,
@@ -349,7 +380,6 @@ app.post("/webhooks/lastlink", (req, res) => {
   }
 });
 
-// Lista os últimos eventos recebidos
 app.get("/api/webhooks/lastlink/events", (req, res) => {
   try {
     const limitRaw = Number(req.query.limit || 20);
@@ -360,12 +390,16 @@ app.get("/api/webhooks/lastlink/events", (req, res) => {
     const events = readWebhookEvents(limit).map((item) => ({
       received_at: item.received_at,
       source: item.source,
+      accepted: Boolean(item.accepted),
       request: {
         method: item.request?.method || "",
         ip: item.request?.ip || "",
         content_type: item.request?.content_type || "",
         token_present: Boolean(item.request?.token_present),
-        signature_present: Boolean(item.request?.signature_present)
+        token_preview: item.request?.token_preview || "",
+        signature_present: Boolean(item.request?.signature_present),
+        signature_preview: item.request?.signature_preview || "",
+        headers: item.request?.headers || {}
       },
       summary: item.summary || {},
       payload: item.payload || {}
@@ -386,7 +420,6 @@ app.get("/api/webhooks/lastlink/events", (req, res) => {
   }
 });
 
-// Fallback para rotas não encontradas
 app.use((req, res) => {
   res.status(404).send("Página não encontrada.");
 });
@@ -397,4 +430,5 @@ app.listen(PORT, () => {
   console.log(`Webhook GET: http://localhost:${PORT}/webhooks/lastlink`);
   console.log(`Webhook POST: http://localhost:${PORT}/webhooks/lastlink`);
   console.log(`Eventos recebidos: http://localhost:${PORT}/api/webhooks/lastlink/events`);
+  console.log(`LASTLINK_SKIP_TOKEN_VALIDATION=${LASTLINK_SKIP_TOKEN_VALIDATION}`);
 });
