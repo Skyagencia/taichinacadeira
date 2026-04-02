@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,8 +14,18 @@ const LASTLINK_WEBHOOK_TOKEN = String(process.env.LASTLINK_WEBHOOK_TOKEN || "").
 const LASTLINK_SKIP_TOKEN_VALIDATION =
   String(process.env.LASTLINK_SKIP_TOKEN_VALIDATION || "true").trim().toLowerCase() === "true";
 
+const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim();
+const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+
 const WEBHOOK_LOG_DIR = path.join(ROOT_DIR, "data");
 const WEBHOOK_LOG_FILE = path.join(WEBHOOK_LOG_DIR, "lastlink-webhooks.jsonl");
+
+const supabase =
+  SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false }
+      })
+    : null;
 
 function ensureDir(dirPath) {
   if (!fs.existsSync(dirPath)) {
@@ -23,11 +34,7 @@ function ensureDir(dirPath) {
 }
 
 function captureRawBody(req, res, buffer) {
-  if (buffer && buffer.length) {
-    req.rawBody = buffer.toString("utf8");
-  } else {
-    req.rawBody = "";
-  }
+  req.rawBody = buffer && buffer.length ? buffer.toString("utf8") : "";
 }
 
 app.use(
@@ -114,18 +121,11 @@ function secureCompare(a, b) {
 }
 
 function isTokenValid(req) {
-  if (LASTLINK_SKIP_TOKEN_VALIDATION) {
-    return true;
-  }
-
-  if (!LASTLINK_WEBHOOK_TOKEN) {
-    return true;
-  }
+  if (LASTLINK_SKIP_TOKEN_VALIDATION) return true;
+  if (!LASTLINK_WEBHOOK_TOKEN) return true;
 
   const incomingToken = getRequestToken(req);
-  if (!incomingToken) {
-    return false;
-  }
+  if (!incomingToken) return false;
 
   return secureCompare(incomingToken, LASTLINK_WEBHOOK_TOKEN);
 }
@@ -161,17 +161,13 @@ function normalizePhone(value) {
 }
 
 function getFirstProduct(data) {
-  if (Array.isArray(data?.Products) && data.Products.length > 0) {
-    return data.Products[0] || {};
-  }
-  return {};
+  return Array.isArray(data?.Products) && data.Products.length > 0 ? data.Products[0] || {} : {};
 }
 
 function getFirstSubscription(data) {
-  if (Array.isArray(data?.Subscriptions) && data.Subscriptions.length > 0) {
-    return data.Subscriptions[0] || {};
-  }
-  return {};
+  return Array.isArray(data?.Subscriptions) && data.Subscriptions.length > 0
+    ? data.Subscriptions[0] || {}
+    : {};
 }
 
 function mapEventStatus(eventName) {
@@ -187,7 +183,7 @@ function mapEventStatus(eventName) {
 
 function buildEventSummary(payload) {
   const body = payload && typeof payload === "object" ? payload : {};
-  const data = body.Data && typeof body.Data === "object" ? body.Data : {};
+  const data = body.Data && typeof data === "object" ? body.Data : body.Data || {};
 
   const product = getFirstProduct(data);
   const buyer = data.Buyer && typeof data.Buyer === "object" ? data.Buyer : {};
@@ -350,16 +346,110 @@ function readWebhookEvents(limit = 50) {
   }
 
   const fileContent = fs.readFileSync(WEBHOOK_LOG_FILE, "utf8");
-  const lines = fileContent
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const lines = fileContent.split("\n").map((line) => line.trim()).filter(Boolean);
 
   return lines
     .slice(-limit)
     .reverse()
     .map((line) => safeJsonParse(line, null))
     .filter(Boolean);
+}
+
+async function saveEventToSupabase(record) {
+  if (!supabase) {
+    return { ok: false, skipped: true, reason: "Supabase não configurado." };
+  }
+
+  const normalized = record.normalized || {};
+  const summary = record.summary || {};
+  const request = record.request || {};
+
+  const row = {
+    source: String(record.source || "lastlink"),
+    accepted: Boolean(record.accepted),
+    received_at: record.received_at || new Date().toISOString(),
+
+    event_id: normalized.event_id || null,
+    event_name: normalized.event_name || null,
+    event_status: normalized.event_status || null,
+    is_test: normalized.is_test === true,
+    created_at: normalized.created_at || null,
+
+    product_id: normalized.product_id || null,
+    product_name: normalized.product_name || null,
+    offer_id: normalized.offer_id || null,
+    offer_name: normalized.offer_name || null,
+    offer_url: normalized.offer_url || null,
+
+    buyer_id: normalized.buyer_id || null,
+    buyer_name: normalized.buyer_name || null,
+    buyer_email: normalized.buyer_email || null,
+    buyer_phone: normalized.buyer_phone || null,
+    buyer_document: normalized.buyer_document || null,
+
+    payment_id: normalized.payment_id || null,
+    payment_date: normalized.payment_date || null,
+    chargeback_date: normalized.chargeback_date || null,
+    recurrency: normalized.recurrency,
+    price_value: normalized.price_value,
+    original_price_value: normalized.original_price_value,
+    payment_method: normalized.payment_method || null,
+    installments: normalized.installments,
+
+    affiliate_id: normalized.affiliate_id || null,
+    affiliate_email: normalized.affiliate_email || null,
+
+    subscription_id: normalized.subscription_id || null,
+    subscription_product_id: normalized.subscription_product_id || null,
+    canceled_date: normalized.canceled_date || null,
+    cancellation_reason: normalized.cancellation_reason || null,
+
+    utm_source: normalized.utm_source || null,
+    utm_medium: normalized.utm_medium || null,
+    utm_campaign: normalized.utm_campaign || null,
+    utm_term: normalized.utm_term || null,
+    utm_content: normalized.utm_content || null,
+
+    device_ip: normalized.device_ip || null,
+    device_user_agent: normalized.device_user_agent || null,
+
+    lead_id: normalized.lead_id || null,
+    session_id: normalized.session_id || null,
+
+    request_ip: normalized.request_ip || null,
+    request_token_present: Boolean(normalized.request_token_present),
+    request_signature_present: Boolean(normalized.request_signature_present),
+
+    raw_payload: record.payload || {},
+    normalized_payload: {
+      summary,
+      normalized
+    },
+    request_meta: {
+      method: request.method || "",
+      original_url: request.original_url || "",
+      ip: request.ip || "",
+      user_agent: request.user_agent || "",
+      content_type: request.content_type || "",
+      token_present: Boolean(request.token_present),
+      token_preview: request.token_preview || "",
+      signature_present: Boolean(request.signature_present),
+      signature_preview: request.signature_preview || "",
+      headers: request.headers || {}
+    }
+  };
+
+  const { data, error } = await supabase
+    .from("lastlink_webhook_events")
+    .upsert(row, { onConflict: "event_id" })
+    .select("id, event_id, event_name, event_status")
+    .single();
+
+  if (error) {
+    return { ok: false, skipped: false, error };
+  }
+
+  return { ok: true, skipped: false, data };
 }
 
 app.get("/", (req, res) => {
@@ -375,6 +465,9 @@ app.get("/health", (req, res) => {
       route: "/webhooks/lastlink",
       token_configured: Boolean(LASTLINK_WEBHOOK_TOKEN),
       skip_token_validation: LASTLINK_SKIP_TOKEN_VALIDATION
+    },
+    supabase: {
+      configured: Boolean(supabase)
     }
   });
 });
@@ -389,7 +482,7 @@ app.get("/webhooks/lastlink", (req, res) => {
   });
 });
 
-app.post("/webhooks/lastlink", (req, res) => {
+app.post("/webhooks/lastlink", async (req, res) => {
   try {
     const requestToken = getRequestToken(req);
     const signature = getRequestSignature(req);
@@ -430,16 +523,19 @@ app.post("/webhooks/lastlink", (req, res) => {
 
     saveWebhookEvent(record);
 
+    const supabaseResult = await saveEventToSupabase(record);
+
     console.log("[LASTLINK WEBHOOK] Evento recebido:", {
       accepted: tokenIsValid,
-      received_at: receivedAt,
       event_name: normalized.event_name,
       event_status: normalized.event_status,
       payment_id: normalized.payment_id,
       buyer_email: normalized.buyer_email,
       payment_method: normalized.payment_method,
       price_value: normalized.price_value,
-      is_test: normalized.is_test
+      is_test: normalized.is_test,
+      supabase_ok: supabaseResult.ok,
+      supabase_skipped: supabaseResult.skipped || false
     });
 
     if (!tokenIsValid) {
@@ -449,14 +545,16 @@ app.post("/webhooks/lastlink", (req, res) => {
         debug: {
           token_present: Boolean(requestToken),
           signature_present: Boolean(signature)
-        }
+        },
+        supabase: supabaseResult
       });
     }
 
     return res.status(200).json({
       ok: true,
       message: "Webhook recebido com sucesso.",
-      normalized
+      normalized,
+      supabase: supabaseResult
     });
   } catch (error) {
     console.error("[LASTLINK WEBHOOK] Erro ao processar:", error);
@@ -471,9 +569,7 @@ app.post("/webhooks/lastlink", (req, res) => {
 app.get("/api/webhooks/lastlink/events", (req, res) => {
   try {
     const limitRaw = Number(req.query.limit || 20);
-    const limit = Number.isFinite(limitRaw)
-      ? Math.max(1, Math.min(limitRaw, 200))
-      : 20;
+    const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(limitRaw, 200)) : 20;
 
     const events = readWebhookEvents(limit).map((item) => ({
       received_at: item.received_at,
@@ -511,9 +607,7 @@ app.get("/api/webhooks/lastlink/events", (req, res) => {
 app.get("/api/webhooks/lastlink/normalized", (req, res) => {
   try {
     const limitRaw = Number(req.query.limit || 20);
-    const limit = Number.isFinite(limitRaw)
-      ? Math.max(1, Math.min(limitRaw, 200))
-      : 20;
+    const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(limitRaw, 200)) : 20;
 
     const events = readWebhookEvents(limit).map((item) => item.normalized || {}).filter(Boolean);
 
@@ -544,4 +638,5 @@ app.listen(PORT, () => {
   console.log(`Eventos recebidos: http://localhost:${PORT}/api/webhooks/lastlink/events`);
   console.log(`Eventos normalizados: http://localhost:${PORT}/api/webhooks/lastlink/normalized`);
   console.log(`LASTLINK_SKIP_TOKEN_VALIDATION=${LASTLINK_SKIP_TOKEN_VALIDATION}`);
+  console.log(`SUPABASE_CONFIGURED=${Boolean(supabase)}`);
 });
