@@ -183,7 +183,7 @@ function mapEventStatus(eventName) {
 
 function buildEventSummary(payload) {
   const body = payload && typeof payload === "object" ? payload : {};
-  const data = body.Data && typeof data === "object" ? body.Data : body.Data || {};
+  const data = body.Data && typeof body.Data === "object" ? body.Data : {};
 
   const product = getFirstProduct(data);
   const buyer = data.Buyer && typeof data.Buyer === "object" ? data.Buyer : {};
