@@ -1842,29 +1842,31 @@
     }
 
     function bindBuyButtons() {
-      const buttons = Array.from(document.querySelectorAll(".buy-btn"));
+  const buttons = Array.from(document.querySelectorAll(".buy-btn"));
 
-      buttons.forEach((button) => {
-        button.addEventListener("click", function (event) {
-          event.preventDefault();
+  buttons.forEach((button) => {
+    button.addEventListener("click", function (event) {
+      event.preventDefault();
 
-          const buyLocation = button.getAttribute("data-buy-location") || "cta";
-          const checkoutUrl = buildCheckoutUrl();
+      const buyLocation = button.getAttribute("data-buy-location") || "cta";
+      const checkoutUrl = buildCheckoutUrl();
 
-          button.setAttribute("href", checkoutUrl);
+      button.setAttribute("href", checkoutUrl);
 
-          trackEvent("buy_click", {
-            step_label: "Etapa de venda",
-            buy_location: buyLocation,
-            checkout_url: checkoutUrl
-          });
-
-          fireInitiateCheckoutPixel(checkoutUrl, buyLocation);
-
-          window.location.href = checkoutUrl;
-        });
+      trackEvent("buy_click", {
+        step_label: "Etapa de venda",
+        buy_location: buyLocation,
+        checkout_url: checkoutUrl
       });
-    }
+
+      fireInitiateCheckoutPixel(checkoutUrl, buyLocation);
+
+      setTimeout(() => {
+        window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+      }, 300);
+    });
+  });
+}
 
     function init() {
       fillPersonalization();
