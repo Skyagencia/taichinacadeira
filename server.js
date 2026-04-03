@@ -252,20 +252,17 @@ function mapEventStatus(eventName) {
 
 function buildEventSummary(payload) {
   const body = payload && typeof payload === "object" ? payload : {};
-  const data = body.Data && typeof data === "object" ? body.Data : body.Data;
-  const safeData = data && typeof data === "object" ? data : {};
-
-  const product = getFirstProduct(safeData);
-  const buyer = safeData.Buyer && typeof safeData.Buyer === "object" ? safeData.Buyer : {};
-  const seller = safeData.Seller && typeof safeData.Seller === "object" ? safeData.Seller : {};
-  const purchase = safeData.Purchase && typeof safeData.Purchase === "object" ? safeData.Purchase : {};
+const data = body.Data && typeof body.Data === "object" ? body.Data : {};
+  const product = getFirstProduct(data);
+  const buyer = data.Buyer && typeof data.Buyer === "object" ? data.Buyer : {};
+  const seller = data.Seller && typeof data.Seller === "object" ? data.Seller : {};
+  const purchase = data.Purchase && typeof data.Purchase === "object" ? data.Purchase : {};
   const payment = purchase.Payment && typeof purchase.Payment === "object" ? purchase.Payment : {};
   const affiliate = purchase.Affiliate && typeof purchase.Affiliate === "object" ? purchase.Affiliate : {};
-  const offer = safeData.Offer && typeof safeData.Offer === "object" ? safeData.Offer : {};
-  const utm = safeData.Utm && typeof safeData.Utm === "object" ? safeData.Utm : {};
-  const deviceInfo =
-    safeData.DeviceInfo && typeof safeData.DeviceInfo === "object" ? safeData.DeviceInfo : {};
-  const subscription = getFirstSubscription(safeData);
+  const offer = data.Offer && typeof data.Offer === "object" ? data.Offer : {};
+  const utm = data.Utm && typeof data.Utm === "object" ? data.Utm : {};
+  const deviceInfo = data.DeviceInfo && typeof data.DeviceInfo === "object" ? data.DeviceInfo : {};
+  const subscription = getFirstSubscription(data);
   const address = buyer.Address && typeof buyer.Address === "object" ? buyer.Address : {};
   const bankSlip = purchase.BankSlip && typeof purchase.BankSlip === "object" ? purchase.BankSlip : {};
   const pix = purchase.Pix && typeof purchase.Pix === "object" ? purchase.Pix : {};
@@ -664,6 +661,14 @@ async function saveFrontendTrackingEventToSupabase(record) {
   return { ok: true, skipped: false, data };
 }
 
+function getMetaEventTimeFromIso(isoValue) {
+  const parsed = new Date(isoValue || "");
+  if (!Number.isNaN(parsed.getTime())) {
+    return Math.floor(parsed.getTime() / 1000);
+  }
+  return Math.floor(Date.now() / 1000);
+}
+
 function getMetaEventTime(normalized) {
   const candidates = [
     normalized.payment_date,
@@ -715,6 +720,42 @@ function buildMetaUserData(normalized) {
   return userData;
 }
 
+function buildFrontendMetaUserData(record) {
+  const userData = {};
+
+  addHashedField(userData, "external_id", record.lead_id || record.session_id || record.event_id);
+  addHashedField(userData, "fbp", record.fbp);
+  addHashedField(userData, "fbc", record.fbc);
+
+  if (record.ip_address) {
+    userData.client_ip_address = record.ip_address;
+  }
+
+  if (record.user_agent) {
+    userData.client_user_agent = record.user_agent;
+  }
+
+  return userData;
+}
+
+function normalizeFrontendMetaEventName(eventName) {
+  const clean = String(eventName || "").trim().toLowerCase();
+
+  if (clean === "initiate_checkout" || clean === "initiatecheckout") {
+    return "InitiateCheckout";
+  }
+
+  if (clean === "view_content" || clean === "viewcontent") {
+    return "ViewContent";
+  }
+
+  if (clean === "page_view" || clean === "pageview") {
+    return "PageView";
+  }
+
+  return null;
+}
+
 function shouldSendPurchaseToMeta(normalized) {
   if (!META_PIXEL_ID || !META_ACCESS_TOKEN) {
     return { ok: false, skipped: true, reason: "Meta não configurada." };
@@ -729,6 +770,24 @@ function shouldSendPurchaseToMeta(normalized) {
   }
 
   return { ok: true, skipped: false };
+}
+
+function shouldSendFrontendEventToMeta(record) {
+  if (!META_PIXEL_ID || !META_ACCESS_TOKEN) {
+    return { ok: false, skipped: true, reason: "Meta não configurada." };
+  }
+
+  const metaEventName = normalizeFrontendMetaEventName(record.event_name);
+
+  if (metaEventName !== "InitiateCheckout") {
+    return { ok: false, skipped: true, reason: "Evento frontend ainda não habilitado para Meta." };
+  }
+
+  if (!record.event_id) {
+    return { ok: false, skipped: true, reason: "Evento sem event_id." };
+  }
+
+  return { ok: true, skipped: false, metaEventName };
 }
 
 async function sendPurchaseToMeta(normalized) {
@@ -805,7 +864,91 @@ async function sendPurchaseToMeta(normalized) {
       ok: false,
       skipped: false,
       error: {
-        message: error.message || "Erro desconhecido ao enviar para Meta."
+        message: error.message || "Erro desconhecido ao enviar Purchase para Meta."
+      }
+    };
+  }
+}
+
+async function sendFrontendEventToMeta(record) {
+  const validation = shouldSendFrontendEventToMeta(record);
+  if (!validation.ok) {
+    return validation;
+  }
+
+  const metaEventName = validation.metaEventName;
+  const eventTime = getMetaEventTimeFromIso(record.event_time || record.created_at);
+  const userData = buildFrontendMetaUserData(record);
+
+  const payload = {
+    data: [
+      {
+        event_name: metaEventName,
+        event_time: eventTime,
+        event_id: record.event_id,
+        action_source: "website",
+        event_source_url: record.page_url || "https://localhost",
+        user_data: userData,
+        custom_data: {
+          currency: META_CURRENCY,
+          value: 0,
+          content_name: record.funnel_name || "Tai Chi para Iniciantes",
+          content_category: record.page_type || "quiz",
+          content_type: "product",
+          content_ids: record.funnel_id ? [record.funnel_id] : [],
+          step_id: record.step_id || null,
+          step_index: record.step_index ?? null,
+          button_text: record.button_text || null,
+          checkout_url: record.checkout_url || null
+        }
+      }
+    ]
+  };
+
+  if (META_TEST_EVENT_CODE) {
+    payload.test_event_code = META_TEST_EVENT_CODE;
+  }
+
+  const url = `https://graph.facebook.com/v23.0/${encodeURIComponent(
+    META_PIXEL_ID
+  )}/events?access_token=${encodeURIComponent(META_ACCESS_TOKEN)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const responseText = await response.text();
+    const responseJson = safeJsonParse(responseText, { raw: responseText });
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        skipped: false,
+        status: response.status,
+        error: responseJson
+      };
+    }
+
+    return {
+      ok: true,
+      skipped: false,
+      status: response.status,
+      event_id: record.event_id,
+      event_name: metaEventName,
+      payload,
+      response: responseJson
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      skipped: false,
+      error: {
+        message: error.message || "Erro desconhecido ao enviar evento frontend para Meta."
       }
     };
   }
@@ -826,7 +969,8 @@ app.get("/health", (req, res) => {
       skip_token_validation: LASTLINK_SKIP_TOKEN_VALIDATION
     },
     tracking: {
-      route: "/track-event"
+      route: "/track-event",
+      frontend_meta_enabled_events: ["InitiateCheckout"]
     },
     supabase: {
       configured: Boolean(supabase)
@@ -862,6 +1006,7 @@ app.post("/track-event", async (req, res) => {
     }
 
     const supabaseResult = await saveFrontendTrackingEventToSupabase(record);
+    const metaResult = await sendFrontendEventToMeta(record);
 
     console.log("[FRONT TRACKING] Evento recebido:", {
       event_name: record.event_name,
@@ -874,14 +1019,20 @@ app.post("/track-event", async (req, res) => {
       utm_campaign: record.utm_campaign,
       supabase_ok: supabaseResult.ok,
       supabase_skipped: supabaseResult.skipped || false,
-      supabase_error: supabaseResult.error || null
+      supabase_error: supabaseResult.error || null,
+      meta_ok: metaResult.ok,
+      meta_skipped: metaResult.skipped || false,
+      meta_reason: metaResult.reason || "",
+      meta_status: metaResult.status || null,
+      meta_error: metaResult.error || null
     });
 
     if (!supabaseResult.ok) {
       return res.status(500).json({
         ok: false,
         error: "Não foi possível salvar o evento no Supabase.",
-        supabase: supabaseResult
+        supabase: supabaseResult,
+        meta: metaResult
       });
     }
 
@@ -894,7 +1045,8 @@ app.post("/track-event", async (req, res) => {
         lead_id: record.lead_id,
         session_id: record.session_id
       },
-      supabase: supabaseResult
+      supabase: supabaseResult,
+      meta: metaResult
     });
   } catch (error) {
     console.error("[FRONT TRACKING] Erro ao processar evento:", error);
@@ -921,7 +1073,7 @@ app.get("/api/tracking/events", async (req, res) => {
     const { data, error } = await supabase
       .from("frontend_tracking_events")
       .select(
-        "id, created_at, event_time, event_name, event_id, lead_id, session_id, step_id, step_index, page_type, utm_campaign"
+        "id, created_at, event_time, event_name, event_id, lead_id, session_id, step_id, step_index, page_type, utm_campaign, button_text, checkout_url"
       )
       .order("created_at", { ascending: false })
       .limit(limit);
