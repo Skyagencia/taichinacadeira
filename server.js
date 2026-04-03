@@ -175,6 +175,30 @@ function normalizeText(value) {
   return String(value || "").trim().toLowerCase();
 }
 
+function normalizeString(value) {
+  return String(value ?? "").trim();
+}
+
+function normalizeNullableString(value) {
+  const clean = normalizeString(value);
+  return clean || null;
+}
+
+function normalizeInteger(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const num = Number(value);
+  if (!Number.isFinite(num)) return null;
+  return Math.trunc(num);
+}
+
+function normalizeIsoDateTime(value, fallback = null) {
+  const clean = normalizeString(value);
+  if (!clean) return fallback;
+  const parsed = new Date(clean);
+  if (Number.isNaN(parsed.getTime())) return fallback;
+  return parsed.toISOString();
+}
+
 function sha256Hex(value) {
   return crypto.createHash("sha256").update(String(value || "").trim().toLowerCase()).digest("hex");
 }
@@ -228,18 +252,20 @@ function mapEventStatus(eventName) {
 
 function buildEventSummary(payload) {
   const body = payload && typeof payload === "object" ? payload : {};
-  const data = body.Data && typeof body.Data === "object" ? body.Data : {};
+  const data = body.Data && typeof data === "object" ? body.Data : body.Data;
+  const safeData = data && typeof data === "object" ? data : {};
 
-  const product = getFirstProduct(data);
-  const buyer = data.Buyer && typeof data.Buyer === "object" ? data.Buyer : {};
-  const seller = data.Seller && typeof data.Seller === "object" ? data.Seller : {};
-  const purchase = data.Purchase && typeof data.Purchase === "object" ? data.Purchase : {};
+  const product = getFirstProduct(safeData);
+  const buyer = safeData.Buyer && typeof safeData.Buyer === "object" ? safeData.Buyer : {};
+  const seller = safeData.Seller && typeof safeData.Seller === "object" ? safeData.Seller : {};
+  const purchase = safeData.Purchase && typeof safeData.Purchase === "object" ? safeData.Purchase : {};
   const payment = purchase.Payment && typeof purchase.Payment === "object" ? purchase.Payment : {};
   const affiliate = purchase.Affiliate && typeof purchase.Affiliate === "object" ? purchase.Affiliate : {};
-  const offer = data.Offer && typeof data.Offer === "object" ? data.Offer : {};
-  const utm = data.Utm && typeof data.Utm === "object" ? data.Utm : {};
-  const deviceInfo = data.DeviceInfo && typeof data.DeviceInfo === "object" ? data.DeviceInfo : {};
-  const subscription = getFirstSubscription(data);
+  const offer = safeData.Offer && typeof safeData.Offer === "object" ? safeData.Offer : {};
+  const utm = safeData.Utm && typeof safeData.Utm === "object" ? safeData.Utm : {};
+  const deviceInfo =
+    safeData.DeviceInfo && typeof safeData.DeviceInfo === "object" ? safeData.DeviceInfo : {};
+  const subscription = getFirstSubscription(safeData);
   const address = buyer.Address && typeof buyer.Address === "object" ? buyer.Address : {};
   const bankSlip = purchase.BankSlip && typeof purchase.BankSlip === "object" ? purchase.BankSlip : {};
   const pix = purchase.Pix && typeof purchase.Pix === "object" ? purchase.Pix : {};
@@ -501,6 +527,143 @@ async function saveEventToSupabase(record) {
   return { ok: true, skipped: false, data };
 }
 
+function buildFrontendTrackingRecord(req) {
+  const body = req.body && typeof req.body === "object" ? req.body : {};
+  const requestIp = getClientIp(req);
+  const receivedAt = new Date().toISOString();
+
+  const payload = {
+    ...body,
+    request_meta: {
+      method: req.method,
+      original_url: req.originalUrl,
+      ip: requestIp,
+      user_agent: String(req.headers["user-agent"] || ""),
+      content_type: String(req.headers["content-type"] || ""),
+      headers: sanitizeHeaders(req.headers),
+      received_at: receivedAt
+    }
+  };
+
+  const record = {
+    created_at: receivedAt,
+    event_time: normalizeIsoDateTime(body.event_time, receivedAt),
+
+    funnel_id: normalizeNullableString(body.funnel_id),
+    funnel_name: normalizeNullableString(body.funnel_name),
+    page_type: normalizeNullableString(body.page_type),
+    page_url: normalizeNullableString(body.page_url),
+    page_path: normalizeNullableString(body.page_path),
+    referrer: normalizeNullableString(body.referrer),
+
+    event_name: normalizeString(body.event_name),
+    event_id: normalizeNullableString(body.event_id),
+    event_source: normalizeNullableString(body.event_source) || "website",
+
+    lead_id: normalizeNullableString(body.lead_id),
+    session_id: normalizeNullableString(body.session_id),
+
+    step_id: normalizeNullableString(body.step_id),
+    step_index: normalizeInteger(body.step_index),
+    step_name: normalizeNullableString(body.step_name),
+    step_type: normalizeNullableString(body.step_type),
+
+    button_id: normalizeNullableString(body.button_id),
+    button_text: normalizeNullableString(body.button_text),
+
+    checkout_url: normalizeNullableString(body.checkout_url),
+
+    utm_source: normalizeNullableString(body.utm_source),
+    utm_medium: normalizeNullableString(body.utm_medium),
+    utm_campaign: normalizeNullableString(body.utm_campaign),
+    utm_content: normalizeNullableString(body.utm_content),
+    utm_term: normalizeNullableString(body.utm_term),
+
+    fbp: normalizeNullableString(body.fbp),
+    fbc: normalizeNullableString(body.fbc),
+    user_agent: String(req.headers["user-agent"] || ""),
+    ip_address: requestIp,
+
+    payload
+  };
+
+  return record;
+}
+
+function validateFrontendTrackingRecord(record) {
+  if (!record.event_name) {
+    return "event_name é obrigatório.";
+  }
+
+  return null;
+}
+
+async function saveFrontendTrackingEventToSupabase(record) {
+  if (!supabase) {
+    return { ok: false, skipped: true, reason: "Supabase não configurado." };
+  }
+
+  const row = {
+    created_at: record.created_at,
+    event_time: record.event_time,
+
+    funnel_id: record.funnel_id,
+    funnel_name: record.funnel_name,
+    page_type: record.page_type,
+    page_url: record.page_url,
+    page_path: record.page_path,
+    referrer: record.referrer,
+
+    event_name: record.event_name,
+    event_id: record.event_id,
+    event_source: record.event_source,
+
+    lead_id: record.lead_id,
+    session_id: record.session_id,
+
+    step_id: record.step_id,
+    step_index: record.step_index,
+    step_name: record.step_name,
+    step_type: record.step_type,
+
+    button_id: record.button_id,
+    button_text: record.button_text,
+
+    checkout_url: record.checkout_url,
+
+    utm_source: record.utm_source,
+    utm_medium: record.utm_medium,
+    utm_campaign: record.utm_campaign,
+    utm_content: record.utm_content,
+    utm_term: record.utm_term,
+
+    fbp: record.fbp,
+    fbc: record.fbc,
+    user_agent: record.user_agent,
+    ip_address: record.ip_address,
+
+    payload: record.payload || {}
+  };
+
+  let query = supabase.from("frontend_tracking_events");
+
+  if (row.event_id) {
+    query = query.upsert(row, { onConflict: "event_id" });
+  } else {
+    query = query.insert(row);
+  }
+
+  const { data, error } = await query
+    .select("id, created_at, event_time, event_name, event_id, lead_id, session_id")
+    .single();
+
+  if (error) {
+    return { ok: false, skipped: false, error };
+  }
+
+  return { ok: true, skipped: false, data };
+}
+
 function getMetaEventTime(normalized) {
   const candidates = [
     normalized.payment_date,
@@ -662,6 +825,9 @@ app.get("/health", (req, res) => {
       token_configured: Boolean(LASTLINK_WEBHOOK_TOKEN),
       skip_token_validation: LASTLINK_SKIP_TOKEN_VALIDATION
     },
+    tracking: {
+      route: "/track-event"
+    },
     supabase: {
       configured: Boolean(supabase)
     },
@@ -681,6 +847,106 @@ app.get("/webhooks/lastlink", (req, res) => {
     token_configured: Boolean(LASTLINK_WEBHOOK_TOKEN),
     skip_token_validation: LASTLINK_SKIP_TOKEN_VALIDATION
   });
+});
+
+app.post("/track-event", async (req, res) => {
+  try {
+    const record = buildFrontendTrackingRecord(req);
+    const validationError = validateFrontendTrackingRecord(record);
+
+    if (validationError) {
+      return res.status(400).json({
+        ok: false,
+        error: validationError
+      });
+    }
+
+    const supabaseResult = await saveFrontendTrackingEventToSupabase(record);
+
+    console.log("[FRONT TRACKING] Evento recebido:", {
+      event_name: record.event_name,
+      event_id: record.event_id,
+      lead_id: record.lead_id,
+      session_id: record.session_id,
+      step_id: record.step_id,
+      step_index: record.step_index,
+      page_type: record.page_type,
+      utm_campaign: record.utm_campaign,
+      supabase_ok: supabaseResult.ok,
+      supabase_skipped: supabaseResult.skipped || false,
+      supabase_error: supabaseResult.error || null
+    });
+
+    if (!supabaseResult.ok) {
+      return res.status(500).json({
+        ok: false,
+        error: "Não foi possível salvar o evento no Supabase.",
+        supabase: supabaseResult
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: "Evento de tracking recebido com sucesso.",
+      event: {
+        event_name: record.event_name,
+        event_id: record.event_id,
+        lead_id: record.lead_id,
+        session_id: record.session_id
+      },
+      supabase: supabaseResult
+    });
+  } catch (error) {
+    console.error("[FRONT TRACKING] Erro ao processar evento:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Erro interno ao processar tracking."
+    });
+  }
+});
+
+app.get("/api/tracking/events", async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(500).json({
+        ok: false,
+        error: "Supabase não configurado."
+      });
+    }
+
+    const limitRaw = Number(req.query.limit || 20);
+    const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(limitRaw, 200)) : 20;
+
+    const { data, error } = await supabase
+      .from("frontend_tracking_events")
+      .select(
+        "id, created_at, event_time, event_name, event_id, lead_id, session_id, step_id, step_index, page_type, utm_campaign"
+      )
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      return res.status(500).json({
+        ok: false,
+        error: "Erro ao listar eventos de tracking.",
+        details: error
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      total: Array.isArray(data) ? data.length : 0,
+      events: data || []
+    });
+  } catch (error) {
+    console.error("[FRONT TRACKING] Erro ao listar eventos:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Erro interno ao listar tracking."
+    });
+  }
 });
 
 app.post("/webhooks/lastlink", async (req, res) => {
@@ -728,23 +994,23 @@ app.post("/webhooks/lastlink", async (req, res) => {
     const metaResult = await sendPurchaseToMeta(normalized);
 
     console.log("[LASTLINK WEBHOOK] Evento recebido:", {
-  accepted: tokenIsValid,
-  event_name: normalized.event_name,
-  event_status: normalized.event_status,
-  payment_id: normalized.payment_id,
-  buyer_email: normalized.buyer_email,
-  payment_method: normalized.payment_method,
-  price_value: normalized.price_value,
-  is_test: normalized.is_test,
-  supabase_ok: supabaseResult.ok,
-  supabase_skipped: supabaseResult.skipped || false,
-  meta_ok: metaResult.ok,
-  meta_skipped: metaResult.skipped || false,
-  meta_reason: metaResult.reason || "",
-  meta_status: metaResult.status || null,
-  meta_error: metaResult.error || null,
-  meta_response: metaResult.response || null
-});
+      accepted: tokenIsValid,
+      event_name: normalized.event_name,
+      event_status: normalized.event_status,
+      payment_id: normalized.payment_id,
+      buyer_email: normalized.buyer_email,
+      payment_method: normalized.payment_method,
+      price_value: normalized.price_value,
+      is_test: normalized.is_test,
+      supabase_ok: supabaseResult.ok,
+      supabase_skipped: supabaseResult.skipped || false,
+      meta_ok: metaResult.ok,
+      meta_skipped: metaResult.skipped || false,
+      meta_reason: metaResult.reason || "",
+      meta_status: metaResult.status || null,
+      meta_error: metaResult.error || null,
+      meta_response: metaResult.response || null
+    });
 
     if (!tokenIsValid) {
       return res.status(401).json({
@@ -843,6 +1109,8 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
   console.log(`Healthcheck: http://localhost:${PORT}/health`);
+  console.log(`Tracking POST: http://localhost:${PORT}/track-event`);
+  console.log(`Tracking GET: http://localhost:${PORT}/api/tracking/events`);
   console.log(`Webhook GET: http://localhost:${PORT}/webhooks/lastlink`);
   console.log(`Webhook POST: http://localhost:${PORT}/webhooks/lastlink`);
   console.log(`Eventos recebidos: http://localhost:${PORT}/api/webhooks/lastlink/events`);
