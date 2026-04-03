@@ -18,6 +18,7 @@
   const SESSION_STORAGE_KEY = "taichiHarnoSessionId";
   const SESSION_STARTED_KEY = "taichiHarnoSessionStarted";
   const PAGE_VIEW_KEY = "taichiHarnoPageViewed";
+  const VIEW_CONTENT_KEY = "taichiHarnoViewContentViewed";
   const QUIZ_START_KEY = "taichiHarnoQuizStarted";
 
   const state = {
@@ -83,7 +84,11 @@
     const percent = Math.max(0, Math.min(100, (current / total) * 100));
 
     progressBarEl.style.width = `${percent}%`;
-    progressTextEl.textContent = `Etapa ${current} de ${total}`;
+
+    if (progressTextEl) {
+      progressTextEl.textContent = "";
+      progressTextEl.style.display = "none";
+    }
   }
 
   function generateId(prefix) {
@@ -205,11 +210,41 @@
     }
   }
 
+  function buildEventId(eventName, extra = {}) {
+    if (!state.tracking) loadTrackingContext();
+
+    const safeEventName = String(eventName || "event")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9_]+/g, "_");
+
+    if (safeEventName === "page_view" && window.__TAICHI_META_EVENT_IDS__?.page_view) {
+      return window.__TAICHI_META_EVENT_IDS__.page_view;
+    }
+
+    if (safeEventName === "view_content" && window.__TAICHI_META_EVENT_IDS__?.view_content) {
+      return window.__TAICHI_META_EVENT_IDS__.view_content;
+    }
+
+    const stepId = String(extra.step_id || extra.destination_step_id || state.currentStepId || "step")
+      .trim()
+      .replace(/[^a-zA-Z0-9_-]+/g, "_");
+
+    return [
+      safeEventName,
+      state.tracking?.lead_id || "lead",
+      state.tracking?.session_id || "session",
+      stepId,
+      Date.now()
+    ].join("_");
+  }
+
   function trackEvent(eventName, extra = {}) {
     if (!state.tracking) loadTrackingContext();
 
     const event = {
       event_name: String(eventName || "").trim(),
+      event_id: buildEventId(eventName, extra),
       created_at: new Date().toISOString(),
       page_url: window.location.href,
       page_path: window.location.pathname,
@@ -238,6 +273,15 @@
       if (!window.localStorage.getItem(PAGE_VIEW_KEY)) {
         trackEvent("page_view");
         window.localStorage.setItem(PAGE_VIEW_KEY, "1");
+      }
+
+      if (!window.localStorage.getItem(VIEW_CONTENT_KEY)) {
+        trackEvent("view_content", {
+          content_name: funnel.meta?.name || "Tai Chi para Iniciantes",
+          content_category: "Funil",
+          content_type: "product"
+        });
+        window.localStorage.setItem(VIEW_CONTENT_KEY, "1");
       }
 
       if (!window.localStorage.getItem(SESSION_STARTED_KEY)) {
