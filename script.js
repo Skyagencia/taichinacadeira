@@ -210,6 +210,74 @@
     }
   }
 
+  function getTrackingEndpoint() {
+    return "/track-event";
+  }
+
+  function buildBackendTrackingPayload(event) {
+    return {
+      event_time: event.created_at || new Date().toISOString(),
+      funnel_id: event.quiz_id || funnel.meta?.id || "taichi-harno-funil",
+      funnel_name: event.quiz_name || funnel.meta?.name || "Tai Chi para Iniciantes",
+      page_type: event.page_type || "quiz",
+      page_url: event.page_url || window.location.href,
+      page_path: event.page_path || window.location.pathname,
+      referrer: document.referrer || "",
+      event_name: event.event_name || "",
+      event_id: event.event_id || "",
+      event_source: "website",
+      lead_id: event.lead_id || "",
+      session_id: event.session_id || "",
+      step_id: event.step_id || "",
+      step_index:
+        event.step_index ??
+        event.step_number ??
+        (Number.isFinite(Number(event.destination_step_number))
+          ? Number(event.destination_step_number)
+          : null),
+      step_name: event.step_label || "",
+      step_type: event.step_type || "",
+      button_id: event.button_id || "",
+      button_text: event.button_text || event.button_label || "",
+      checkout_url: event.checkout_url || "",
+      utm_source: event.utm_source || "",
+      utm_medium: event.utm_medium || "",
+      utm_campaign: event.utm_campaign || "",
+      utm_content: event.utm_content || "",
+      utm_term: event.utm_term || "",
+      fbp: event.fbp || "",
+      fbc: event.fbc || "",
+      payload: event
+    };
+  }
+
+  function sendEventToBackend(event) {
+    const payload = buildBackendTrackingPayload(event);
+    const body = JSON.stringify(payload);
+    const endpoint = getTrackingEndpoint();
+
+    try {
+      if (navigator.sendBeacon) {
+        const blob = new Blob([body], { type: "application/json" });
+        const queued = navigator.sendBeacon(endpoint, blob);
+        if (queued) return;
+      }
+    } catch (error) {
+      console.warn("Falha no sendBeacon do tracking.", error);
+    }
+
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body,
+      keepalive: true
+    }).catch((error) => {
+      console.warn("Falha ao enviar evento para o backend.", error);
+    });
+  }
+
   function buildEventId(eventName, extra = {}) {
     if (!state.tracking) loadTrackingContext();
 
@@ -266,6 +334,7 @@
     const events = getStoredEvents();
     events.push(event);
     saveStoredEvents(events);
+    sendEventToBackend(event);
   }
 
   function trackPageEntryOnce() {
@@ -1021,143 +1090,82 @@
       resumo,
       scores: {
         energia: energyScore,
-        mobilidade: mobilityScore,
         sono: sleepScore,
-        dores: dorScore,
+        dor: dorScore,
+        mobilidade: mobilityScore,
         metabolismo: metabolismoScore
       }
     };
   }
 
-  function scoreBar(label, score, color) {
-    const percent = Math.max(0, Math.min(100, score * 10));
+  function renderSimpleLoadingBar(label, percent, id) {
     return `
-      <div style="margin-bottom:14px;">
-        <div style="display:flex;justify-content:space-between;gap:12px;font-weight:700;font-size:14px;margin-bottom:6px;">
-          <span>${escapeHtml(label)}</span>
-          <span>${score}/10</span>
+      <div class="analysis-progress-row" data-progress-id="${escapeHtml(id || "")}" data-target="${Number(percent || 0)}">
+        <div class="analysis-progress-head">
+          <span>${escapeHtml(label || "")}</span>
+          <strong>0%</strong>
         </div>
-        <div style="height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;">
-          <div style="width:${percent}%;height:100%;background:${color};border-radius:999px;"></div>
+        <div class="analysis-progress-bar">
+          <div class="analysis-progress-fill"></div>
         </div>
       </div>
     `;
+  }
+
+  function animateProgressRow(row, target, duration, onComplete) {
+    if (!row) {
+      if (typeof onComplete === "function") onComplete();
+      return;
+    }
+
+    const fill = row.querySelector(".analysis-progress-fill");
+    const value = row.querySelector(".analysis-progress-head strong");
+    const start = performance.now();
+
+    function frame(now) {
+      const elapsed = now - start;
+      const progress = Math.min(1, elapsed / duration);
+      const current = Math.round(target * progress);
+
+      if (fill) fill.style.width = `${current}%`;
+      if (value) value.textContent = `${current}%`;
+
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+        return;
+      }
+
+      if (typeof onComplete === "function") onComplete();
+    }
+
+    requestAnimationFrame(frame);
   }
 
   function renderAnalysisStep(step) {
-    const profile = calculateProfile();
-
     stageEl.innerHTML = `
       ${renderLogo(step)}
-      ${renderTopNote(step)}
-      <h2 class="stage-title">Seu perfil com base em suas respostas:</h2>
-
-      <div style="background:#fff;border:1px solid #dfe5e7;border-radius:18px;padding:18px 16px;margin-bottom:16px;box-shadow:0 10px 24px rgba(0,0,0,.05);">
-        <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px;">
-          <div>
-            <div style="font-size:14px;color:#5f6b7a;">Índice de Massa Corporal</div>
-            <div style="font-size:28px;font-weight:800;line-height:1.1;">IMC: ${profile.imc}</div>
-          </div>
-          <div style="font-size:14px;font-weight:800;color:${profile.faixaColor};">${escapeHtml(profile.faixa)}</div>
-        </div>
-
-        <div style="position:relative;margin:12px 0 8px;">
-          <div style="height:12px;border-radius:999px;background:linear-gradient(90deg,#60a5fa 0 20%,#22c55e 20% 50%,#f59e0b 50% 75%,#ef4444 75% 100%);"></div>
-          <div style="position:absolute;left:calc(${profile.faixaPercent}% - 9px);top:-4px;width:18px;height:18px;background:#fff;border:3px solid ${profile.faixaColor};border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,.18);"></div>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-size:12px;font-weight:700;color:#374151;">
-          <div>Abaixo</div>
-          <div>Normal</div>
-          <div>Sobrepeso</div>
-          <div>Obesidade</div>
-        </div>
-      </div>
-
-      <div style="background:#fff;border:1px solid #dfe5e7;border-radius:18px;padding:18px 16px;margin-bottom:16px;box-shadow:0 10px 24px rgba(0,0,0,.05);">
-        <div style="font-size:18px;font-weight:800;margin-bottom:10px;">Leitura do seu cenário atual</div>
-        <p style="font-size:15px;line-height:1.65;color:#243042;margin-bottom:14px;">
-          ${escapeHtml(profile.resumo)}
-        </p>
-        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
-          <div style="background:#f8fafc;border-radius:14px;padding:12px;">
-            <div style="font-size:12px;color:#64748b;">Faixa etária</div>
-            <div style="font-weight:800;">${escapeHtml(profile.idadeLabel)}</div>
-          </div>
-          <div style="background:#f8fafc;border-radius:14px;padding:12px;">
-            <div style="font-size:12px;color:#64748b;">Objetivo atual</div>
-            <div style="font-weight:800;">${escapeHtml(profile.objetivo)}</div>
-          </div>
-          <div style="background:#f8fafc;border-radius:14px;padding:12px;">
-            <div style="font-size:12px;color:#64748b;">Energia</div>
-            <div style="font-weight:800;">${escapeHtml(profile.energiaLabel)}</div>
-          </div>
-          <div style="background:#f8fafc;border-radius:14px;padding:12px;">
-            <div style="font-size:12px;color:#64748b;">Motivação</div>
-            <div style="font-weight:800;">${escapeHtml(profile.motivacao)}</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="background:#fff;border:1px solid #dfe5e7;border-radius:18px;padding:18px 16px;margin-bottom:16px;box-shadow:0 10px 24px rgba(0,0,0,.05);">
-        <div style="font-size:18px;font-weight:800;margin-bottom:14px;">Indicadores visuais do seu perfil</div>
-        ${scoreBar("Energia", profile.scores.energia, "#2563eb")}
-        ${scoreBar("Mobilidade", profile.scores.mobilidade, "#0f766e")}
-        ${scoreBar("Sono", profile.scores.sono, "#7c3aed")}
-        ${scoreBar("Conforto articular", profile.scores.dores, "#dc2626")}
-        ${scoreBar("Metabolismo", profile.scores.metabolismo, "#ea580c")}
-      </div>
-
-      ${renderButtons(step)}
-    `;
-
-    bindActionButtons(step);
-  }
-
-  function renderSimpleLoadingBar(label, percentValue, key) {
-    return `
-      <div class="analysis-progress-row" data-progress-key="${escapeHtml(key || label)}" data-target="${percentValue}">
-        <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:700;margin-bottom:6px;">
-          <span>${escapeHtml(label)}</span>
-          <span class="analysis-progress-value">0%</span>
-        </div>
-        <div style="height:10px;background:#dfe5e7;border-radius:999px;overflow:hidden;">
-          <div
-            class="analysis-progress-fill"
-            style="width:0%;height:100%;background:#0f6158;border-radius:999px;transition:none;"
-          ></div>
-        </div>
+      <h2 class="stage-title">Estamos analisando suas respostas</h2>
+      <p class="stage-subtitle">Em instantes vamos mostrar o plano mais indicado para você.</p>
+      <div style="max-width:420px;margin:0 auto;">
+        ${renderSimpleLoadingBar("Avaliando seu perfil", 100, "analise_1")}
+        ${renderSimpleLoadingBar("Calculando sequência ideal", 100, "analise_2")}
+        ${renderSimpleLoadingBar("Ajustando ritmo das aulas", 100, "analise_3")}
       </div>
     `;
-  }
 
-  function animateProgressRow(rowEl, targetPercent, duration, onComplete) {
-    if (!rowEl) return;
+    const rows = Array.from(stageEl.querySelectorAll(".analysis-progress-row"));
+    if (!rows.length) return;
 
-    const fillEl = rowEl.querySelector(".analysis-progress-fill");
-    const valueEl = rowEl.querySelector(".analysis-progress-value");
-    const safeTarget = Math.max(0, Math.min(100, Number(targetPercent) || 0));
-    const totalSteps = Math.max(1, Math.round(duration / 30));
-    let currentStep = 0;
-
-    const intervalId = scheduleInterval(() => {
-      currentStep += 1;
-      const progress = currentStep / totalSteps;
-      const currentPercent = Math.round(safeTarget * progress);
-
-      if (fillEl) fillEl.style.width = `${currentPercent}%`;
-      if (valueEl) valueEl.textContent = `${currentPercent}%`;
-
-      if (currentStep >= totalSteps) {
-        clearInterval(intervalId);
-        state.intervals = state.intervals.filter((id) => id !== intervalId);
-
-        if (fillEl) fillEl.style.width = `${safeTarget}%`;
-        if (valueEl) valueEl.textContent = `${safeTarget}%`;
-
-        if (typeof onComplete === "function") onComplete();
-      }
-    }, 30);
+    animateProgressRow(rows[0], 100, 1200, () => {
+      animateProgressRow(rows[1], 100, 1000, () => {
+        animateProgressRow(rows[2], 100, 900, () => {
+          schedule(() => {
+            const current = getCurrentStep();
+            if (current && current.id === step.id) goNext(step);
+          }, Number(step.delay || 700));
+        });
+      });
+    });
   }
 
   function animateProgressSequence(onComplete) {
