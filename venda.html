@@ -1547,20 +1547,12 @@
     const TRACKING_CONTEXT_STORAGE_KEY = "taichiHarnoTrackingContext";
     const CHECKOUT_BASE_URL = "https://lastlink.com/p/CB7C4A9EE/checkout-payment/";
 
-    function safeParse(raw, fallback) {
+    function safeParse(value, fallback) {
       try {
-        return raw ? JSON.parse(raw) : fallback;
-      } catch (err) {
+        return value ? JSON.parse(value) : fallback;
+      } catch (error) {
         return fallback;
       }
-    }
-
-    function normalizeString() {
-      for (let i = 0; i < arguments.length; i += 1) {
-        const text = String(arguments[i] || "").trim();
-        if (text) return text;
-      }
-      return "";
     }
 
     function generateId(prefix) {
@@ -1569,10 +1561,16 @@
       return `${prefix}_${time}_${random}`;
     }
 
+    function normalizeString(value, fallback = "") {
+      const text = String(value || "").trim();
+      return text || String(fallback || "").trim();
+    }
+
     function getOrCreateStorageValue(key, prefix) {
       try {
         const existing = localStorage.getItem(key);
         if (existing) return existing;
+
         const created = generateId(prefix);
         localStorage.setItem(key, created);
         return created;
@@ -1598,6 +1596,17 @@
       return safeParse(localStorage.getItem(TRACKING_CONTEXT_STORAGE_KEY), {}) || {};
     }
 
+    function saveTrackingContext(context) {
+      try {
+        localStorage.setItem(
+          TRACKING_CONTEXT_STORAGE_KEY,
+          JSON.stringify(context || {})
+        );
+      } catch (error) {
+        console.warn("Não foi possível salvar o contexto de tracking.", error);
+      }
+    }
+
     function getTrackingContext() {
       const stored = getStoredTrackingContext();
       const urlData = getUrlParams();
@@ -1610,7 +1619,7 @@
         normalizeString(stored.session_id) ||
         getOrCreateStorageValue("taichiHarnoSessionId", "sess");
 
-      return {
+      const context = {
         lead_id: leadId,
         session_id: sessionId,
         utm_source: normalizeString(urlData.utm_source, stored.utm_source),
@@ -1621,6 +1630,9 @@
         fbp: normalizeString(urlData.fbp, stored.fbp),
         fbc: normalizeString(urlData.fbc, stored.fbc)
       };
+
+      saveTrackingContext(context);
+      return context;
     }
 
     function getStoredEvents() {
@@ -1664,6 +1676,17 @@
       saveStoredEvents(events);
     }
 
+    function buildPitchViewEventId() {
+      const tracking = getTrackingContext();
+
+      return [
+        "pitchview",
+        tracking.lead_id || "lead",
+        tracking.session_id || "session",
+        "venda"
+      ].join("_");
+    }
+
     function trackPitchViewOnce() {
       const tracking = getTrackingContext();
       const events = getStoredEvents();
@@ -1675,9 +1698,38 @@
       });
 
       if (!alreadyTracked) {
+        const pitchViewEventId = buildPitchViewEventId();
+
         trackEvent("pitch_view", {
+          event_id: pitchViewEventId,
           step_label: "Etapa de venda"
         });
+
+        if (typeof window.fbq === "function") {
+          const salesData = getSalesData();
+          const value =
+            Number(salesData?.salesView?.valorOferta) ||
+            Number(salesData?.salesView?.precoFinal) ||
+            29;
+
+          window.fbq(
+            "track",
+            "ViewContent",
+            {
+              content_name: "Tai Chi na Cadeira",
+              content_category: "Oferta",
+              content_type: "product",
+              content_ids: ["cfd0cb2d-a0ad-4536-ae03-c69b6973ece2"],
+              value: value,
+              currency: "BRL",
+              lead_id: tracking.lead_id || "",
+              session_id: tracking.session_id || ""
+            },
+            {
+              eventID: pitchViewEventId
+            }
+          );
+        }
       }
     }
 
@@ -1777,7 +1829,19 @@
       setInterval(tick, 1000);
     }
 
-    function buildCheckoutUrl() {
+    function buildInitiateCheckoutEventId(buyLocation) {
+      const tracking = getTrackingContext();
+
+      return [
+        "initcheckout",
+        tracking.lead_id || "lead",
+        tracking.session_id || "session",
+        buyLocation || "cta",
+        Date.now()
+      ].join("_");
+    }
+
+    function buildCheckoutUrl(initiateCheckoutEventId) {
       const tracking = getTrackingContext();
       const checkoutUrl = new URL(CHECKOUT_BASE_URL);
 
@@ -1791,6 +1855,10 @@
       if (tracking.fbp) checkoutUrl.searchParams.set("fbp", tracking.fbp);
       if (tracking.fbc) checkoutUrl.searchParams.set("fbc", tracking.fbc);
 
+      if (initiateCheckoutEventId) {
+        checkoutUrl.searchParams.set("initiate_checkout_event_id", initiateCheckoutEventId);
+      }
+
       return checkoutUrl.toString();
     }
 
@@ -1803,18 +1871,15 @@
       });
     }
 
-    function fireInitiateCheckoutPixel(checkoutUrl, buyLocation) {
+    function fireInitiateCheckoutPixel(checkoutUrl, buyLocation, initiateCheckoutEventId) {
       if (typeof window.fbq !== "function") return;
 
       const tracking = getTrackingContext();
       const salesData = getSalesData();
-      const eventId = [
-        "initcheckout",
-        tracking.lead_id || "lead",
-        tracking.session_id || "session",
-        buyLocation || "cta",
-        Date.now()
-      ].join("_");
+
+      const eventId =
+        initiateCheckoutEventId ||
+        buildInitiateCheckoutEventId(buyLocation);
 
       const value =
         Number(salesData?.salesView?.valorOferta) ||
@@ -1833,7 +1898,9 @@
           content_ids: ["cfd0cb2d-a0ad-4536-ae03-c69b6973ece2"],
           num_items: 1,
           checkout_url: checkoutUrl,
-          buy_location: buyLocation || "cta"
+          buy_location: buyLocation || "cta",
+          lead_id: tracking.lead_id || "",
+          session_id: tracking.session_id || ""
         },
         {
           eventID: eventId
@@ -1842,33 +1909,40 @@
     }
 
     function bindBuyButtons() {
-  const buttons = Array.from(document.querySelectorAll(".buy-btn"));
+      const buttons = Array.from(document.querySelectorAll(".buy-btn"));
 
-  buttons.forEach((button) => {
-    button.addEventListener("click", function (event) {
-      event.preventDefault();
+      buttons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
 
-      const buyLocation = button.getAttribute("data-buy-location") || "cta";
-      const checkoutUrl = buildCheckoutUrl();
+          const buyLocation = button.getAttribute("data-buy-location") || "cta";
+          const initiateCheckoutEventId = buildInitiateCheckoutEventId(buyLocation);
+          const checkoutUrl = buildCheckoutUrl(initiateCheckoutEventId);
 
-      button.setAttribute("href", checkoutUrl);
+          button.setAttribute("href", checkoutUrl);
 
-      trackEvent("buy_click", {
-        step_label: "Etapa de venda",
-        buy_location: buyLocation,
-        checkout_url: checkoutUrl
+          trackEvent("buy_click", {
+            event_id: initiateCheckoutEventId,
+            step_label: "Etapa de venda",
+            buy_location: buyLocation,
+            checkout_url: checkoutUrl
+          });
+
+          fireInitiateCheckoutPixel(
+            checkoutUrl,
+            buyLocation,
+            initiateCheckoutEventId
+          );
+
+          setTimeout(() => {
+            window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+          }, 300);
+        });
       });
-
-      fireInitiateCheckoutPixel(checkoutUrl, buyLocation);
-
-      setTimeout(() => {
-        window.open(checkoutUrl, "_blank", "noopener,noreferrer");
-      }, 300);
-    });
-  });
-}
+    }
 
     function init() {
+      getTrackingContext();
       fillPersonalization();
       bindFaq();
       startCountdown();
