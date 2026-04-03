@@ -12,6 +12,115 @@
     content="Descubra em 2 minutos o melhor caminho para começar no Tai Chi."
   />
 
+  <script>
+    (function () {
+      const TRACKING_CONTEXT_STORAGE_KEY = "taichiHarnoTrackingContext";
+      const LEAD_STORAGE_KEY = "taichiHarnoLeadId";
+      const SESSION_STORAGE_KEY = "taichiHarnoSessionId";
+
+      function generateId(prefix) {
+        const random = Math.random().toString(36).slice(2, 10);
+        const time = Date.now().toString(36);
+        return prefix + "_" + time + "_" + random;
+      }
+
+      function normalizeValue(value) {
+        return String(value || "").trim();
+      }
+
+      function getStorageValue(key) {
+        try {
+          return window.localStorage.getItem(key) || "";
+        } catch (error) {
+          return "";
+        }
+      }
+
+      function setStorageValue(key, value) {
+        try {
+          window.localStorage.setItem(key, value);
+        } catch (error) {}
+      }
+
+      function getOrCreateStorageValue(key, prefix) {
+        const existing = getStorageValue(key);
+        if (existing) return existing;
+
+        const created = generateId(prefix);
+        setStorageValue(key, created);
+        return created;
+      }
+
+      function getStoredTrackingContext() {
+        try {
+          const raw = window.localStorage.getItem(TRACKING_CONTEXT_STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          return parsed && typeof parsed === "object" ? parsed : {};
+        } catch (error) {
+          return {};
+        }
+      }
+
+      function saveTrackingContext(context) {
+        try {
+          window.localStorage.setItem(
+            TRACKING_CONTEXT_STORAGE_KEY,
+            JSON.stringify(context || {})
+          );
+        } catch (error) {}
+      }
+
+      function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          utm_source: params.get("utm_source") || "",
+          utm_medium: params.get("utm_medium") || "",
+          utm_campaign: params.get("utm_campaign") || "",
+          utm_content: params.get("utm_content") || "",
+          utm_term: params.get("utm_term") || "",
+          fbp: params.get("fbp") || "",
+          fbc: params.get("fbc") || ""
+        };
+      }
+
+      const stored = getStoredTrackingContext();
+      const urlData = getUrlParams();
+
+      const tracking = {
+        lead_id:
+          normalizeValue(stored.lead_id) ||
+          getOrCreateStorageValue(LEAD_STORAGE_KEY, "lead"),
+
+        session_id:
+          normalizeValue(stored.session_id) ||
+          getOrCreateStorageValue(SESSION_STORAGE_KEY, "sess"),
+
+        utm_source:
+          normalizeValue(urlData.utm_source) || normalizeValue(stored.utm_source),
+        utm_medium:
+          normalizeValue(urlData.utm_medium) || normalizeValue(stored.utm_medium),
+        utm_campaign:
+          normalizeValue(urlData.utm_campaign) || normalizeValue(stored.utm_campaign),
+        utm_content:
+          normalizeValue(urlData.utm_content) || normalizeValue(stored.utm_content),
+        utm_term:
+          normalizeValue(urlData.utm_term) || normalizeValue(stored.utm_term),
+        fbp:
+          normalizeValue(urlData.fbp) || normalizeValue(stored.fbp),
+        fbc:
+          normalizeValue(urlData.fbc) || normalizeValue(stored.fbc)
+      };
+
+      saveTrackingContext(tracking);
+
+      window.__TAICHI_TRACKING__ = tracking;
+      window.__TAICHI_META_EVENT_IDS__ = {
+        page_view: "pv_" + tracking.lead_id + "_" + tracking.session_id,
+        view_content: "vc_" + tracking.lead_id + "_" + tracking.session_id
+      };
+    })();
+  </script>
+
   <!-- Meta Pixel Code -->
   <script>
     !function(f,b,e,v,n,t,s)
@@ -32,12 +141,36 @@
     }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
     fbq('init', '963885466292415');
-    fbq('track', 'PageView');
-    fbq('track', 'ViewContent', {
-      content_name: 'Tai Chi para Iniciantes',
-      content_category: 'Funil',
-      content_type: 'product'
-    });
+
+    fbq(
+      'track',
+      'PageView',
+      {
+        page_type: 'quiz',
+        page_name: 'Tai Chi para Iniciantes',
+        lead_id: window.__TAICHI_TRACKING__?.lead_id || '',
+        session_id: window.__TAICHI_TRACKING__?.session_id || ''
+      },
+      {
+        eventID: window.__TAICHI_META_EVENT_IDS__?.page_view || ''
+      }
+    );
+
+    fbq(
+      'track',
+      'ViewContent',
+      {
+        content_name: 'Tai Chi para Iniciantes',
+        content_category: 'Funil',
+        content_type: 'product',
+        page_type: 'quiz',
+        lead_id: window.__TAICHI_TRACKING__?.lead_id || '',
+        session_id: window.__TAICHI_TRACKING__?.session_id || ''
+      },
+      {
+        eventID: window.__TAICHI_META_EVENT_IDS__?.view_content || ''
+      }
+    );
   </script>
   <noscript>
     <img
