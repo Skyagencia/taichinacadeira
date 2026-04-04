@@ -14,7 +14,7 @@ window.FUNNEL_DATA = {
       images: ["step-01-capa.png"],
       layout: "split-left-image",
       texts: [
-        "TAI CHI PARA INICIANTES",
+        "TAI CHI NA CADEIRA PARA INICIANTES",
         "De acordo com sua idade: 👇",
         "Teste de 2 minutos"
       ],
