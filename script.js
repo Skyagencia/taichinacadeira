@@ -97,18 +97,27 @@
     return `${prefix}_${time}_${random}`;
   }
 
-  function getOrCreateLocalStorageValue(key, prefix) {
-    try {
-      const existing = window.localStorage.getItem(key);
-      if (existing) return existing;
-      const created = generateId(prefix);
-      window.localStorage.setItem(key, created);
-      return created;
-    } catch (error) {
-      console.warn(`Não foi possível acessar ${key}.`, error);
-      return generateId(prefix);
-    }
+  function getOrCreateStorageValue(storage, key, prefix) {
+  try {
+    const existing = storage.getItem(key);
+    if (existing) return existing;
+
+    const created = generateId(prefix);
+    storage.setItem(key, created);
+    return created;
+  } catch (error) {
+    console.warn(`Não foi possível acessar ${key}.`, error);
+    return generateId(prefix);
   }
+}
+
+function getOrCreateLocalStorageValue(key, prefix) {
+  return getOrCreateStorageValue(window.localStorage, key, prefix);
+}
+
+function getOrCreateSessionStorageValue(key, prefix) {
+  return getOrCreateStorageValue(window.sessionStorage, key, prefix);
+}
 
   function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
@@ -150,41 +159,41 @@
   }
 
   function buildTrackingContext() {
-    const urlData = getUrlParams();
-    const storedTracking = getStoredTrackingContext();
-    const leadId =
-      normalizeTrackingValue(storedTracking.lead_id) ||
-      getOrCreateLocalStorageValue(LEAD_STORAGE_KEY, "lead");
-    const sessionId =
-      normalizeTrackingValue(storedTracking.session_id) ||
-      getOrCreateLocalStorageValue(SESSION_STORAGE_KEY, "sess");
+  const urlData = getUrlParams();
+  const storedTracking = getStoredTrackingContext();
 
-    return {
-      lead_id: leadId,
-      session_id: sessionId,
-      utm_source:
-        normalizeTrackingValue(urlData.utm_source) ||
-        normalizeTrackingValue(storedTracking.utm_source),
-      utm_medium:
-        normalizeTrackingValue(urlData.utm_medium) ||
-        normalizeTrackingValue(storedTracking.utm_medium),
-      utm_campaign:
-        normalizeTrackingValue(urlData.utm_campaign) ||
-        normalizeTrackingValue(storedTracking.utm_campaign),
-      utm_content:
-        normalizeTrackingValue(urlData.utm_content) ||
-        normalizeTrackingValue(storedTracking.utm_content),
-      utm_term:
-        normalizeTrackingValue(urlData.utm_term) ||
-        normalizeTrackingValue(storedTracking.utm_term),
-      fbp:
-        normalizeTrackingValue(urlData.fbp) ||
-        normalizeTrackingValue(storedTracking.fbp),
-      fbc:
-        normalizeTrackingValue(urlData.fbc) ||
-        normalizeTrackingValue(storedTracking.fbc)
-    };
-  }
+  const leadId =
+    normalizeTrackingValue(storedTracking.lead_id) ||
+    getOrCreateLocalStorageValue(LEAD_STORAGE_KEY, "lead");
+
+  const sessionId = getOrCreateSessionStorageValue(SESSION_STORAGE_KEY, "sess");
+
+  return {
+    lead_id: leadId,
+    session_id: sessionId,
+    utm_source:
+      normalizeTrackingValue(urlData.utm_source) ||
+      normalizeTrackingValue(storedTracking.utm_source),
+    utm_medium:
+      normalizeTrackingValue(urlData.utm_medium) ||
+      normalizeTrackingValue(storedTracking.utm_medium),
+    utm_campaign:
+      normalizeTrackingValue(urlData.utm_campaign) ||
+      normalizeTrackingValue(storedTracking.utm_campaign),
+    utm_content:
+      normalizeTrackingValue(urlData.utm_content) ||
+      normalizeTrackingValue(storedTracking.utm_content),
+    utm_term:
+      normalizeTrackingValue(urlData.utm_term) ||
+      normalizeTrackingValue(storedTracking.utm_term),
+    fbp:
+      normalizeTrackingValue(urlData.fbp) ||
+      normalizeTrackingValue(storedTracking.fbp),
+    fbc:
+      normalizeTrackingValue(urlData.fbc) ||
+      normalizeTrackingValue(storedTracking.fbc)
+  };
+}
 
   function loadTrackingContext() {
     state.tracking = buildTrackingContext();
@@ -338,34 +347,34 @@
   }
 
   function trackPageEntryOnce() {
-    try {
-      if (!window.localStorage.getItem(PAGE_VIEW_KEY)) {
-        trackEvent("page_view");
-        window.localStorage.setItem(PAGE_VIEW_KEY, "1");
-      }
-
-      if (!window.localStorage.getItem(VIEW_CONTENT_KEY)) {
-        trackEvent("view_content", {
-          content_name: funnel.meta?.name || "Tai Chi para Iniciantes",
-          content_category: "Funil",
-          content_type: "product"
-        });
-        window.localStorage.setItem(VIEW_CONTENT_KEY, "1");
-      }
-
-      if (!window.localStorage.getItem(SESSION_STARTED_KEY)) {
-        trackEvent("session_start");
-        window.localStorage.setItem(SESSION_STARTED_KEY, "1");
-      }
-
-      if (!window.localStorage.getItem(QUIZ_START_KEY)) {
-        trackEvent("quiz_start");
-        window.localStorage.setItem(QUIZ_START_KEY, "1");
-      }
-    } catch (error) {
-      console.warn("Não foi possível marcar eventos iniciais.", error);
+  try {
+    if (!window.sessionStorage.getItem(PAGE_VIEW_KEY)) {
+      trackEvent("page_view");
+      window.sessionStorage.setItem(PAGE_VIEW_KEY, "1");
     }
+
+    if (!window.sessionStorage.getItem(VIEW_CONTENT_KEY)) {
+      trackEvent("view_content", {
+        content_name: funnel.meta?.name || "Tai Chi para Iniciantes",
+        content_category: "Funil",
+        content_type: "product"
+      });
+      window.sessionStorage.setItem(VIEW_CONTENT_KEY, "1");
+    }
+
+    if (!window.sessionStorage.getItem(SESSION_STARTED_KEY)) {
+      trackEvent("session_start");
+      window.sessionStorage.setItem(SESSION_STARTED_KEY, "1");
+    }
+
+    if (!window.sessionStorage.getItem(QUIZ_START_KEY)) {
+      trackEvent("quiz_start");
+      window.sessionStorage.setItem(QUIZ_START_KEY, "1");
+    }
+  } catch (error) {
+    console.warn("Não foi possível marcar eventos iniciais.", error);
   }
+}
 
   function trackStepView(step) {
     if (!step) return;
