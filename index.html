@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
+<script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  data-utmify-prevent-xcod-sck
+  data-utmify-prevent-subids
+  async
+  defer
+></script>
+
+<script>
+  window.pixelId = "69d29d68c7fb8950b8b24f5a";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+
   <meta charset="UTF-8" />
   <meta
     name="viewport"
@@ -114,73 +132,8 @@
       saveTrackingContext(tracking);
 
       window.__TAICHI_TRACKING__ = tracking;
-      window.__TAICHI_META_EVENT_IDS__ = {
-        page_view: "pv_" + tracking.lead_id + "_" + tracking.session_id,
-        view_content: "vc_" + tracking.lead_id + "_" + tracking.session_id
-      };
     })();
   </script>
-
-  <!-- Meta Pixel Code -->
-  <script>
-    !function(f,b,e,v,n,t,s)
-    {
-      if(f.fbq)return;
-      n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;
-      n.push=n;
-      n.loaded=!0;
-      n.version='2.0';
-      n.queue=[];
-      t=b.createElement(e);
-      t.async=!0;
-      t.src=v;
-      s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s);
-    }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-
-    fbq('init', '963885466292415');
-
-    fbq(
-      'track',
-      'PageView',
-      {
-        page_type: 'quiz',
-        page_name: 'Tai Chi para Iniciantes',
-        lead_id: window.__TAICHI_TRACKING__?.lead_id || '',
-        session_id: window.__TAICHI_TRACKING__?.session_id || ''
-      },
-      {
-        eventID: window.__TAICHI_META_EVENT_IDS__?.page_view || ''
-      }
-    );
-
-    fbq(
-      'track',
-      'ViewContent',
-      {
-        content_name: 'Tai Chi para Iniciantes',
-        content_category: 'Funil',
-        content_type: 'product',
-        page_type: 'quiz',
-        lead_id: window.__TAICHI_TRACKING__?.lead_id || '',
-        session_id: window.__TAICHI_TRACKING__?.session_id || ''
-      },
-      {
-        eventID: window.__TAICHI_META_EVENT_IDS__?.view_content || ''
-      }
-    );
-  </script>
-  <noscript>
-    <img
-      height="1"
-      width="1"
-      style="display:none"
-      src="https://www.facebook.com/tr?id=963885466292415&ev=PageView&noscript=1"
-    />
-  </noscript>
-  <!-- End Meta Pixel Code -->
 
   <link rel="stylesheet" href="style.css" />
 </head>
