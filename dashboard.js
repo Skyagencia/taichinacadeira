@@ -1,7 +1,6 @@
 (function () {
-  const STORAGE_KEY = "taichiHarnoTracking";
   const FILTER_STORAGE_KEY = "taichiHarnoDashboardFilter";
-  const TRACKING_API_URL = "/api/tracking/events";
+  const TRACKING_API_URL = "/api/tracking/events?limit=10000";
 
   const els = {
     refreshBtn: document.getElementById("refreshDashboardBtn"),
@@ -34,44 +33,34 @@
     }
   }
 
-  function getLocalEvents() {
-    const data = safeParse(localStorage.getItem(STORAGE_KEY), []);
-    return Array.isArray(data) ? data : [];
-  }
-
   async function fetchBackendEvents() {
-    try {
-      const response = await fetch(TRACKING_API_URL, {
-        method: "GET",
-        headers: {
-          Accept: "application/json"
-        },
-        cache: "no-store"
-      });
+    const response = await fetch(TRACKING_API_URL, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      },
+      cache: "no-store"
+    });
 
-      if (!response.ok) {
-        throw new Error(`Falha ao buscar eventos do backend. HTTP ${response.status}`);
-      }
-
-      const json = await response.json();
-      const items =
-        (Array.isArray(json?.events) && json.events) ||
-        (Array.isArray(json?.data) && json.data) ||
-        (Array.isArray(json) && json) ||
-        [];
-
-      return items.map(normalizeBackendEvent).filter(Boolean);
-    } catch (error) {
-      console.warn("Não foi possível buscar eventos do backend. Usando fallback local.", error);
-      return [];
+    if (!response.ok) {
+      throw new Error(`Falha ao buscar eventos do backend. HTTP ${response.status}`);
     }
+
+    const json = await response.json();
+    const items =
+      (Array.isArray(json?.events) && json.events) ||
+      (Array.isArray(json?.data) && json.data) ||
+      (Array.isArray(json) && json) ||
+      [];
+
+    return items.map(normalizeBackendEvent).filter(Boolean);
   }
 
   function normalizeBackendEvent(event) {
     if (!event || typeof event !== "object") return null;
 
     return {
-      ...event,
+      id: event.id || null,
       created_at:
         event.created_at ||
         event.event_time ||
@@ -79,10 +68,18 @@
         event.received_at ||
         event.timestamp ||
         "",
+      event_time:
+        event.event_time ||
+        event.created_at ||
+        event.timestamp ||
+        "",
       event_name:
         event.event_name ||
         event.event ||
         event.name ||
+        "",
+      event_id:
+        event.event_id ||
         "",
       lead_id:
         event.lead_id ||
@@ -92,11 +89,30 @@
         event.session_id ||
         event.sessionId ||
         "",
+      step_id:
+        event.step_id ||
+        "",
       step_index:
         event.step_index ??
         event.stepIndex ??
         event.step_number ??
         null,
+      step_name:
+        event.step_name ||
+        event.step_label ||
+        "",
+      step_type:
+        event.step_type ||
+        "",
+      page_type:
+        event.page_type ||
+        "",
+      utm_source:
+        event.utm_source ||
+        "",
+      utm_medium:
+        event.utm_medium ||
+        "",
       utm_campaign:
         event.utm_campaign ||
         event.campaign ||
@@ -108,24 +124,28 @@
       utm_term:
         event.utm_term ||
         "",
-      page_type:
-        event.page_type ||
+      button_id:
+        event.button_id ||
         "",
-      step_id:
-        event.step_id ||
+      button_text:
+        event.button_text ||
         "",
       checkout_url:
         event.checkout_url ||
+        "",
+      funnel_id:
+        event.funnel_id ||
+        "",
+      funnel_name:
+        event.funnel_name ||
         ""
     };
   }
 
   async function loadAllEvents() {
     const backendEvents = await fetchBackendEvents();
-    const localEvents = getLocalEvents();
-
-    const merged = [...backendEvents, ...localEvents];
-    const deduped = dedupeEvents(merged);
+    const deduped = dedupeEvents(backendEvents)
+      .sort((a, b) => getEventTime(a) - getEventTime(b));
 
     dashboardEventsCache = deduped;
     return deduped;
@@ -137,14 +157,20 @@
     events.forEach((event) => {
       if (!event || typeof event !== "object") return;
 
-      const eventId = normalizeString(event.event_id);
-      const eventName = normalizeEventName(event);
-      const leadId = normalizeLeadId(event);
-      const createdAt = normalizeString(event.created_at || event.event_time || event.timestamp);
-      const stepIndex = normalizeStepNumber(event);
-      const key = eventId || [eventName, leadId, createdAt, stepIndex].join("|");
+      const primaryKey = normalizeString(event.event_id);
+      const fallbackKey = [
+        normalizeEventName(event),
+        normalizeSessionId(event),
+        normalizeString(event.step_id),
+        normalizeStepNumber(event),
+        normalizeString(event.button_id),
+        normalizeString(event.button_text),
+        normalizeString(event.created_at)
+      ].join("|");
 
-      if (!key || key === "|||") return;
+      const key = primaryKey || fallbackKey;
+      if (!key || key === "||||||") return;
+
       if (!map.has(key)) {
         map.set(key, event);
       }
@@ -292,9 +318,14 @@
     };
   }
 
+  function getEventTime(event) {
+    const value = event?.event_time || event?.created_at || "";
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? new Date(0) : parsed;
+  }
+
   function isEventInRange(event, filter) {
-    const createdAt = new Date(event.created_at || event.timestamp || event.date || 0);
-    if (Number.isNaN(createdAt.getTime())) return false;
+    const createdAt = getEventTime(event);
     return createdAt >= filter.start && createdAt <= filter.end;
   }
 
@@ -310,24 +341,27 @@
     ).toLowerCase();
   }
 
+  function normalizeSessionId(event) {
+    return normalizeString(
+      event.session_id || event.sessionId,
+      ""
+    );
+  }
+
   function normalizeLeadId(event) {
     return normalizeString(
-      event.lead_id ||
-      event.leadId ||
-      event.session_id ||
-      event.sessionId ||
-      event.external_id,
+      event.lead_id || event.leadId,
       ""
     );
   }
 
   function normalizeStepNumber(event) {
     const value = Number(
-      event.step_number ??
-      event.stepIndex ??
       event.step_index ??
+      event.stepIndex ??
+      event.step_number ??
       event.step ??
-      event.params?.step_number
+      null
     );
 
     if (Number.isFinite(value) && value > 0) return value;
@@ -337,9 +371,7 @@
   function normalizeCampaign(event) {
     return normalizeString(
       event.utm_campaign ||
-      event.campaign ||
-      event.params?.utm_campaign ||
-      event.params?.campaign,
+      event.campaign,
       "Sem campanha"
     );
   }
@@ -348,8 +380,6 @@
     return normalizeString(
       event.utm_content ||
       event.creative ||
-      event.params?.utm_content ||
-      event.params?.creative ||
       event.utm_term,
       "Sem criativo"
     );
@@ -379,78 +409,125 @@
       .replace(/'/g, "&#039;");
   }
 
-  function isBuyIntentEvent(event) {
-    const name = normalizeEventName(event);
-    return name === "buy_click" || name === "initiate_checkout";
+  function isSessionStartEvent(eventName) {
+    return eventName === "session_start" || eventName === "quiz_start";
   }
 
-  function getUniqueLeadIds(events, predicate) {
-    const ids = new Set();
+  function isBuyClickEvent(eventName) {
+    return eventName === "buy_click";
+  }
+
+  function isPitchViewEvent(eventName) {
+    return eventName === "pitch_view";
+  }
+
+  function isQuizCompleteEvent(eventName) {
+    return eventName === "quiz_complete";
+  }
+
+  function buildJourneys(events) {
+    const sessions = new Map();
 
     events.forEach((event) => {
-      if (!predicate(event)) return;
-      const leadId = normalizeLeadId(event);
-      if (!leadId) return;
-      ids.add(leadId);
+      const sessionId = normalizeSessionId(event);
+      if (!sessionId) return;
+
+      if (!sessions.has(sessionId)) {
+        sessions.set(sessionId, {
+          sessionId,
+          leadId: normalizeLeadId(event),
+          campaign: normalizeCampaign(event),
+          creative: normalizeCreative(event),
+          utmSource: normalizeString(event.utm_source),
+          utmMedium: normalizeString(event.utm_medium),
+          started: false,
+          completed: false,
+          pitchViewed: false,
+          buyClicked: false,
+          stepViews: new Set(),
+          rawEvents: []
+        });
+      }
+
+      const journey = sessions.get(sessionId);
+      const eventName = normalizeEventName(event);
+      const stepNumber = normalizeStepNumber(event);
+
+      if (!journey.leadId) {
+        journey.leadId = normalizeLeadId(event);
+      }
+
+      if (
+        journey.campaign === "Sem campanha" &&
+        normalizeCampaign(event) !== "Sem campanha"
+      ) {
+        journey.campaign = normalizeCampaign(event);
+      }
+
+      if (
+        journey.creative === "Sem criativo" &&
+        normalizeCreative(event) !== "Sem criativo"
+      ) {
+        journey.creative = normalizeCreative(event);
+      }
+
+      journey.rawEvents.push(event);
+
+      if (isSessionStartEvent(eventName)) {
+        journey.started = true;
+      }
+
+      if (eventName === "step_view" && stepNumber) {
+        journey.stepViews.add(stepNumber);
+      }
+
+      if (isQuizCompleteEvent(eventName)) {
+        journey.completed = true;
+      }
+
+      if (isPitchViewEvent(eventName)) {
+        journey.pitchViewed = true;
+      }
+
+      if (isBuyClickEvent(eventName)) {
+        journey.buyClicked = true;
+      }
     });
 
-    return ids;
-  }
-
-  function getSessionLeadIds(events) {
-    return getUniqueLeadIds(events, (event) => {
-      const name = normalizeEventName(event);
-      return name === "session_start" || name === "quiz_start";
+    return Array.from(sessions.values()).map((journey) => {
+      journey.rawEvents.sort((a, b) => getEventTime(a) - getEventTime(b));
+      return journey;
     });
   }
 
-  function getQuizCompleteLeadIds(events) {
-    return getUniqueLeadIds(events, (event) => normalizeEventName(event) === "quiz_complete");
-  }
+  function buildStepRowsFromJourneys(journeys) {
+    const maxStep = journeys.reduce((acc, journey) => {
+      const highest = Math.max(0, ...Array.from(journey.stepViews));
+      return Math.max(acc, highest);
+    }, 0);
 
-  function getPitchViewLeadIds(events) {
-    return getUniqueLeadIds(events, (event) => normalizeEventName(event) === "pitch_view");
-  }
-
-  function getBuyClickLeadIds(events) {
-    return getUniqueLeadIds(events, (event) => isBuyIntentEvent(event));
-  }
-
-  function getStepViewLeadIds(events, stepNumber) {
-    return getUniqueLeadIds(events, (event) => {
-      return normalizeEventName(event) === "step_view" && normalizeStepNumber(event) === stepNumber;
-    });
-  }
-
-  function getStepAdvanceLeadIds(events, stepNumber) {
-    return getUniqueLeadIds(events, (event) => {
-      const name = normalizeEventName(event);
-      const currentStep = normalizeStepNumber(event);
-
-      if (name === "step_advance" && currentStep === stepNumber) return true;
-      if (name === "step_view" && currentStep === stepNumber + 1) return true;
-
-      return false;
-    });
-  }
-
-  function buildStepRows(events) {
-    const stepNumbers = new Set();
-
-    events.forEach((event) => {
-      const step = normalizeStepNumber(event);
-      if (step) stepNumbers.add(step);
-    });
-
-    const sortedSteps = Array.from(stepNumbers).sort((a, b) => a - b);
     const rows = [];
 
-    sortedSteps.forEach((stepNumber) => {
-      const viewedIds = getStepViewLeadIds(events, stepNumber);
-      const advancedIds = getStepAdvanceLeadIds(events, stepNumber);
+    for (let stepNumber = 1; stepNumber <= maxStep; stepNumber += 1) {
+      let views = 0;
+      let advances = 0;
 
-      const views = viewedIds.size;
-      const advances = advancedIds.size;
+      journeys.forEach((journey) => {
+        const hasCurrent = journey.stepViews.has(stepNumber);
+        if (!hasCurrent) return;
+
+        views += 1;
+
+        const hasAdvance =
+          journey.stepViews.has(stepNumber + 1) ||
+          (stepNumber === maxStep && journey.completed) ||
+          (journey.completed && stepNumber < maxStep);
+
+        if (hasAdvance) {
+          advances += 1;
+        }
+      });
+
       const abandono = Math.max(views - advances, 0);
       const taxaAbandono = percent(abandono, views);
 
@@ -461,13 +538,10 @@
         abandono,
         taxaAbandono
       });
-    });
+    }
 
-    const pitchViewedIds = getPitchViewLeadIds(events);
-    const buyClickedIds = getBuyClickLeadIds(events);
-
-    const pitchViews = pitchViewedIds.size;
-    const pitchAdvances = buyClickedIds.size;
+    const pitchViews = journeys.filter((journey) => journey.pitchViewed).length;
+    const pitchAdvances = journeys.filter((journey) => journey.buyClicked).length;
     const pitchAbandono = Math.max(pitchViews - pitchAdvances, 0);
     const pitchTaxaAbandono = percent(pitchAbandono, pitchViews);
 
@@ -481,8 +555,8 @@
 
     rows.push({
       label: "Botão de compra",
-      views: buyClickedIds.size,
-      advances: buyClickedIds.size,
+      views: pitchAdvances,
+      advances: pitchAdvances,
       abandono: 0,
       taxaAbandono: 0
     });
@@ -490,60 +564,34 @@
     return rows;
   }
 
-  function groupByDimension(events, dimensionGetter) {
+  function groupJourneysByDimension(journeys, getter) {
     const groups = new Map();
 
-    events.forEach((event) => {
-      const key = dimensionGetter(event);
-      const leadId = normalizeLeadId(event);
-      if (!leadId) return;
+    journeys.forEach((journey) => {
+      const key = getter(journey);
 
       if (!groups.has(key)) {
         groups.set(key, {
           key,
-          leadIds: new Set(),
-          completeIds: new Set(),
-          pitchIds: new Set(),
-          buyIds: new Set()
+          leads: 0,
+          completos: 0,
+          venda: 0,
+          clicks: 0
         });
       }
 
       const group = groups.get(key);
-      const eventName = normalizeEventName(event);
 
-      if (eventName === "session_start" || eventName === "quiz_start") {
-        group.leadIds.add(leadId);
-      }
-
-      if (eventName === "quiz_complete") {
-        group.completeIds.add(leadId);
-      }
-
-      if (eventName === "pitch_view") {
-        group.pitchIds.add(leadId);
-      }
-
-      if (isBuyIntentEvent(event)) {
-        group.buyIds.add(leadId);
-      }
+      group.leads += 1;
+      if (journey.completed) group.completos += 1;
+      if (journey.pitchViewed) group.venda += 1;
+      if (journey.buyClicked) group.clicks += 1;
     });
 
-    return Array.from(groups.values()).map((group) => {
-      const leads = group.leadIds.size;
-      const completos = group.completeIds.size;
-      const venda = group.pitchIds.size;
-      const clicks = group.buyIds.size;
-      const ctr = percent(clicks, venda);
-
-      return {
-        key: group.key,
-        leads,
-        completos,
-        venda,
-        clicks,
-        ctr
-      };
-    });
+    return Array.from(groups.values()).map((group) => ({
+      ...group,
+      ctr: percent(group.clicks, group.venda)
+    }));
   }
 
   function sortDimensionRows(rows) {
@@ -556,17 +604,23 @@
   }
 
   function buildDashboardData(filteredEvents) {
-    const sessions = getSessionLeadIds(filteredEvents).size;
-    const completes = getQuizCompleteLeadIds(filteredEvents).size;
-    const pitchViews = getPitchViewLeadIds(filteredEvents).size;
-    const buyClicks = getBuyClickLeadIds(filteredEvents).size;
+    const journeys = buildJourneys(filteredEvents);
+
+    const sessions = journeys.length;
+    const completes = journeys.filter((journey) => journey.completed).length;
+    const pitchViews = journeys.filter((journey) => journey.pitchViewed).length;
+    const buyClicks = journeys.filter((journey) => journey.buyClicked).length;
 
     const pitchRate = percent(pitchViews, sessions);
     const buyRate = percent(buyClicks, pitchViews);
 
-    const stepRows = buildStepRows(filteredEvents);
-    const campaignRows = sortDimensionRows(groupByDimension(filteredEvents, normalizeCampaign));
-    const creativeRows = sortDimensionRows(groupByDimension(filteredEvents, normalizeCreative));
+    const stepRows = buildStepRowsFromJourneys(journeys);
+    const campaignRows = sortDimensionRows(
+      groupJourneysByDimension(journeys, (journey) => journey.campaign || "Sem campanha")
+    );
+    const creativeRows = sortDimensionRows(
+      groupJourneysByDimension(journeys, (journey) => journey.creative || "Sem criativo")
+    );
 
     return {
       sessions,
@@ -670,10 +724,10 @@
     const cards = [];
 
     cards.push({
-      title: "Leitura geral do funil",
+      title: "Resumo do período",
       text: data.sessions > 0
-        ? `O período selecionado trouxe ${data.sessions} lead(s), ${data.completes} quiz completo(s), ${data.pitchViews} chegada(s) na etapa de venda e ${data.buyClicks} clique(s) no botão de compra.`
-        : "Ainda não existem leads suficientes no período selecionado para gerar leitura do funil."
+        ? `O período selecionado trouxe ${data.sessions} sessão(ões), ${data.completes} quiz completo(s), ${data.pitchViews} chegada(s) na etapa de venda e ${data.buyClicks} clique(s) reais no botão de compra.`
+        : "Ainda não existem sessões suficientes no período selecionado para gerar leitura do funil."
     });
 
     const worstStep = findWorstStep(data.stepRows);
@@ -687,16 +741,16 @@
     const bestCampaign = findBestCampaign(data.campaignRows);
     if (bestCampaign) {
       cards.push({
-        title: `Campanha com mais entrada de leads: ${bestCampaign.key}`,
-        text: `Essa campanha gerou ${bestCampaign.leads} lead(s), ${bestCampaign.venda} chegada(s) na venda e ${bestCampaign.clicks} clique(s) no botão, com CTR de ${formatPercent(bestCampaign.ctr)}.`
+        title: `Campanha com mais entrada de sessões: ${bestCampaign.key}`,
+        text: `Essa campanha gerou ${bestCampaign.leads} sessão(ões), ${bestCampaign.venda} chegada(s) na venda e ${bestCampaign.clicks} clique(s) reais no botão, com CTR de ${formatPercent(bestCampaign.ctr)}.`
       });
     }
 
     const bestCreative = findBestCreative(data.creativeRows);
     if (bestCreative) {
       cards.push({
-        title: `Criativo com mais leads: ${bestCreative.key}`,
-        text: `Esse criativo trouxe ${bestCreative.leads} lead(s), ${bestCreative.completos} quiz completo(s), ${bestCreative.venda} chegada(s) na venda e ${bestCreative.clicks} clique(s) no botão.`
+        title: `Criativo com mais sessões: ${bestCreative.key}`,
+        text: `Esse criativo trouxe ${bestCreative.leads} sessão(ões), ${bestCreative.completos} quiz completo(s), ${bestCreative.venda} chegada(s) na venda e ${bestCreative.clicks} clique(s) reais no botão.`
       });
     }
 
@@ -724,7 +778,10 @@
     updatePeriodLabel(filter);
     saveFilterState(serializeFilter(filter));
 
-    const allEvents = dashboardEventsCache.length ? dashboardEventsCache : await loadAllEvents();
+    const allEvents = dashboardEventsCache.length
+      ? dashboardEventsCache
+      : await loadAllEvents();
+
     const filteredEvents = allEvents.filter((event) => isEventInRange(event, filter));
     const data = buildDashboardData(filteredEvents);
 
@@ -781,7 +838,7 @@
     els.refreshBtn.addEventListener("click", async function () {
       dashboardEventsCache = [];
       await loadAllEvents();
-      runDashboard();
+      await runDashboard();
     });
   }
 
@@ -791,9 +848,11 @@
     if (savedFilter) {
       applyFilterToInputs(savedFilter);
     } else {
+      const today = getTodayRange();
       applyFilterToInputs({
         mode: "today",
-        ...getTodayRange()
+        start: today.start,
+        end: today.end
       });
     }
 
