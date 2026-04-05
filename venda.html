@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
+  <script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  data-utmify-prevent-xcod-sck
+  data-utmify-prevent-subids
+  async
+  defer
+></script>
+
+<script>
+  window.pixelId = "69d29d68c7fb8950b8b24f5a";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+
+
   <meta charset="UTF-8" />
   <meta
     name="viewport"
@@ -1949,78 +1968,94 @@
     }
 
     function fireInitiateCheckoutPixel(checkoutUrl, buyLocation, initiateCheckoutEventId) {
-      if (typeof window.fbq !== "function") return;
+  if (typeof window.fbq !== "function") return;
 
-      const tracking = getTrackingContext();
-      const salesData = getSalesData();
+  const tracking = getTrackingContext();
+  const salesData = getSalesData();
 
-      const eventId =
-        initiateCheckoutEventId ||
-        buildInitiateCheckoutEventId(buyLocation);
+  const eventId =
+    initiateCheckoutEventId ||
+    buildInitiateCheckoutEventId(buyLocation);
 
-      const value =
-        Number(salesData?.salesView?.valorOferta) ||
-        Number(salesData?.salesView?.precoFinal) ||
-        29;
+  const value =
+    Number(salesData?.salesView?.valorOferta) ||
+    Number(salesData?.salesView?.precoFinal) ||
+    29;
 
-      window.fbq(
-        "track",
-        "InitiateCheckout",
-        {
-          value: value,
-          currency: "BRL",
-          content_name: "Tai Chi na Cadeira",
-          content_category: "Oferta",
-          content_type: "product",
-          content_ids: ["cfd0cb2d-a0ad-4536-ae03-c69b6973ece2"],
-          num_items: 1,
-          checkout_url: checkoutUrl,
-          buy_location: buyLocation || "cta",
-          lead_id: tracking.lead_id || "",
-          session_id: tracking.session_id || ""
-        },
-        {
-          eventID: eventId
-        }
-      );
+  window.fbq(
+    "track",
+    "InitiateCheckout",
+    {
+      value: value,
+      currency: "BRL",
+      content_name: "Tai Chi na Cadeira",
+      content_category: "Oferta",
+      content_type: "product",
+      content_ids: ["cfd0cb2d-a0ad-4536-ae03-c69b6973ece2"],
+      num_items: 1,
+      checkout_url: checkoutUrl,
+      buy_location: buyLocation || "cta",
+      lead_id: tracking.lead_id || "",
+      session_id: tracking.session_id || "",
+      utm_source: tracking.utm_source || "",
+      utm_medium: tracking.utm_medium || "",
+      utm_campaign: tracking.utm_campaign || "",
+      utm_content: tracking.utm_content || "",
+      utm_term: tracking.utm_term || "",
+      fbp: tracking.fbp || "",
+      fbc: tracking.fbc || "",
+      click_ref: eventId
+    },
+    {
+      eventID: eventId
     }
+  );
+}
 
     function bindBuyButtons() {
       const buttons = Array.from(document.querySelectorAll(".buy-btn"));
 
       buttons.forEach((button) => {
         button.addEventListener("click", function (event) {
-          event.preventDefault();
+  event.preventDefault();
 
-          const buyLocation = button.getAttribute("data-buy-location") || "cta";
-          const initiateCheckoutEventId = buildInitiateCheckoutEventId(buyLocation);
-          const checkoutUrl = buildCheckoutUrl(initiateCheckoutEventId);
+  const tracking = getTrackingContext();
+  const buyLocation = button.getAttribute("data-buy-location") || "cta";
+  const initiateCheckoutEventId = buildInitiateCheckoutEventId(buyLocation);
+  const checkoutUrl = buildCheckoutUrl(initiateCheckoutEventId);
 
-          button.setAttribute("href", checkoutUrl);
+  button.setAttribute("href", checkoutUrl);
 
-          trackEvent("initiate_checkout", {
-  event_id: initiateCheckoutEventId,
-  step_label: "Etapa de venda",
-  step_id: "pitch_venda",
-  step_index: 41,
-  step_type: "offer",
-  buy_location: buyLocation,
-  button_id: button.id || "",
-  button_text: String(button.textContent || "").trim(),
-  checkout_url: checkoutUrl,
-  click_ref: initiateCheckoutEventId
+  trackEvent("initiate_checkout", {
+    event_id: initiateCheckoutEventId,
+    step_label: "Etapa de venda",
+    step_id: "pitch_venda",
+    step_index: 41,
+    step_type: "offer",
+    buy_location: buyLocation,
+    button_id: button.id || "",
+    button_text: String(button.textContent || "").trim(),
+    checkout_url: checkoutUrl,
+    click_ref: initiateCheckoutEventId,
+    utm_source: tracking.utm_source || "",
+    utm_medium: tracking.utm_medium || "",
+    utm_campaign: tracking.utm_campaign || "",
+    utm_content: tracking.utm_content || "",
+    utm_term: tracking.utm_term || "",
+    fbp: tracking.fbp || "",
+    fbc: tracking.fbc || ""
+  });
+
+  fireInitiateCheckoutPixel(
+    checkoutUrl,
+    buyLocation,
+    initiateCheckoutEventId
+  );
+
+  setTimeout(() => {
+    window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+  }, 300);
 });
-
-          fireInitiateCheckoutPixel(
-            checkoutUrl,
-            buyLocation,
-            initiateCheckoutEventId
-          );
-
-          setTimeout(() => {
-            window.open(checkoutUrl, "_blank", "noopener,noreferrer");
-          }, 300);
-        });
       });
     }
 
