@@ -1918,25 +1918,26 @@
     }
 
     function buildCheckoutUrl(initiateCheckoutEventId) {
-      const tracking = getTrackingContext();
-      const checkoutUrl = new URL(CHECKOUT_BASE_URL);
+  const tracking = getTrackingContext();
+  const checkoutUrl = new URL(CHECKOUT_BASE_URL);
 
-      if (tracking.utm_source) checkoutUrl.searchParams.set("utm_source", tracking.utm_source);
-      if (tracking.utm_medium) checkoutUrl.searchParams.set("utm_medium", tracking.utm_medium);
-      if (tracking.utm_campaign) checkoutUrl.searchParams.set("utm_campaign", tracking.utm_campaign);
-      if (tracking.utm_content) checkoutUrl.searchParams.set("utm_content", tracking.utm_content);
-      if (tracking.utm_term) checkoutUrl.searchParams.set("utm_term", tracking.utm_term);
-      if (tracking.lead_id) checkoutUrl.searchParams.set("lead_id", tracking.lead_id);
-      if (tracking.session_id) checkoutUrl.searchParams.set("session_id", tracking.session_id);
-      if (tracking.fbp) checkoutUrl.searchParams.set("fbp", tracking.fbp);
-      if (tracking.fbc) checkoutUrl.searchParams.set("fbc", tracking.fbc);
+  if (tracking.utm_source) checkoutUrl.searchParams.set("utm_source", tracking.utm_source);
+  if (tracking.utm_medium) checkoutUrl.searchParams.set("utm_medium", tracking.utm_medium);
+  if (tracking.utm_campaign) checkoutUrl.searchParams.set("utm_campaign", tracking.utm_campaign);
+  if (tracking.utm_content) checkoutUrl.searchParams.set("utm_content", tracking.utm_content);
+  if (tracking.utm_term) checkoutUrl.searchParams.set("utm_term", tracking.utm_term);
+  if (tracking.lead_id) checkoutUrl.searchParams.set("lead_id", tracking.lead_id);
+  if (tracking.session_id) checkoutUrl.searchParams.set("session_id", tracking.session_id);
+  if (tracking.fbp) checkoutUrl.searchParams.set("fbp", tracking.fbp);
+  if (tracking.fbc) checkoutUrl.searchParams.set("fbc", tracking.fbc);
 
-      if (initiateCheckoutEventId) {
-        checkoutUrl.searchParams.set("initiate_checkout_event_id", initiateCheckoutEventId);
-      }
+  if (initiateCheckoutEventId) {
+    checkoutUrl.searchParams.set("initiate_checkout_event_id", initiateCheckoutEventId);
+    checkoutUrl.searchParams.set("click_ref", initiateCheckoutEventId);
+  }
 
-      return checkoutUrl.toString();
-    }
+  return checkoutUrl.toString();
+}
 
     function prepareBuyButtons() {
       const buttons = Array.from(document.querySelectorAll(".buy-btn"));
@@ -1998,16 +1999,17 @@
           button.setAttribute("href", checkoutUrl);
 
           trackEvent("initiate_checkout", {
-            event_id: initiateCheckoutEventId,
-            step_label: "Etapa de venda",
-            step_id: "pitch_venda",
-            step_index: 41,
-            step_type: "offer",
-            buy_location: buyLocation,
-            button_id: button.id || "",
-            button_text: String(button.textContent || "").trim(),
-            checkout_url: checkoutUrl
-          });
+  event_id: initiateCheckoutEventId,
+  step_label: "Etapa de venda",
+  step_id: "pitch_venda",
+  step_index: 41,
+  step_type: "offer",
+  buy_location: buyLocation,
+  button_id: button.id || "",
+  button_text: String(button.textContent || "").trim(),
+  checkout_url: checkoutUrl,
+  click_ref: initiateCheckoutEventId
+});
 
           fireInitiateCheckoutPixel(
             checkoutUrl,
