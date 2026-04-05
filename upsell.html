@@ -1,237 +1,688 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tadalafila 100% Natural - Oferta Especial</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Oferta complementar - Vitalidade Masculina</title>
+  <meta name="description" content="Quiz curto para oferta complementar de vitalidade masculina." />
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f1f14;
-      color: #fff;
-      text-align: center;
+    :root{
+      --bg:#efefef;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:#d8dee4;
+      --primary:#0f6158;
+      --primary-2:#18a84a;
+      --green-soft:#dff3e3;
+      --blue-soft:#dfeafb;
+      --yellow-soft:#f6edb8;
+      --red-soft:#f8dddd;
+      --orange-soft:#fff1db;
+      --shadow:0 16px 36px rgba(0,0,0,.08);
+      --radius:18px;
+      --wrap:760px;
     }
 
-    /* FAIXA VERMELHA */
-    .top-alert {
-      background: #b30000;
-      padding: 12px;
-      font-weight: bold;
-      font-size: 14px;
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
     }
 
-    .container {
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
+    img{max-width:100%;display:block}
+    button,a{font:inherit}
+    a{text-decoration:none;color:inherit}
+
+    .top-alert{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:#b30000;
+      color:#fff;
+      padding:12px 14px;
+      text-align:center;
+      font-size:14px;
+      font-weight:900;
+      line-height:1.4;
     }
 
-    h1 {
-      font-size: 26px;
-      margin-top: 20px;
-      color: #fff;
+    .page{
+      width:100%;
+      padding:18px 16px 44px;
+      display:flex;
+      justify-content:center;
     }
 
-    .highlight {
-      color: #00ff88;
-      font-weight: bold;
+    .container{
+      width:100%;
+      max-width:var(--wrap);
     }
 
-    .sub {
-      font-size: 16px;
-      margin-top: 10px;
-      color: #ccc;
+    .progress-wrap{
+      margin:0 0 18px;
+      background:#d9e3e8;
+      border-radius:999px;
+      overflow:hidden;
+      height:12px;
+      border:1px solid #cbd5dc;
+      box-shadow:var(--shadow);
     }
 
-    /* IMAGEM PRODUTO */
-    .product-img {
-      margin: 25px 0;
+    .progress-bar{
+      width:14.285%;
+      height:100%;
+      background:linear-gradient(90deg,var(--primary),var(--primary-2));
+      transition:width .28s ease;
     }
 
-    .product-img img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 10px;
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:22px 18px 22px;
     }
 
-    /* BENEFICIOS */
-    .benefits {
-      text-align: left;
-      margin-top: 20px;
+    .hidden{display:none}
+
+    .headline-box{
+      padding:18px 20px;
+      text-align:center;
+      border-radius:16px;
+      background:#d9f1dd;
+      border:1px solid #b9e2c2;
+      margin-bottom:16px;
     }
 
-    .benefits p {
-      margin: 8px 0;
+    .headline-box h1,
+    .headline-box h2{
+      margin:0;
+      font-weight:900;
+      letter-spacing:-.03em;
+      line-height:1.16;
     }
 
-    /* PREÇO */
-    .price {
-      margin-top: 20px;
-      font-size: 18px;
+    .headline-box h1{font-size:30px}
+    .headline-box h2{font-size:28px}
+
+    .green{color:var(--primary-2)}
+    .primary{color:var(--primary)}
+
+    .text-box{
+      padding:16px 18px;
+      border-radius:16px;
+      background:#f8fafc;
+      border:1px solid var(--line);
+      margin-bottom:16px;
     }
 
-    .old-price {
-      text-decoration: line-through;
-      color: #aaa;
+    .text-box p{
+      margin:0 0 12px;
+      font-size:17px;
+      line-height:1.6;
+      color:#334155;
     }
 
-    .new-price {
-      font-size: 28px;
-      color: #00ff88;
-      font-weight: bold;
+    .text-box p:last-child{margin-bottom:0}
+
+    .hero-image{
+      display:flex;
+      justify-content:center;
+      margin:0 0 18px;
     }
 
-    /* BOTÃO */
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
+    .hero-image img{
+      width:100%;
+      max-width:360px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:#fff;
+      object-fit:cover;
     }
 
-    .btn-buy {
-      background: #00ff88;
-      color: #000;
-      animation: pulse 1.5s infinite;
+    .pill-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top:12px;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    .pill{
+      background:var(--green-soft);
+      color:#0f6158;
+      border:1px solid #b7dfc2;
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
+      font-weight:900;
     }
 
-    .btn-decline {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #ccc;
-      text-decoration: underline;
+    .option-list{
+      display:grid;
+      gap:12px;
+      margin-top:14px;
     }
 
-    /* DEPOIMENTOS */
-    .testimonials {
-      margin-top: 30px;
-      text-align: left;
+    .option-btn{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:16px;
+      padding:16px 16px;
+      text-align:left;
+      font-size:17px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, box-shadow .12s ease, background .12s ease;
+      box-shadow:0 8px 18px rgba(15,23,42,.04);
     }
 
-    .testimonial {
-      background: #16261b;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      display: flex;
-      gap: 10px;
+    .option-btn:hover{
+      transform:translateY(-1px);
+      border-color:#9dd1ac;
+      background:#f8fffa;
+      box-shadow:0 12px 22px rgba(15,23,42,.08);
     }
 
-    .testimonial img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+    .cta{
+      display:block;
+      width:100%;
+      border:none;
+      background:#18a84a;
+      color:#fff;
+      text-align:center;
+      font-weight:900;
+      font-size:26px;
+      line-height:1.2;
+      padding:19px 18px;
+      border-radius:14px;
+      box-shadow:0 6px 0 #14913f;
+      cursor:pointer;
     }
 
-    .testimonial-content {
-      font-size: 13px;
+    .cta.small{
+      font-size:18px;
+      padding:16px 18px;
+      box-shadow:0 5px 0 #14913f;
     }
 
-    .name {
-      font-weight: bold;
+    .cta:active{
+      transform:translateY(2px);
+      box-shadow:0 4px 0 #14913f;
     }
 
-    .time {
-      font-size: 11px;
-      color: #aaa;
+    .sub-link{
+      display:block;
+      margin-top:14px;
+      text-align:center;
+      font-size:13px;
+      color:#64748b;
+      text-decoration:underline;
     }
 
+    .card-soft{
+      background:var(--orange-soft);
+      border:1px solid #f2d7ab;
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .card-soft p{
+      margin:0;
+      font-size:16px;
+      line-height:1.6;
+      color:#6b4f1d;
+      font-weight:700;
+    }
+
+    .proof-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      margin-bottom:12px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .proof-card img{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      object-fit:cover;
+      flex:0 0 44px;
+    }
+
+    .proof-name{
+      font-weight:900;
+      margin-bottom:4px;
+      color:#0f172a;
+      font-size:15px;
+    }
+
+    .proof-text{
+      margin:0;
+      font-size:14px;
+      line-height:1.55;
+      color:#334155;
+    }
+
+    .proof-time{
+      margin-top:6px;
+      font-size:12px;
+      color:#64748b;
+      font-weight:700;
+    }
+
+    .price-box{
+      border:1px solid #cfd7df;
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:var(--shadow);
+      margin:16px 0;
+    }
+
+    .price-highlight{
+      background:#0f6158;
+      color:#fff;
+      text-align:center;
+      font-weight:900;
+      padding:10px 14px;
+      font-size:15px;
+    }
+
+    .price-body{
+      padding:18px 16px;
+      text-align:center;
+    }
+
+    .old-price{
+      color:#ef4444;
+      font-size:22px;
+      text-decoration:line-through;
+      margin:0 0 6px;
+      font-weight:700;
+    }
+
+    .new-price{
+      color:#16a34a;
+      font-size:42px;
+      line-height:1;
+      font-weight:900;
+      margin:0 0 8px;
+    }
+
+    .installments{
+      font-size:22px;
+      color:#334155;
+      font-weight:900;
+      margin:0 0 8px;
+    }
+
+    .compare{
+      margin:0;
+      color:#475569;
+      font-size:16px;
+      line-height:1.5;
+      font-weight:700;
+    }
+
+    .benefit-list{
+      margin:14px 0 0;
+      display:grid;
+      gap:10px;
+    }
+
+    .benefit-item{
+      background:var(--green-soft);
+      border:1px solid #b7dfc2;
+      color:#0f6158;
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:15px;
+      font-weight:800;
+    }
+
+    .center{text-align:center}
+
+    .small-note{
+      margin-top:14px;
+      font-size:14px;
+      line-height:1.55;
+      color:#475569;
+      text-align:center;
+      font-weight:700;
+    }
+
+    @media (max-width: 640px){
+      .headline-box h1{font-size:26px}
+      .headline-box h2{font-size:24px}
+      .cta{font-size:22px}
+      .new-price{font-size:36px}
+      .installments{font-size:19px}
+    }
   </style>
 </head>
-
 <body>
+  <div class="top-alert">⚠️ Sua compra está sendo processada, continue respondendo as perguntas para concluir sua compra no final.</div>
 
-  <!-- ALERTA -->
-  <div class="top-alert">
-    ⚠️ Não feche essa página ou sua compra pode dar problema
+  <div class="page">
+    <div class="container">
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <section class="panel" id="step-1">
+        <div class="headline-box">
+          <h1>Fica comigo até o final porque eu vou liberar um <span class="green">presente absurdo</span> só pra quem não abandonar essa página.</h1>
+        </div>
+
+        <div class="hero-image">
+          <img src="produto.png" alt="Oferta especial" />
+        </div>
+
+        <div class="text-box center">
+          <p>Seu pedido está quase concluído.</p>
+          <p>Tenho um presente pra você no final.</p>
+        </div>
+
+        <div class="pill-row">
+          <div class="pill">Menos de 1 minuto</div>
+          <div class="pill">Sem enrolação</div>
+          <div class="pill">Presente no final</div>
+        </div>
+
+        <div style="margin-top:18px">
+          <button class="cta" data-next="2">Quero continuar</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="step-2">
+        <div class="headline-box">
+          <h2>Me fala a verdade: Sua mulher está satisfeita com você na cama? <span class="green">O "Amigão" ta respondendo como antes?</span>?</h2>
+        </div>
+
+        <div class="hero-image">
+          <img src="etapa-2.png" alt="Desempenho masculino" />
+        </div>
+
+        <div class="text-box">
+          <p>Pra muito homem, a queda começa com menos energia, menos disposição e menos resposta nos momentos em que ele mais queria estar no controle.</p>
+        </div>
+
+        <div class="option-list">
+          <button class="option-btn" data-next="3">Sim, ainda responde bem</button>
+          <button class="option-btn" data-next="3">Às vezes falha e me irrita</button>
+          <button class="option-btn" data-next="3">Caiu bastante nos últimos meses</button>
+          <button class="option-btn" data-next="3">Prefiro não entrar em detalhes</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="step-3">
+        <div class="headline-box">
+          <h2>O que mais tá te pegando hoje?</h2>
+        </div>
+
+        <div class="hero-image">
+          <img src="etapa-3.png" alt="Dor principal" />
+        </div>
+
+        <div class="text-box">
+          <p>Escolhe o que mais bate com a tua realidade agora.</p>
+        </div>
+
+        <div class="option-list">
+          <button class="option-btn" data-next="4">Menos firmeza na hora H</button>
+          <button class="option-btn" data-next="4">Baixa disposição e energia</button>
+          <button class="option-btn" data-next="4">Menor desejo Sexual</button>
+          <button class="option-btn" data-next="4">Falhas ocasionais que já preocupam</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="step-4">
+        <div class="headline-box">
+          <h2>Isso já mexeu com tua <span class="green">confiança</span> de um jeito que tu não gostaria de admitir?</h2>
+        </div>
+
+        <div class="hero-image">
+          <img src="etapa-4.png" alt="Confiança masculina" />
+        </div>
+
+        <div class="text-box">
+          <p>Quando o corpo não acompanha, não fica só no físico. Isso bate na autoestima, na segurança e na forma como o homem se enxerga.</p>
+        </div>
+
+        <div class="option-list">
+          <button class="option-btn" data-next="5">Sim, bastante</button>
+          <button class="option-btn" data-next="5">Um pouco, mas já incomoda</button>
+          <button class="option-btn" data-next="5">Tento ignorar, mas pesa</button>
+          <button class="option-btn" data-next="5">Ainda não, mas preocupa</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="step-5">
+        <div class="headline-box">
+          <h2>Tu não é o único passando por isso.</h2>
+        </div>
+
+        <div class="hero-image">
+          <img src="etapa-5.png" alt="Prova social" />
+        </div>
+
+        <div class="proof-card">
+          <img src="alisson.png" alt="Alisson" />
+          <div>
+            <div class="proof-name">Alisson, 53 anos</div>
+            <p class="proof-text">“Nunca pensei que voltaria a ter essa confiança. Minha parceira ficou surpresa com a mudança.”</p>
+            <div class="proof-time">1 dia atrás</div>
+          </div>
+        </div>
+
+        <div class="proof-card">
+          <img src="jorge.png" alt="Jorge" />
+          <div>
+            <div class="proof-name">Jorge, 64 anos</div>
+            <p class="proof-text">“Achei que já era tarde pra mim, mas isso aqui virou o jogo no meu desempenho.”</p>
+            <div class="proof-time">2 horas atrás</div>
+          </div>
+        </div>
+
+        <div class="proof-card">
+          <img src="alex.png" alt="Alex Lupe" />
+          <div>
+            <div class="proof-name">Alex Lupe, 49 anos</div>
+            <p class="proof-text">“Energia lá em cima e sensação de controle de novo. Faz diferença de verdade.”</p>
+            <div class="proof-time">3 dias atrás</div>
+          </div>
+        </div>
+
+        <button class="cta small" data-next="6">Continuar</button>
+      </section>
+
+      <section class="panel hidden" id="step-6">
+        <div class="headline-box">
+          <h2>O teu perfil mostra que ainda dá pra recuperar <span class="green">mais confiança, mais vitalidade e mais resposta</span>.</h2>
+        </div>
+
+        <div class="hero-image">
+          <img src="etapa-6.png" alt="Vitalidade masculina" />
+        </div>
+
+        <div class="card-soft">
+          <p>Muitos homens percebem melhora quando combinam o cuidado com o corpo com um suporte específico para vitalidade masculina.</p>
+        </div>
+
+        <div class="text-box">
+          <p>Foi por isso que eu separei uma recomendação complementar pra quem quer sentir mais firmeza, mais segurança e mais presença na rotina íntima.</p>
+        </div>
+
+        <button class="cta" data-next="7">Ver minha condição especial</button>
+      </section>
+
+      <section class="panel hidden" id="step-7">
+  <div class="headline-box">
+    <h2>Agora sim: teu <span class="green">presente</span> foi liberado.</h2>
   </div>
 
-  <div class="container">
-
-    <!-- HEADLINE -->
-    <h1>
-      Ative seu desempenho com o <span class="highlight">Tadalafila Natural</span>
-    </h1>
-
-    <p class="sub">
-      Método natural que ajuda a deixar o "Amigão" firme como uma rocha, sem afetar o coração 
-      fica ativo no corpo até 72h após consumo.
-    </p>
-
-    <!-- IMAGEM -->
-    <div class="product-img">
-      <img src="produto.jpg" alt="Tadalafila Natural">
-    </div>
-
-    <!-- BENEFÍCIOS -->
-    <div class="benefits">
-      <p>✔ Aumenta a firmeza e resistência</p>
-      <p>✔ Melhora o desempenho natural</p>
-      <p>✔ Aumenta o desejo e disposição</p>
-      <p>✔ Sem efeitos agressivos no corpo</p>
-      <p>✔ Método simples e natural</p>
-    </div>
-
-    <!-- PREÇO -->
-    <div class="price">
-      <p class="old-price">De R$ 97,00</p>
-      <p class="new-price">Por apenas R$ 19,90</p>
-    </div>
-
-    <!-- BOTÃO COMPRA -->
-    <a href="https://lastlink.com/p/CCCAC9884/checkout-payment/" class="btn btn-buy">
-      QUERO ATIVAR AGORA
-    </a>
-
-    <!-- DECLINAR -->
-    <a href="https://taichinacadeira.onrender.com/downsell.html" class="btn-decline">
-      Não quero melhorar minha performance
-    </a>
-
-    <!-- DEPOIMENTOS -->
-    <div class="testimonials">
-
-      <div class="testimonial">
-        <img src="alisson.png">
-        <div class="testimonial-content">
-          <div class="name">Alisson, 53 anos</div>
-          <div>"Nunca pensei que voltaria a ter essa confiança. Minha parceira ficou surpresa com a mudança."</div>
-          <div class="time">1 dia atrás</div>
-        </div>
-      </div>
-
-      <div class="testimonial">
-        <img src="jorge.png">
-        <div class="testimonial-content">
-          <div class="name">Jorge, 64 anos</div>
-          <div>"Achei que já era tarde pra mim… mas isso aqui mudou completamente meu desempenho."</div>
-          <div class="time">2 horas atrás</div>
-        </div>
-      </div>
-
-      <div class="testimonial">
-        <img src="alex.png">
-        <div class="testimonial-content">
-          <div class="name">Alex Lupe, 49 anos</div>
-          <div>"Energia absurda… voltei a me sentir no controle total de novo."</div>
-          <div class="time">3 dias atrás</div>
-        </div>
-      </div>
-
-    </div>
-
+  <div class="hero-image">
+    <img src="etapa-7.jpg" alt="Oferta final" />
   </div>
 
+  <div class="text-box center">
+    <p>Como tu ficou até o final, foi liberada uma condição especial de hoje para adicionar essa oferta ao teu pedido.</p>
+    <p>Essa é a chance de pegar o produto com preço esmagado antes que o dia acabe.</p>
+  </div>
+
+  <div class="card-soft center" style="margin-bottom:16px">
+    <p style="margin-bottom:8px"><strong>Oferta válida até hoje:</strong> <span id="expiryDateTime"></span></p>
+    <p style="margin-bottom:8px"><strong>Tempo restante:</strong></p>
+    <div id="countdownTimer" style="font-size:32px;font-weight:900;color:#b30000;line-height:1.1">--:--:--</div>
+    <p style="margin-top:10px;margin-bottom:0"><strong>Unidades restantes:</strong> <span id="unitsLeft">2</span></p>
+  </div>
+
+  <div class="price-body">
+  <p class="old-price">De R$ 97,00</p>
+  <p class="new-price">3x de R$ 7,17</p>
+  <p style="margin:6px 0 0; font-size:15px; color:#64748b; font-weight:700;">
+    ou apenas R$ 19,90 à vista
+  </p>
+  <p class="compare">Menos que um bolo da padaria.</p>
+</div>
+
+  <div class="benefit-list">
+    <div class="benefit-item">✔ Recupere sua potência e segurança na cama</div>
+    <div class="benefit-item">✔ Não agride o coração</div>
+    <div class="benefit-item">✔ Uso simples e prático</div>
+    <div class="benefit-item">✔ 100% Natural</div>
+  </div>
+
+  <p class="small-note">
+    Oferta complementar apresentada para homens que querem se sentir mais confiantes e com melhor resposta do corpo enquanto mantêm o uso na rotina.
+  </p>
+
+  <div style="margin-top:16px">
+    <a href="https://lastlink.com/p/CCCAC9884/checkout-payment/" class="cta">Quero garantir meu desconto agora</a>
+    <a href="https://taichinacadeira.onrender.com/downsell.html" class="sub-link">Não, quero seguir sem essa condição especial</a>
+  </div>
+</section>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    const totalSteps = 7;
+    const progressBar = document.getElementById("progressBar");
+    const sections = Array.from(document.querySelectorAll(".panel"));
+    const responses = {};
+
+    function showStep(stepNumber) {
+      sections.forEach((section) => section.classList.add("hidden"));
+      const current = document.getElementById("step-" + stepNumber);
+      if (current) current.classList.remove("hidden");
+      progressBar.style.width = ((stepNumber / totalSteps) * 100) + "%";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-next]").forEach((button) => {
+      button.addEventListener("click", function () {
+        const currentSection = this.closest(".panel");
+        const currentId = currentSection ? currentSection.id : "";
+        const label = (this.textContent || "").trim();
+        if (currentId) responses[currentId] = label;
+
+        const nextStep = Number(this.getAttribute("data-next"));
+        if (nextStep) showStep(nextStep);
+      });
+    });
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function updateExpiryInfo() {
+      const expiryEl = document.getElementById("expiryDateTime");
+      const timerEl = document.getElementById("countdownTimer");
+      if (!expiryEl || !timerEl) return;
+
+      const now = new Date();
+      const endOfDay = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        23, 59, 59
+      );
+
+      const dateText =
+        pad(now.getDate()) + "/" +
+        pad(now.getMonth() + 1) + "/" +
+        now.getFullYear() +
+        " às 23:59";
+
+      expiryEl.textContent = dateText;
+
+      const diff = endOfDay.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        timerEl.textContent = "00:00:00";
+        return;
+      }
+
+      const hours = Math.floor(diff / 1000 / 60 / 60);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      timerEl.textContent =
+        pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
+    }
+
+    setInterval(updateExpiryInfo, 1000);
+    updateExpiryInfo();
+
+    window.__quizResponses = responses;
+    showStep(1);
+  })();
+</script>
+
+  <script>
+    (function () {
+      const totalSteps = 7;
+      const progressBar = document.getElementById("progressBar");
+      const sections = Array.from(document.querySelectorAll(".panel"));
+      const responses = {};
+
+      function showStep(stepNumber) {
+        sections.forEach((section) => section.classList.add("hidden"));
+        const current = document.getElementById("step-" + stepNumber);
+        if (current) current.classList.remove("hidden");
+        progressBar.style.width = ((stepNumber / totalSteps) * 100) + "%";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.querySelectorAll("[data-next]").forEach((button) => {
+        button.addEventListener("click", function () {
+          const currentSection = this.closest(".panel");
+          const currentId = currentSection ? currentSection.id : "";
+          const label = (this.textContent || "").trim();
+          if (currentId) responses[currentId] = label;
+
+          const nextStep = Number(this.getAttribute("data-next"));
+          if (nextStep) showStep(nextStep);
+        });
+      });
+
+      window.__quizResponses = responses;
+      showStep(1);
+    })();
+  </script>
 </body>
 </html>
