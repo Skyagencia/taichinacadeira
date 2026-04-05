@@ -1,6 +1,7 @@
 (function () {
   const STORAGE_KEY = "taichiHarnoTracking";
   const FILTER_STORAGE_KEY = "taichiHarnoDashboardFilter";
+  const TRACKING_API_URL = "/api/tracking/events";
 
   const els = {
     refreshBtn: document.getElementById("refreshDashboardBtn"),
@@ -23,6 +24,8 @@
     insightsList: document.getElementById("insightsList")
   };
 
+  let dashboardEventsCache = [];
+
   function safeParse(raw, fallback) {
     try {
       return raw ? JSON.parse(raw) : fallback;
@@ -31,9 +34,123 @@
     }
   }
 
-  function getAllEvents() {
+  function getLocalEvents() {
     const data = safeParse(localStorage.getItem(STORAGE_KEY), []);
     return Array.isArray(data) ? data : [];
+  }
+
+  async function fetchBackendEvents() {
+    try {
+      const response = await fetch(TRACKING_API_URL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json"
+        },
+        cache: "no-store"
+      });
+
+      if (!response.ok) {
+        throw new Error(`Falha ao buscar eventos do backend. HTTP ${response.status}`);
+      }
+
+      const json = await response.json();
+      const items =
+        (Array.isArray(json?.events) && json.events) ||
+        (Array.isArray(json?.data) && json.data) ||
+        (Array.isArray(json) && json) ||
+        [];
+
+      return items.map(normalizeBackendEvent).filter(Boolean);
+    } catch (error) {
+      console.warn("Não foi possível buscar eventos do backend. Usando fallback local.", error);
+      return [];
+    }
+  }
+
+  function normalizeBackendEvent(event) {
+    if (!event || typeof event !== "object") return null;
+
+    return {
+      ...event,
+      created_at:
+        event.created_at ||
+        event.event_time ||
+        event.inserted_at ||
+        event.received_at ||
+        event.timestamp ||
+        "",
+      event_name:
+        event.event_name ||
+        event.event ||
+        event.name ||
+        "",
+      lead_id:
+        event.lead_id ||
+        event.leadId ||
+        "",
+      session_id:
+        event.session_id ||
+        event.sessionId ||
+        "",
+      step_index:
+        event.step_index ??
+        event.stepIndex ??
+        event.step_number ??
+        null,
+      utm_campaign:
+        event.utm_campaign ||
+        event.campaign ||
+        "",
+      utm_content:
+        event.utm_content ||
+        event.creative ||
+        "",
+      utm_term:
+        event.utm_term ||
+        "",
+      page_type:
+        event.page_type ||
+        "",
+      step_id:
+        event.step_id ||
+        "",
+      checkout_url:
+        event.checkout_url ||
+        ""
+    };
+  }
+
+  async function loadAllEvents() {
+    const backendEvents = await fetchBackendEvents();
+    const localEvents = getLocalEvents();
+
+    const merged = [...backendEvents, ...localEvents];
+    const deduped = dedupeEvents(merged);
+
+    dashboardEventsCache = deduped;
+    return deduped;
+  }
+
+  function dedupeEvents(events) {
+    const map = new Map();
+
+    events.forEach((event) => {
+      if (!event || typeof event !== "object") return;
+
+      const eventId = normalizeString(event.event_id);
+      const eventName = normalizeEventName(event);
+      const leadId = normalizeLeadId(event);
+      const createdAt = normalizeString(event.created_at || event.event_time || event.timestamp);
+      const stepIndex = normalizeStepNumber(event);
+      const key = eventId || [eventName, leadId, createdAt, stepIndex].join("|");
+
+      if (!key || key === "|||") return;
+      if (!map.has(key)) {
+        map.set(key, event);
+      }
+    });
+
+    return Array.from(map.values());
   }
 
   function saveFilterState(filter) {
@@ -190,7 +307,7 @@
     return normalizeString(
       event.event_name || event.event || event.name,
       ""
-    );
+    ).toLowerCase();
   }
 
   function normalizeLeadId(event) {
@@ -232,7 +349,8 @@
       event.utm_content ||
       event.creative ||
       event.params?.utm_content ||
-      event.params?.creative,
+      event.params?.creative ||
+      event.utm_term,
       "Sem criativo"
     );
   }
@@ -259,6 +377,11 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  }
+
+  function isBuyIntentEvent(event) {
+    const name = normalizeEventName(event);
+    return name === "buy_click" || name === "initiate_checkout";
   }
 
   function getUniqueLeadIds(events, predicate) {
@@ -290,7 +413,7 @@
   }
 
   function getBuyClickLeadIds(events) {
-    return getUniqueLeadIds(events, (event) => normalizeEventName(event) === "buy_click");
+    return getUniqueLeadIds(events, (event) => isBuyIntentEvent(event));
   }
 
   function getStepViewLeadIds(events, stepNumber) {
@@ -400,7 +523,7 @@
         group.pitchIds.add(leadId);
       }
 
-      if (eventName === "buy_click") {
+      if (isBuyIntentEvent(event)) {
         group.buyIds.add(leadId);
       }
     });
@@ -596,12 +719,12 @@
     els.currentPeriodLabel.textContent = `Período atual: ${formatDateBr(filter.start)} até ${formatDateBr(filter.end)}`;
   }
 
-  function runDashboard() {
+  async function runDashboard() {
     const filter = getCurrentFilter();
     updatePeriodLabel(filter);
     saveFilterState(serializeFilter(filter));
 
-    const allEvents = getAllEvents();
+    const allEvents = dashboardEventsCache.length ? dashboardEventsCache : await loadAllEvents();
     const filteredEvents = allEvents.filter((event) => isEventInRange(event, filter));
     const data = buildDashboardData(filteredEvents);
 
@@ -655,12 +778,14 @@
       runDashboard();
     });
 
-    els.refreshBtn.addEventListener("click", function () {
+    els.refreshBtn.addEventListener("click", async function () {
+      dashboardEventsCache = [];
+      await loadAllEvents();
       runDashboard();
     });
   }
 
-  function init() {
+  async function init() {
     const savedFilter = hydrateFilter(getSavedFilterState());
 
     if (savedFilter) {
@@ -673,7 +798,8 @@
     }
 
     initEvents();
-    runDashboard();
+    await loadAllEvents();
+    await runDashboard();
   }
 
   init();
