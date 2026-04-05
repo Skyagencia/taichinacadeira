@@ -1091,13 +1091,13 @@ app.get("/api/tracking/events", async (req, res) => {
       });
     }
 
-    const limitRaw = Number(req.query.limit || 20);
-    const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(limitRaw, 200)) : 20;
+    const limitRaw = Number(req.query.limit || 5000);
+    const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(limitRaw, 10000)) : 5000;
 
     const { data, error } = await supabase
       .from("frontend_tracking_events")
       .select(
-        "id, created_at, event_time, event_name, event_id, lead_id, session_id, step_id, step_index, page_type, utm_campaign, button_text, checkout_url"
+        "id, created_at, event_time, event_name, event_id, lead_id, session_id, step_id, step_index, step_name, step_type, page_type, utm_source, utm_medium, utm_campaign, utm_content, utm_term, button_id, button_text, checkout_url, funnel_id, funnel_name"
       )
       .order("created_at", { ascending: false })
       .limit(limit);
