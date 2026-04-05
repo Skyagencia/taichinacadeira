@@ -723,16 +723,40 @@ function buildMetaUserData(normalized) {
 function buildFrontendMetaUserData(record) {
   const userData = {};
 
-  addHashedField(userData, "external_id", record.lead_id || record.session_id || record.event_id);
-  addHashedField(userData, "fbp", record.fbp);
-  addHashedField(userData, "fbc", record.fbc);
+  // Identificadores que DEVEM ir sem hash
+  const fbp = normalizeValue(record.fbp);
+  const fbc = normalizeValue(record.fbc);
 
-  if (record.ip_address) {
-    userData.client_ip_address = record.ip_address;
+  if (fbp) {
+    userData.fbp = fbp;
   }
 
-  if (record.user_agent) {
-    userData.client_user_agent = record.user_agent;
+  if (fbc) {
+    userData.fbc = fbc;
+  }
+
+  // Identificadores que PODEM/DEVEM ir com hash
+  addHashedField(userData, "em", record.email);
+  addHashedField(userData, "ph", record.phone);
+  addHashedField(userData, "fn", record.first_name || record.name);
+  addHashedField(userData, "ln", record.last_name);
+
+  const externalId =
+    normalizeValue(record.lead_id) ||
+    normalizeValue(record.session_id) ||
+    normalizeValue(record.external_id) ||
+    normalizeValue(record.event_id);
+
+  addHashedField(userData, "external_id", externalId);
+
+  const clientIp = normalizeValue(record.request_ip) || normalizeValue(record.ip);
+  if (clientIp) {
+    userData.client_ip_address = clientIp;
+  }
+
+  const userAgent = normalizeValue(record.user_agent);
+  if (userAgent) {
+    userData.client_user_agent = userAgent;
   }
 
   return userData;
