@@ -2,27 +2,27 @@
 <html lang="pt-BR">
 <head>
 
- <script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-xcod-sck
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
 
-<script>
-  window.pixelId = "69d29d68c7fb8950b8b24f5a";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script>
+  <script>
+    window.pixelId = "69d29d68c7fb8950b8b24f5a";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Oferta Especial - Upsell</title>
-  <meta name="description" content="Oferta complementar com checkout embutido na própria página." />
+  <meta name="description" content="Oferta complementar com redirecionamento direto para o checkout." />
 
   <style>
     :root{
@@ -41,6 +41,7 @@
 
     *{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%}
+
     body{
       margin:0;
       font-family:Arial, Helvetica, sans-serif;
@@ -138,6 +139,21 @@
       box-shadow:var(--shadow);
     }
 
+    .thanks-image{
+      width:100%;
+      border-radius:24px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:#f8fafc;
+      box-shadow:var(--shadow);
+    }
+
+    .thanks-image img{
+      width:100%;
+      aspect-ratio:16 / 9;
+      object-fit:cover;
+    }
+
     .card{
       background:var(--card);
       border:1px solid var(--line);
@@ -211,18 +227,6 @@
       padding:18px 16px;
       margin-bottom:8px;
       transition:all .25s ease;
-    }
-
-    .offer-box.checkout-open .cta-primary{
-      display:none;
-    }
-
-    .offer-box.checkout-open .micro-note{
-      display:none;
-    }
-
-    .offer-box.checkout-open .cta-stack{
-      margin-bottom:0;
     }
 
     .offer-box h2{
@@ -358,80 +362,85 @@
       margin-top:10px;
     }
 
-    .checkout-wrap{
-      display:none;
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:30px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      margin-top:-2px;
+    .testimonials{
+      margin-top:22px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
     }
 
-    .checkout-wrap.active{
-      display:block;
-      animation:fadeCheckout .28s ease;
-    }
-
-    @keyframes fadeCheckout{
-      from{
-        opacity:0;
-        transform:translateY(10px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
-
-    .checkout-head{
-      padding:18px 18px 14px;
-      border-bottom:1px solid var(--line);
-      background:#f8fafc;
-    }
-
-    .checkout-head h3{
-      margin:0 0 6px;
-      font-size:22px;
+    .testimonials-title{
+      margin:0;
+      text-align:center;
+      font-size:24px;
       line-height:1.15;
       font-weight:900;
       letter-spacing:-.02em;
-      text-align:center;
     }
 
-    .checkout-head p{
-      margin:0;
+    .testimonials-subtitle{
+      margin:0 0 4px;
       text-align:center;
-      color:var(--muted);
       font-size:14px;
-      line-height:1.55;
-    }
-
-    .checkout-status{
-      margin-top:12px;
-      text-align:center;
-      font-size:13px;
-      line-height:1.5;
+      line-height:1.6;
       color:var(--muted);
-      font-weight:700;
     }
 
-    .checkout-status.ok{
-      color:var(--success);
-    }
-
-    .checkout-frame-box{
-      padding:8px;
-      background:#eef2f7;
-    }
-
-    .checkout-frame{
-      width:100%;
-      min-height:760px;
-      border:none;
-      border-radius:22px;
+    .testimonial-card{
       background:#fff;
-      box-shadow:0 10px 30px rgba(15,23,42,.08);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:0 10px 24px rgba(15,23,42,.05);
+    }
+
+    .testimonial-head{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .testimonial-avatar{
+      width:56px;
+      height:56px;
+      border-radius:999px;
+      object-fit:cover;
+      border:2px solid #e5e7eb;
+      flex-shrink:0;
+    }
+
+    .testimonial-meta{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .testimonial-meta strong{
+      font-size:15px;
+      line-height:1.2;
+    }
+
+    .testimonial-stars{
+      color:#f59e0b;
+      font-size:16px;
+      letter-spacing:.08em;
+      line-height:1;
+    }
+
+    .testimonial-text{
+      margin:0;
+      font-size:15px;
+      line-height:1.7;
+      color:#273244;
+    }
+
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      padding:6px 4px 0;
     }
 
     .expired-bar{
@@ -483,8 +492,8 @@
         padding:16px 16px;
       }
 
-      .checkout-frame{
-        min-height:680px;
+      .thanks-image img{
+        aspect-ratio:4 / 3;
       }
     }
   </style>
@@ -513,25 +522,29 @@
           🎉 Parabéns pela sua compra! Estamos finalizando tudo para liberar seu acesso e, antes de concluir, temos uma oferta especial para você nesta tela.
         </div>
 
+        <div class="thanks-image">
+          <img src="chines-agradecendo.png" alt="Mensagem especial de agradecimento" />
+        </div>
+
         <section class="card">
           <div class="card-body">
             <div class="headline-wrap">
               <div class="eyebrow">Antes de concluir sua compra, aviso importante</div>
               <h1>Temos uma oferta especial para você</h1>
               <p class="subheadline">
-                O Tai Chi ajuda seu corpo a entrar no caminho certo, mas existe um sabotador silencioso que pode travar seus resultados: a fome fora de hora. Que convenhamos ela é o principal vilão e que cria a famosa barriga estufada e o acumulo de gordura localizada, E talvez sem essa solução você não alcance o apice do seu resultado no projeto TAI CHI NA CADEIRA adicione essa solução e veja a barriga estufada ser trocada por uma barriguinha cheia de gomos e tonificada a famosa barriga tanquinho.
+                O Tai Chi ajuda seu corpo a entrar no caminho certo, mas existe um sabotador silencioso que pode travar seus resultados: a fome fora de hora. Que convenhamos ela é o principal vilão e que cria a famosa barriga estufada e o acúmulo de gordura localizada. Talvez sem essa solução você não alcance o ápice do seu resultado no projeto TAI CHI NA CADEIRA.
               </p>
             </div>
 
             <div class="hero-image">
-  <img src="upsell-produto.png" alt="Oferta complementar" />
-</div>
+              <img src="upsell-produto.png" alt="Oferta complementar" />
+            </div>
 
             <div class="offer-box" id="offerBox">
               <h2>BLOQUEADOR DE FOME NATURAL</h2>
 
               <p class="offer-copy">
-                Uma receita prática com 3 ingredientes simples para você bloquear um Hormonio que fica desregulado por conta de hábitos errados na alimentação e estilo de vida causando a fome fora de hora, Essa receita reduz a vontade de beliscar e facilita seus resultados com mais leveza no dia a dia. Geralmente vendemos esse produto seperado por R$97,00 reais, mas como você já entrou no projeto do TAI CHI NA CADEIRA vamos te dar essa oferta exclusiva que só aparecerá nessa página então aproveite.
+                Uma receita prática com 3 ingredientes simples para você bloquear um hormônio que fica desregulado por conta de hábitos errados na alimentação e estilo de vida, causando a fome fora de hora. Essa receita reduz a vontade de beliscar e facilita seus resultados com mais leveza no dia a dia. Geralmente vendemos esse produto separado por R$97,00, mas como você já entrou no projeto do TAI CHI NA CADEIRA vamos te dar essa oferta exclusiva que só aparecerá nesta página.
               </p>
 
               <div class="bullets">
@@ -540,7 +553,7 @@
                 <div class="bullet">✔ Receita simples com 3 ingredientes que você tem em casa e nem sabe</div>
                 <div class="bullet">✔ Potencializa seus resultados com o Tai Chi</div>
                 <div class="bullet">✔ Reduz a barriga estufada e devora a gordura localizada</div>
-                <div class="bullet">✔ Perca até 10 kg em uma semana (Causados pelos liquidos presos e retidos)</div>
+                <div class="bullet">✔ Perca até 10 kg em uma semana (causados pelos líquidos presos e retidos)</div>
               </div>
 
               <div class="price-box">
@@ -548,7 +561,7 @@
                 <div class="price-old">De R$ 97,90</div>
                 <div class="price-new">R$ 3x de 6,63</div>
                 <div class="price-note">
-                  Agora não tem mais volta com Tai chi na cadeira vai ajudar, mas se você não eliminar esse inimigo silencioso talvez não tenha resultados satisfatórios.
+                  Agora não tem mais volta. O Tai Chi na cadeira vai ajudar, mas se você não eliminar esse inimigo silencioso talvez não tenha resultados satisfatórios.
                 </div>
               </div>
 
@@ -563,34 +576,61 @@
               </div>
 
               <div class="micro-note">
-                Todos os direitos reservados (@) tai chi na cadeira.
+                Oferta complementar disponível somente nesta página.
+              </div>
+
+              <div class="testimonials">
+                <h3 class="testimonials-title">Relatos de clientes</h3>
+                <p class="testimonials-subtitle">
+                  Substitua estes textos por depoimentos reais dos seus compradores.
+                </p>
+
+                <div class="testimonial-card">
+                  <div class="testimonial-head">
+                    <img class="testimonial-avatar" src="alisson.png" alt="Foto de perfil do cliente Alisson" />
+                    <div class="testimonial-meta">
+                      <strong>Alisson R.</strong>
+                      <div class="testimonial-stars">★★★★★</div>
+                    </div>
+                  </div>
+                  <p class="testimonial-text">
+                    “Depois que organizei melhor minha rotina e acrescentei esse complemento junto com o Tai Chi na Cadeira, Senti que se eu não tivesse adquirido esse bloqueador eu não iria conseguir parar de comer ai não adiantar muito né, recomendo demais!!.”
+                  </p>
+                </div>
+
+                <div class="testimonial-card">
+                  <div class="testimonial-head">
+                    <img class="testimonial-avatar" src="alex.png" alt="Foto de perfil do cliente Alex" />
+                    <div class="testimonial-meta">
+                      <strong>Alex M.</strong>
+                      <div class="testimonial-stars">★★★★★</div>
+                    </div>
+                  </div>
+                  <p class="testimonial-text">
+                    “Pra mim, o principal foi conseguir seguir melhor a rotina. Eu já tinha dado o primeiro passo com o Tai Chi na Cadeira, mas esse bloqueador me ajudou demais, percebi que na primeira semana já tinha ido embora mais de 7kg.”
+                  </p>
+                </div>
+
+                <div class="testimonial-card">
+                  <div class="testimonial-head">
+                    <img class="testimonial-avatar" src="jorge.png" alt="Foto de perfil do cliente Jorge" />
+                    <div class="testimonial-meta">
+                      <strong>Jorge P.</strong>
+                      <div class="testimonial-stars">★★★★★</div>
+                    </div>
+                  </div>
+                  <p class="testimonial-text">
+                    “Gostei porque é algo simples de aplicar. E eu nem sabia que tinha em casa esses ingredientes simples demais kkkkkk.”
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="checkoutWrap" class="checkout-wrap">
-          <div class="checkout-head">
-            <h3>Finalize a adição da sua oferta</h3>
-            <p>
-              O checkout foi aberto logo abaixo para você concluir sem sair desta página.
-            </p>
-            <div id="checkoutStatus" class="checkout-status">
-              Carregando checkout...
-            </div>
-          </div>
-
-          <div class="checkout-frame-box">
-            <iframe
-              id="checkoutFrame"
-              class="checkout-frame"
-              title="Checkout da oferta complementar"
-              loading="eager"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowpaymentrequest
-            ></iframe>
-          </div>
-        </section>
+        <div class="footer">
+          Todos os direitos reservados © Tai Chi na Cadeira
+        </div>
       </div>
     </div>
   </div>
@@ -609,15 +649,9 @@
         timerBar: document.getElementById("timerBar"),
         expiredBar: document.getElementById("expiredBar"),
         timerCount: document.getElementById("timerCount"),
-        offerBox: document.getElementById("offerBox"),
         addOfferBtn: document.getElementById("addOfferBtn"),
-        declineBtn: document.getElementById("declineBtn"),
-        checkoutWrap: document.getElementById("checkoutWrap"),
-        checkoutFrame: document.getElementById("checkoutFrame"),
-        checkoutStatus: document.getElementById("checkoutStatus")
+        declineBtn: document.getElementById("declineBtn")
       };
-
-      let finalCheckoutUrl = "";
 
       function safeJsonParse(raw, fallback) {
         try {
@@ -735,41 +769,21 @@
       function setLoadingState(isLoading) {
         els.addOfferBtn.classList.toggle("loading", isLoading);
         els.addOfferBtn.textContent = isLoading
-          ? "CARREGANDO CHECKOUT..."
-          : "⚡ QUERO ADICIONAR ESTA OFERTA AGORA";
+          ? "REDIRECIONANDO..."
+          : "⚡ QUERO ELIMINAR BARRIGA ESTUFADA";
       }
 
-      function showCheckoutStatus(text, type) {
-        els.checkoutStatus.textContent = text || "";
-        els.checkoutStatus.classList.remove("ok");
-
-        if (type === "ok") {
-          els.checkoutStatus.classList.add("ok");
-        }
-      }
-
-      function openCheckoutInline() {
+      function goToCheckout() {
         if (!UPSELL_CHECKOUT_URL || UPSELL_CHECKOUT_URL.includes("SEU-CHECKOUT-AQUI")) {
           alert("Troque a constante UPSELL_CHECKOUT_URL pelo link real do checkout.");
           return;
         }
 
-        finalCheckoutUrl = buildCheckoutUrl();
         setLoadingState(true);
-
-        els.offerBox.classList.add("checkout-open");
-        els.checkoutWrap.classList.add("active");
-        showCheckoutStatus("Carregando checkout...", "");
-
-        els.checkoutFrame.onload = function () {
-          setLoadingState(false);
-          showCheckoutStatus("Checkout carregado abaixo. Você pode concluir nesta mesma tela.", "ok");
-        };
-
-        els.checkoutFrame.src = finalCheckoutUrl;
+        const checkoutUrl = buildCheckoutUrl();
 
         setTimeout(() => {
-          els.checkoutWrap.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          window.location.href = checkoutUrl;
         }, 120);
       }
 
@@ -785,7 +799,7 @@
       }
 
       function bindEvents() {
-        els.addOfferBtn.addEventListener("click", openCheckoutInline);
+        els.addOfferBtn.addEventListener("click", goToCheckout);
         els.declineBtn.addEventListener("click", handleDecline);
       }
 
