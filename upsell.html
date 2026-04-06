@@ -2,8 +2,7 @@
 <html lang="pt-BR">
 <head>
 
-
-  <script
+ <script
   src="https://cdn.utmify.com.br/scripts/utms/latest.js"
   data-utmify-prevent-xcod-sck
   data-utmify-prevent-subids
@@ -19,28 +18,25 @@
   a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
   document.head.appendChild(a);
 </script>
-  
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Oferta complementar - Vitalidade Masculina</title>
-  <meta name="description" content="Quiz curto para oferta complementar de vitalidade masculina." />
+  <title>Oferta Especial - Upsell</title>
+  <meta name="description" content="Oferta complementar com checkout embutido na própria página." />
+
   <style>
     :root{
-      --bg:#efefef;
+      --bg:#eef1f4;
       --card:#ffffff;
-      --text:#0f172a;
-      --muted:#475569;
-      --line:#d8dee4;
-      --primary:#0f6158;
-      --primary-2:#18a84a;
-      --green-soft:#dff3e3;
-      --blue-soft:#dfeafb;
-      --yellow-soft:#f6edb8;
-      --red-soft:#f8dddd;
-      --orange-soft:#fff1db;
-      --shadow:0 16px 36px rgba(0,0,0,.08);
-      --radius:18px;
-      --wrap:760px;
+      --text:#101828;
+      --muted:#5b6678;
+      --line:#d9e0e7;
+      --primary:#2563eb;
+      --primary-dark:#1d4ed8;
+      --success:#16a34a;
+      --warning:#f97316;
+      --shadow:0 18px 50px rgba(15, 23, 42, .10);
+      --container:780px;
     }
 
     *{box-sizing:border-box}
@@ -52,655 +48,753 @@
       color:var(--text);
     }
 
-    img{max-width:100%;display:block}
-    button,a{font:inherit}
-    a{text-decoration:none;color:inherit}
+    img{
+      max-width:100%;
+      display:block;
+    }
 
-    .top-alert{
-      position:sticky;
-      top:0;
-      z-index:20;
-      background:#b30000;
-      color:#fff;
-      padding:12px 14px;
-      text-align:center;
-      font-size:14px;
-      font-weight:900;
-      line-height:1.4;
+    button,a{
+      font:inherit;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
     }
 
     .page{
       width:100%;
-      padding:18px 16px 44px;
+      min-height:100vh;
+      padding:0 14px 42px;
       display:flex;
       justify-content:center;
     }
 
     .container{
       width:100%;
-      max-width:var(--wrap);
+      max-width:var(--container);
     }
 
-    .progress-wrap{
-      margin:0 0 18px;
-      background:#d9e3e8;
-      border-radius:999px;
-      overflow:hidden;
-      height:12px;
-      border:1px solid #cbd5dc;
+    .top-sticky{
+      position:sticky;
+      top:0;
+      z-index:60;
+      padding-top:10px;
+      margin-bottom:18px;
+    }
+
+    .timer-bar{
+      background:linear-gradient(90deg, #dc2626, #cf1e1e);
+      color:#fff;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:14px 16px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.15);
+    }
+
+    .timer-bar .timer-top{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:4px;
+      font-weight:900;
+      font-size:15px;
+      line-height:1.3;
+    }
+
+    .timer-bar .timer-count{
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:.03em;
+      min-width:110px;
+    }
+
+    .timer-bar .timer-sub{
+      font-size:13px;
+      opacity:.96;
+      line-height:1.4;
+    }
+
+    .shell{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .notice{
+      background:linear-gradient(180deg, #ecfdf3, #dff7e8);
+      color:#14532d;
+      border:1px solid #b7e4c7;
+      border-radius:22px;
+      padding:16px 16px;
+      text-align:center;
+      font-size:15px;
+      font-weight:800;
+      line-height:1.6;
       box-shadow:var(--shadow);
     }
 
-    .progress-bar{
-      width:14.285%;
-      height:100%;
-      background:linear-gradient(90deg,var(--primary),var(--primary-2));
-      transition:width .28s ease;
-    }
-
-    .panel{
+    .card{
       background:var(--card);
       border:1px solid var(--line);
-      border-radius:28px;
+      border-radius:30px;
       box-shadow:var(--shadow);
-      padding:22px 18px 22px;
+      overflow:hidden;
     }
 
-    .hidden{display:none}
+    .card-body{
+      padding:26px 20px 24px;
+    }
 
-    .headline-box{
-      padding:18px 20px;
+    .headline-wrap{
       text-align:center;
-      border-radius:16px;
-      background:#d9f1dd;
-      border:1px solid #b9e2c2;
-      margin-bottom:16px;
+      margin-bottom:18px;
     }
 
-    .headline-box h1,
-    .headline-box h2{
-      margin:0;
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:#fff5f5;
+      color:#b91c1c;
+      border:1px solid #fecaca;
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.02em;
+      margin-bottom:14px;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:34px;
+      line-height:1.08;
       font-weight:900;
       letter-spacing:-.03em;
-      line-height:1.16;
     }
 
-    .headline-box h1{font-size:30px}
-    .headline-box h2{font-size:28px}
-
-    .green{color:var(--primary-2)}
-    .primary{color:var(--primary)}
-
-    .text-box{
-      padding:16px 18px;
-      border-radius:16px;
-      background:#f8fafc;
-      border:1px solid var(--line);
-      margin-bottom:16px;
-    }
-
-    .text-box p{
-      margin:0 0 12px;
+    .subheadline{
+      margin:0 auto;
+      max-width:620px;
       font-size:17px;
       line-height:1.6;
-      color:#334155;
+      color:var(--muted);
+      font-weight:500;
     }
 
-    .text-box p:last-child{margin-bottom:0}
-
     .hero-image{
-      display:flex;
-      justify-content:center;
-      margin:0 0 18px;
+      width:100%;
+      border-radius:24px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:#f8fafc;
+      margin:0 0 20px;
     }
 
     .hero-image img{
       width:100%;
-      max-width:360px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      background:#fff;
+      aspect-ratio:16 / 10;
       object-fit:cover;
     }
 
-    .pill-row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:center;
-      margin-top:12px;
-    }
-
-    .pill{
-      background:var(--green-soft);
-      color:#0f6158;
-      border:1px solid #b7dfc2;
-      border-radius:999px;
-      padding:10px 14px;
-      font-size:13px;
-      font-weight:900;
-    }
-
-    .option-list{
-      display:grid;
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .option-btn{
-      width:100%;
+    .offer-box{
+      background:#f8fafc;
       border:1px solid var(--line);
-      background:#fff;
-      color:var(--text);
-      border-radius:16px;
-      padding:16px 16px;
-      text-align:left;
+      border-radius:24px;
+      padding:18px 16px;
+      margin-bottom:8px;
+      transition:all .25s ease;
+    }
+
+    .offer-box.checkout-open .cta-primary{
+      display:none;
+    }
+
+    .offer-box.checkout-open .micro-note{
+      display:none;
+    }
+
+    .offer-box.checkout-open .cta-stack{
+      margin-bottom:0;
+    }
+
+    .offer-box h2{
+      margin:0 0 12px;
+      font-size:27px;
+      line-height:1.14;
+      font-weight:900;
+      text-align:center;
+      letter-spacing:-.02em;
+    }
+
+    .offer-copy{
+      margin:0 auto 16px;
+      max-width:620px;
+      text-align:center;
       font-size:17px;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .12s ease, border-color .12s ease, box-shadow .12s ease, background .12s ease;
-      box-shadow:0 8px 18px rgba(15,23,42,.04);
+      line-height:1.7;
+      color:#273244;
     }
 
-    .option-btn:hover{
-      transform:translateY(-1px);
-      border-color:#9dd1ac;
-      background:#f8fffa;
-      box-shadow:0 12px 22px rgba(15,23,42,.08);
+    .bullets{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin:0 0 18px;
     }
 
-    .cta{
-      display:block;
-      width:100%;
-      border:none;
-      background:#18a84a;
-      color:#fff;
-      text-align:center;
-      font-weight:900;
-      font-size:26px;
-      line-height:1.2;
-      padding:19px 18px;
-      border-radius:14px;
-      box-shadow:0 6px 0 #14913f;
-      cursor:pointer;
-    }
-
-    .cta.small{
-      font-size:18px;
-      padding:16px 18px;
-      box-shadow:0 5px 0 #14913f;
-    }
-
-    .cta:active{
-      transform:translateY(2px);
-      box-shadow:0 4px 0 #14913f;
-    }
-
-    .sub-link{
-      display:block;
-      margin-top:14px;
-      text-align:center;
-      font-size:13px;
-      color:#64748b;
-      text-decoration:underline;
-    }
-
-    .card-soft{
-      background:var(--orange-soft);
-      border:1px solid #f2d7ab;
-      border-radius:16px;
-      padding:16px;
-      margin-bottom:16px;
-    }
-
-    .card-soft p{
-      margin:0;
-      font-size:16px;
-      line-height:1.6;
-      color:#6b4f1d;
-      font-weight:700;
-    }
-
-    .proof-card{
-      background:var(--card);
+    .bullet{
+      background:#fff;
       border:1px solid var(--line);
       border-radius:16px;
-      padding:14px;
-      margin-bottom:12px;
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-    }
-
-    .proof-card img{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      object-fit:cover;
-      flex:0 0 44px;
-    }
-
-    .proof-name{
-      font-weight:900;
-      margin-bottom:4px;
-      color:#0f172a;
+      padding:13px 14px;
       font-size:15px;
-    }
-
-    .proof-text{
-      margin:0;
-      font-size:14px;
       line-height:1.55;
-      color:#334155;
-    }
-
-    .proof-time{
-      margin-top:6px;
-      font-size:12px;
-      color:#64748b;
-      font-weight:700;
+      color:#243041;
+      font-weight:600;
     }
 
     .price-box{
-      border:1px solid #cfd7df;
-      border-radius:18px;
-      overflow:hidden;
       background:#fff;
-      box-shadow:var(--shadow);
-      margin:16px 0;
-    }
-
-    .price-highlight{
-      background:#0f6158;
-      color:#fff;
-      text-align:center;
-      font-weight:900;
-      padding:10px 14px;
-      font-size:15px;
-    }
-
-    .price-body{
+      border:1px solid var(--line);
+      border-radius:20px;
       padding:18px 16px;
       text-align:center;
+      margin-bottom:16px;
     }
 
-    .old-price{
-      color:#ef4444;
-      font-size:22px;
+    .price-top{
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .price-old{
+      font-size:18px;
+      color:#94a3b8;
       text-decoration:line-through;
-      margin:0 0 6px;
+      margin-bottom:4px;
       font-weight:700;
     }
 
-    .new-price{
-      color:#16a34a;
+    .price-new{
       font-size:42px;
       line-height:1;
       font-weight:900;
-      margin:0 0 8px;
+      color:var(--primary-dark);
+      letter-spacing:-.04em;
+      margin-bottom:8px;
     }
 
-    .installments{
-      font-size:22px;
-      color:#334155;
-      font-weight:900;
-      margin:0 0 8px;
-    }
-
-    .compare{
-      margin:0;
-      color:#475569;
-      font-size:16px;
+    .price-note{
+      font-size:14px;
+      color:var(--muted);
       line-height:1.5;
-      font-weight:700;
     }
 
-    .benefit-list{
-      margin:14px 0 0;
-      display:grid;
-      gap:10px;
+    .cta-stack{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-bottom:8px;
     }
 
-    .benefit-item{
-      background:var(--green-soft);
-      border:1px solid #b7dfc2;
-      color:#0f6158;
-      padding:12px 14px;
-      border-radius:14px;
+    .cta-btn{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:18px 18px;
+      font-size:18px;
+      font-weight:900;
+      line-height:1.25;
+      cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      box-shadow:0 14px 32px rgba(37, 99, 235, .22);
+    }
+
+    .cta-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .cta-btn:active{
+      transform:translateY(0);
+    }
+
+    .cta-primary{
+      background:linear-gradient(180deg, #3b82f6, var(--primary));
+      color:#fff;
+    }
+
+    .cta-primary.loading{
+      opacity:.8;
+      pointer-events:none;
+    }
+
+    .cta-secondary{
+      background:#fff;
+      color:#475569;
+      border:1px solid var(--line);
+      box-shadow:none;
       font-size:15px;
-      font-weight:800;
+      font-weight:700;
+      padding:14px 16px;
     }
 
-    .center{text-align:center}
+    .micro-note{
+      text-align:center;
+      font-size:13px;
+      line-height:1.55;
+      color:var(--muted);
+      margin-top:10px;
+    }
 
-    .small-note{
-      margin-top:14px;
+    .checkout-wrap{
+      display:none;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      margin-top:-2px;
+    }
+
+    .checkout-wrap.active{
+      display:block;
+      animation:fadeCheckout .28s ease;
+    }
+
+    @keyframes fadeCheckout{
+      from{
+        opacity:0;
+        transform:translateY(10px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .checkout-head{
+      padding:18px 18px 14px;
+      border-bottom:1px solid var(--line);
+      background:#f8fafc;
+    }
+
+    .checkout-head h3{
+      margin:0 0 6px;
+      font-size:22px;
+      line-height:1.15;
+      font-weight:900;
+      letter-spacing:-.02em;
+      text-align:center;
+    }
+
+    .checkout-head p{
+      margin:0;
+      text-align:center;
+      color:var(--muted);
       font-size:14px;
       line-height:1.55;
-      color:#475569;
+    }
+
+    .checkout-status{
+      margin-top:12px;
       text-align:center;
+      font-size:13px;
+      line-height:1.5;
+      color:var(--muted);
       font-weight:700;
+    }
+
+    .checkout-status.ok{
+      color:var(--success);
+    }
+
+    .checkout-frame-box{
+      padding:8px;
+      background:#eef2f7;
+    }
+
+    .checkout-frame{
+      width:100%;
+      min-height:760px;
+      border:none;
+      border-radius:22px;
+      background:#fff;
+      box-shadow:0 10px 30px rgba(15,23,42,.08);
+    }
+
+    .expired-bar{
+      display:none;
+      background:#7f1d1d;
+      color:#fff;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:14px 16px;
+      text-align:center;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .expired-bar.active{
+      display:block;
     }
 
     @media (max-width: 640px){
-      .headline-box h1{font-size:26px}
-      .headline-box h2{font-size:24px}
-      .cta{font-size:22px}
-      .new-price{font-size:36px}
-      .installments{font-size:19px}
+      .page{
+        padding-left:10px;
+        padding-right:10px;
+      }
+
+      .card-body{
+        padding:22px 14px 20px;
+      }
+
+      h1{
+        font-size:27px;
+      }
+
+      .offer-box h2{
+        font-size:23px;
+      }
+
+      .subheadline,
+      .offer-copy{
+        font-size:15px;
+      }
+
+      .price-new{
+        font-size:34px;
+      }
+
+      .cta-btn{
+        font-size:17px;
+        padding:16px 16px;
+      }
+
+      .checkout-frame{
+        min-height:680px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="top-alert">⚠️ Sua compra está sendo processada, continue respondendo as perguntas para concluir sua compra no final.</div>
-
   <div class="page">
     <div class="container">
-      <div class="progress-wrap">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
+      <div class="shell">
+        <div class="top-sticky">
+          <div id="timerBar" class="timer-bar">
+            <div class="timer-top">
+              <span>⏰ Oferta por tempo limitado</span>
+              <span id="timerCount" class="timer-count">10:00</span>
+            </div>
+            <div class="timer-sub">
+              Esta condição especial fica disponível somente nesta página pelos próximos 10 minutos.
+            </div>
+          </div>
 
-      <section class="panel" id="step-1">
-        <div class="headline-box">
-          <h1>Fica comigo até o final porque eu vou liberar um <span class="green">presente oculto</span> só pra quem não abandonar essa página.</h1>
-        </div>
-
-        <div class="hero-image">
-          <img src="produto.png" alt="Oferta especial" />
-        </div>
-
-        <div class="text-box center">
-          <p>Seu pedido está quase concluído.</p>
-          <p>Tenho um presente pra você no final.</p>
-        </div>
-
-        <div class="pill-row">
-          <div class="pill">Menos de 1 minuto</div>
-          <div class="pill">Sem enrolação</div>
-          <div class="pill">Presente no final</div>
-        </div>
-
-        <div style="margin-top:18px">
-          <button class="cta" data-next="2">Quero continuar</button>
-        </div>
-      </section>
-
-      <section class="panel hidden" id="step-2">
-        <div class="headline-box">
-          <h2>Me fala a verdade: Sua parceira(a) está satisfeita com você na cama? <span class="green">O "Amigão" ta respondendo como antes?</span>?</h2>
-        </div>
-
-        <div class="hero-image">
-          <img src="etapa-2.png" alt="Desempenho masculino" />
-        </div>
-
-        <div class="text-box">
-          <p>Pra muito homem, a queda começa com menos energia, menos disposição e menos resposta nos momentos em que ele mais queria estar no controle.</p>
-        </div>
-
-        <div class="option-list">
-          <button class="option-btn" data-next="3">Sim, ainda responde bem</button>
-          <button class="option-btn" data-next="3">Às vezes falha e me irrita</button>
-          <button class="option-btn" data-next="3">Caiu bastante nos últimos meses</button>
-          <button class="option-btn" data-next="3">Prefiro não entrar em detalhes</button>
-        </div>
-      </section>
-
-      <section class="panel hidden" id="step-3">
-        <div class="headline-box">
-          <h2>O que mais tá te pegando hoje?</h2>
-        </div>
-
-        <div class="hero-image">
-          <img src="etapa-3.png" alt="Dor principal" />
-        </div>
-
-        <div class="text-box">
-          <p>Escolhe o que mais bate com a tua realidade agora.</p>
-        </div>
-
-        <div class="option-list">
-          <button class="option-btn" data-next="4">Menos firmeza na hora H</button>
-          <button class="option-btn" data-next="4">Baixa disposição e energia</button>
-          <button class="option-btn" data-next="4">Menor desejo Sexual</button>
-          <button class="option-btn" data-next="4">Falhas ocasionais que já preocupam</button>
-        </div>
-      </section>
-
-      <section class="panel hidden" id="step-4">
-        <div class="headline-box">
-          <h2>Isso já mexeu com tua <span class="green">confiança</span> de um jeito que tu não gostaria de admitir?</h2>
-        </div>
-
-        <div class="hero-image">
-          <img src="etapa-4.png" alt="Confiança masculina" />
-        </div>
-
-        <div class="text-box">
-          <p>Quando o corpo não acompanha, não fica só no físico. Isso bate na autoestima, na segurança e na forma como o homem se enxerga.</p>
-        </div>
-
-        <div class="option-list">
-          <button class="option-btn" data-next="5">Sim, bastante</button>
-          <button class="option-btn" data-next="5">Um pouco, mas já incomoda</button>
-          <button class="option-btn" data-next="5">Tento ignorar, mas pesa</button>
-          <button class="option-btn" data-next="5">Ainda não, mas preocupa</button>
-        </div>
-      </section>
-
-      <section class="panel hidden" id="step-5">
-        <div class="headline-box">
-          <h2>Tu não é o único passando por isso.</h2>
-        </div>
-
-        <div class="hero-image">
-          <img src="etapa-5.png" alt="Prova social" />
-        </div>
-
-        <div class="proof-card">
-          <img src="alisson.png" alt="Alisson" />
-          <div>
-            <div class="proof-name">Alisson, 53 anos</div>
-            <p class="proof-text">“Nunca pensei que voltaria a ter essa confiança. Minha parceira ficou surpresa com a mudança.”</p>
-            <div class="proof-time">1 dia atrás</div>
+          <div id="expiredBar" class="expired-bar">
+            O tempo desta condição especial terminou.
           </div>
         </div>
 
-        <div class="proof-card">
-          <img src="jorge.png" alt="Jorge" />
-          <div>
-            <div class="proof-name">Jorge, 64 anos</div>
-            <p class="proof-text">“Achei que já era tarde pra mim, mas isso aqui virou o jogo no meu desempenho.”</p>
-            <div class="proof-time">2 horas atrás</div>
-          </div>
+        <div class="notice">
+          🎉 Parabéns pela sua compra! Estamos finalizando tudo para liberar seu acesso e, antes de concluir, temos uma oferta especial para você nesta tela.
         </div>
 
-        <div class="proof-card">
-          <img src="alex.png" alt="Alex Lupe" />
-          <div>
-            <div class="proof-name">Alex Lupe, 49 anos</div>
-            <p class="proof-text">“Energia lá em cima e sensação de controle de novo. Faz diferença de verdade.”</p>
-            <div class="proof-time">3 dias atrás</div>
-          </div>
-        </div>
+        <section class="card">
+          <div class="card-body">
+            <div class="headline-wrap">
+              <div class="eyebrow">Antes de concluir sua compra, aviso importante</div>
+              <h1>Temos uma oferta especial para você</h1>
+              <p class="subheadline">
+                O Tai Chi ajuda seu corpo a entrar no caminho certo, mas existe um sabotador silencioso que pode travar seus resultados: a fome fora de hora. Que convenhamos ela é o principal vilão e que cria a famosa barriga estufada e o acumulo de gordura localizada, E talvez sem essa solução você não alcance o apice do seu resultado no projeto TAI CHI NA CADEIRA.
+              </p>
+            </div>
 
-        <button class="cta small" data-next="6">Continuar</button>
-      </section>
-
-      <section class="panel hidden" id="step-6">
-        <div class="headline-box">
-          <h2>O teu perfil mostra que ainda dá pra recuperar <span class="green">mais confiança, mais vitalidade e mais resposta</span>.</h2>
-        </div>
-
-        <div class="hero-image">
-          <img src="etapa-6.png" alt="Vitalidade masculina" />
-        </div>
-
-        <div class="card-soft">
-          <p>Muitos homens percebem melhora quando combinam o cuidado com o corpo com um suporte específico para vitalidade masculina.</p>
-        </div>
-
-        <div class="text-box">
-          <p>Foi por isso que eu separei uma recomendação complementar pra quem quer sentir mais firmeza, mais segurança e mais presença na rotina íntima.</p>
-        </div>
-
-        <button class="cta" data-next="7">Ver minha condição especial</button>
-      </section>
-
-      <section class="panel hidden" id="step-7">
-  <div class="headline-box">
-    <h2>Agora sim: teu <span class="green">presente</span> foi liberado.</h2>
-  </div>
-
-  <div class="hero-image">
-    <img src="etapa-7.jpg" alt="Oferta final" />
-  </div>
-
-  <div class="text-box center">
-    <p>Como tu ficou até o final, foi liberada uma condição especial de hoje para adicionar essa oferta ao teu pedido.</p>
-    <p>Essa é a chance de pegar o produto com preço esmagado antes que o dia acabe.</p>
-  </div>
-
-  <div class="card-soft center" style="margin-bottom:16px">
-    <p style="margin-bottom:8px"><strong>Oferta válida até hoje:</strong> <span id="expiryDateTime"></span></p>
-    <p style="margin-bottom:8px"><strong>Tempo restante:</strong></p>
-    <div id="countdownTimer" style="font-size:32px;font-weight:900;color:#b30000;line-height:1.1">--:--:--</div>
-    <p style="margin-top:10px;margin-bottom:0"><strong>Unidades restantes:</strong> <span id="unitsLeft">2</span></p>
-  </div>
-
-  <div class="price-body">
-  <p class="old-price">De R$ 97,00</p>
-  <p class="new-price">3x de R$ 7,17</p>
-  <p style="margin:6px 0 0; font-size:15px; color:#64748b; font-weight:700;">
-    ou apenas R$ 19,90 à vista
-  </p>
-  <p class="compare">Menos que um bolo da padaria.</p>
+            <div class="hero-image">
+  <img src="upsell-produto.png" alt="Oferta complementar" />
 </div>
 
-  <div class="benefit-list">
-    <div class="benefit-item">✔ Recupere sua potência e segurança na cama</div>
-    <div class="benefit-item">✔ Não agride o coração</div>
-    <div class="benefit-item">✔ Uso simples e prático</div>
-    <div class="benefit-item">✔ 100% Natural</div>
-  </div>
+            <div class="offer-box" id="offerBox">
+              <h2>BLOQUEADOR DE FOME NATURAL</h2>
 
-  <p class="small-note">
-    Oferta complementar apresentada para homens que querem se sentir mais confiantes e com melhor resposta do corpo enquanto mantêm o uso na rotina.
-  </p>
+              <p class="offer-copy">
+                Uma receita prática com 3 ingredientes simples para você bloquear um Hormonio que fica desregulado por conta de hábitos errados na alimentação e estilo de vida causando a fome fora de hora, Essa receita reduz a vontade de beliscar e facilita seus resultados com mais leveza no dia a dia. Geralmente vendemos esse produto seperado por R$97,00 reais, mas como você já entrou no projeto do TAI CHI NA CADEIRA vamos te dar essa oferta exclusiva que só aparecerá nessa página então aproveite.
+              </p>
 
-  <div style="margin-top:16px">
-    <a href="https://lastlink.com/p/CCCAC9884/checkout-payment/" class="cta">Quero garantir meu desconto agora</a>
-    <a href="https://taichinacadeira.onrender.com/downsell.html" class="sub-link">Não, quero seguir sem essa condição especial</a>
-  </div>
-</section>
+              <div class="bullets">
+                <div class="bullet">✔ Bloqueia a fome ao longo do dia</div>
+                <div class="bullet">✔ Você para de beliscar toda hora</div>
+                <div class="bullet">✔ Receita simples com 3 ingredientes que você tem em casa e nem sabe</div>
+                <div class="bullet">✔ Potencializa seus resultados com o Tai Chi</div>
+                <div class="bullet">✔ Reduz a barriga estufada e devora a gordura localizada</div>
+                <div class="bullet">✔ Perca até 10 kg em uma semana (Causados pelos liquidos presos e retidos)</div>
+              </div>
+
+              <div class="price-box">
+                <div class="price-top">Somente nesta página</div>
+                <div class="price-old">De R$ 97,90</div>
+                <div class="price-new">R$ 3x de 6,63</div>
+                <div class="price-note">
+                  Agora não tem mais volta com Tai chi na cadeira vai ajudar, mas se você não eliminar esse inimigo silencioso talvez não tenha resultados satisfatórios.
+                </div>
+              </div>
+
+              <div class="cta-stack">
+                <button id="addOfferBtn" class="cta-btn cta-primary" type="button">
+                  ⚡ QUERO ELIMINAR BARRIGA ESTUFADA
+                </button>
+
+                <button id="declineBtn" class="cta-btn cta-secondary" type="button">
+                  Não, quero arriscar sem essa oferta.
+                </button>
+              </div>
+
+              <div class="micro-note">
+                Todos os direitos reservados (@) tai chi na cadeira.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="checkoutWrap" class="checkout-wrap">
+          <div class="checkout-head">
+            <h3>Finalize a adição da sua oferta</h3>
+            <p>
+              O checkout foi aberto logo abaixo para você concluir sem sair desta página.
+            </p>
+            <div id="checkoutStatus" class="checkout-status">
+              Carregando checkout...
+            </div>
+          </div>
+
+          <div class="checkout-frame-box">
+            <iframe
+              id="checkoutFrame"
+              class="checkout-frame"
+              title="Checkout da oferta complementar"
+              loading="eager"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowpaymentrequest
+            ></iframe>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 
   <script>
-  (function () {
-    const totalSteps = 7;
-    const progressBar = document.getElementById("progressBar");
-    const sections = Array.from(document.querySelectorAll(".panel"));
-    const responses = {};
-
-    function showStep(stepNumber) {
-      sections.forEach((section) => section.classList.add("hidden"));
-      const current = document.getElementById("step-" + stepNumber);
-      if (current) current.classList.remove("hidden");
-      progressBar.style.width = ((stepNumber / totalSteps) * 100) + "%";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    document.querySelectorAll("[data-next]").forEach((button) => {
-      button.addEventListener("click", function () {
-        const currentSection = this.closest(".panel");
-        const currentId = currentSection ? currentSection.id : "";
-        const label = (this.textContent || "").trim();
-        if (currentId) responses[currentId] = label;
-
-        const nextStep = Number(this.getAttribute("data-next"));
-        if (nextStep) showStep(nextStep);
-      });
-    });
-
-    function pad(value) {
-      return String(value).padStart(2, "0");
-    }
-
-    function updateExpiryInfo() {
-      const expiryEl = document.getElementById("expiryDateTime");
-      const timerEl = document.getElementById("countdownTimer");
-      if (!expiryEl || !timerEl) return;
-
-      const now = new Date();
-      const endOfDay = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        23, 59, 59
-      );
-
-      const dateText =
-        pad(now.getDate()) + "/" +
-        pad(now.getMonth() + 1) + "/" +
-        now.getFullYear() +
-        " às 23:59";
-
-      expiryEl.textContent = dateText;
-
-      const diff = endOfDay.getTime() - now.getTime();
-
-      if (diff <= 0) {
-        timerEl.textContent = "00:00:00";
-        return;
-      }
-
-      const hours = Math.floor(diff / 1000 / 60 / 60);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      timerEl.textContent =
-        pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
-    }
-
-    setInterval(updateExpiryInfo, 1000);
-    updateExpiryInfo();
-
-    window.__quizResponses = responses;
-    showStep(1);
-  })();
-</script>
-
-  <script>
     (function () {
-      const totalSteps = 7;
-      const progressBar = document.getElementById("progressBar");
-      const sections = Array.from(document.querySelectorAll(".panel"));
-      const responses = {};
+      const UPSELL_CHECKOUT_URL = "https://lastlink.com/p/CCCAC9884/checkout-payment/";
+      const DOWNSELL_OR_NEXT_URL = "";
+      const TIMER_MINUTES = 10;
 
-      function showStep(stepNumber) {
-        sections.forEach((section) => section.classList.add("hidden"));
-        const current = document.getElementById("step-" + stepNumber);
-        if (current) current.classList.remove("hidden");
-        progressBar.style.width = ((stepNumber / totalSteps) * 100) + "%";
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      const TRACKING_CONTEXT_STORAGE_KEY = "taichiHarnoTrackingContext";
+      const SALES_STORAGE_KEY = "taichiHarnoSalesData";
+      const TIMER_STORAGE_KEY = "upsellTimerDeadlineV1";
+
+      const els = {
+        timerBar: document.getElementById("timerBar"),
+        expiredBar: document.getElementById("expiredBar"),
+        timerCount: document.getElementById("timerCount"),
+        offerBox: document.getElementById("offerBox"),
+        addOfferBtn: document.getElementById("addOfferBtn"),
+        declineBtn: document.getElementById("declineBtn"),
+        checkoutWrap: document.getElementById("checkoutWrap"),
+        checkoutFrame: document.getElementById("checkoutFrame"),
+        checkoutStatus: document.getElementById("checkoutStatus")
+      };
+
+      let finalCheckoutUrl = "";
+
+      function safeJsonParse(raw, fallback) {
+        try {
+          return raw ? JSON.parse(raw) : fallback;
+        } catch (error) {
+          return fallback;
+        }
       }
 
-      document.querySelectorAll("[data-next]").forEach((button) => {
-        button.addEventListener("click", function () {
-          const currentSection = this.closest(".panel");
-          const currentId = currentSection ? currentSection.id : "";
-          const label = (this.textContent || "").trim();
-          if (currentId) responses[currentId] = label;
+      function getTrackingContext() {
+        const stored = safeJsonParse(localStorage.getItem(TRACKING_CONTEXT_STORAGE_KEY), {});
+        const salesData = safeJsonParse(localStorage.getItem(SALES_STORAGE_KEY), {});
+        const trackingFromSales = salesData && salesData.tracking ? salesData.tracking : {};
+        const params = new URLSearchParams(window.location.search);
 
-          const nextStep = Number(this.getAttribute("data-next"));
-          if (nextStep) showStep(nextStep);
-        });
-      });
+        return {
+          lead_id: params.get("lead_id") || trackingFromSales.lead_id || stored.lead_id || "",
+          session_id: params.get("session_id") || trackingFromSales.session_id || stored.session_id || "",
+          utm_source: params.get("utm_source") || trackingFromSales.utm_source || stored.utm_source || "",
+          utm_medium: params.get("utm_medium") || trackingFromSales.utm_medium || stored.utm_medium || "",
+          utm_campaign: params.get("utm_campaign") || trackingFromSales.utm_campaign || stored.utm_campaign || "",
+          utm_content: params.get("utm_content") || trackingFromSales.utm_content || stored.utm_content || "",
+          utm_term: params.get("utm_term") || trackingFromSales.utm_term || stored.utm_term || "",
+          fbp: params.get("fbp") || trackingFromSales.fbp || stored.fbp || "",
+          fbc: params.get("fbc") || trackingFromSales.fbc || stored.fbc || ""
+        };
+      }
 
-      window.__quizResponses = responses;
-      showStep(1);
+      function buildCheckoutUrl() {
+        const base = new URL(UPSELL_CHECKOUT_URL);
+        const ctx = getTrackingContext();
+
+        if (ctx.lead_id) base.searchParams.set("lead_id", ctx.lead_id);
+        if (ctx.session_id) base.searchParams.set("session_id", ctx.session_id);
+        if (ctx.utm_source) base.searchParams.set("utm_source", ctx.utm_source);
+        if (ctx.utm_medium) base.searchParams.set("utm_medium", ctx.utm_medium);
+        if (ctx.utm_campaign) base.searchParams.set("utm_campaign", ctx.utm_campaign);
+        if (ctx.utm_content) base.searchParams.set("utm_content", ctx.utm_content);
+        if (ctx.utm_term) base.searchParams.set("utm_term", ctx.utm_term);
+        if (ctx.fbp) base.searchParams.set("fbp", ctx.fbp);
+        if (ctx.fbc) base.searchParams.set("fbc", ctx.fbc);
+
+        base.searchParams.set("offer_source", "upsell_page");
+        base.searchParams.set("offer_name", "freio_da_fome_natural");
+
+        return base.toString();
+      }
+
+      function buildDeclineUrl() {
+        if (!DOWNSELL_OR_NEXT_URL) return "";
+
+        const base = new URL(DOWNSELL_OR_NEXT_URL);
+        const ctx = getTrackingContext();
+
+        if (ctx.lead_id) base.searchParams.set("lead_id", ctx.lead_id);
+        if (ctx.session_id) base.searchParams.set("session_id", ctx.session_id);
+        if (ctx.utm_source) base.searchParams.set("utm_source", ctx.utm_source);
+        if (ctx.utm_medium) base.searchParams.set("utm_medium", ctx.utm_medium);
+        if (ctx.utm_campaign) base.searchParams.set("utm_campaign", ctx.utm_campaign);
+        if (ctx.utm_content) base.searchParams.set("utm_content", ctx.utm_content);
+        if (ctx.utm_term) base.searchParams.set("utm_term", ctx.utm_term);
+        if (ctx.fbp) base.searchParams.set("fbp", ctx.fbp);
+        if (ctx.fbc) base.searchParams.set("fbc", ctx.fbc);
+
+        base.searchParams.set("offer_declined", "1");
+        base.searchParams.set("offer_name", "freio_da_fome_natural");
+
+        return base.toString();
+      }
+
+      function getOrCreateDeadline() {
+        const saved = sessionStorage.getItem(TIMER_STORAGE_KEY);
+        const parsed = Number(saved);
+
+        if (Number.isFinite(parsed) && parsed > Date.now()) {
+          return parsed;
+        }
+
+        const deadline = Date.now() + TIMER_MINUTES * 60 * 1000;
+        sessionStorage.setItem(TIMER_STORAGE_KEY, String(deadline));
+        return deadline;
+      }
+
+      function formatTime(ms) {
+        const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+      }
+
+      function expireOfferVisual() {
+        els.timerBar.style.display = "none";
+        els.expiredBar.classList.add("active");
+      }
+
+      function startTimer() {
+        const deadline = getOrCreateDeadline();
+
+        function tick() {
+          const remaining = deadline - Date.now();
+
+          if (remaining <= 0) {
+            els.timerCount.textContent = "00:00";
+            expireOfferVisual();
+            return;
+          }
+
+          els.timerCount.textContent = formatTime(remaining);
+          setTimeout(tick, 250);
+        }
+
+        tick();
+      }
+
+      function setLoadingState(isLoading) {
+        els.addOfferBtn.classList.toggle("loading", isLoading);
+        els.addOfferBtn.textContent = isLoading
+          ? "CARREGANDO CHECKOUT..."
+          : "⚡ QUERO ADICIONAR ESTA OFERTA AGORA";
+      }
+
+      function showCheckoutStatus(text, type) {
+        els.checkoutStatus.textContent = text || "";
+        els.checkoutStatus.classList.remove("ok");
+
+        if (type === "ok") {
+          els.checkoutStatus.classList.add("ok");
+        }
+      }
+
+      function openCheckoutInline() {
+        if (!UPSELL_CHECKOUT_URL || UPSELL_CHECKOUT_URL.includes("SEU-CHECKOUT-AQUI")) {
+          alert("Troque a constante UPSELL_CHECKOUT_URL pelo link real do checkout.");
+          return;
+        }
+
+        finalCheckoutUrl = buildCheckoutUrl();
+        setLoadingState(true);
+
+        els.offerBox.classList.add("checkout-open");
+        els.checkoutWrap.classList.add("active");
+        showCheckoutStatus("Carregando checkout...", "");
+
+        els.checkoutFrame.onload = function () {
+          setLoadingState(false);
+          showCheckoutStatus("Checkout carregado abaixo. Você pode concluir nesta mesma tela.", "ok");
+        };
+
+        els.checkoutFrame.src = finalCheckoutUrl;
+
+        setTimeout(() => {
+          els.checkoutWrap.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 120);
+      }
+
+      function handleDecline() {
+        const url = buildDeclineUrl();
+
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+
+        history.back();
+      }
+
+      function bindEvents() {
+        els.addOfferBtn.addEventListener("click", openCheckoutInline);
+        els.declineBtn.addEventListener("click", handleDecline);
+      }
+
+      function init() {
+        startTimer();
+        bindEvents();
+      }
+
+      init();
     })();
   </script>
 </body>
