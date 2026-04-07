@@ -281,11 +281,7 @@
     }
 
     .radio::after{
-      content:"";
-      position:absolute;
-      inset:4px;
-      border-radius:50%;
-      background:#18a84a;
+      content:none;
     }
 
     .plan-name{
@@ -333,6 +329,53 @@
       color:#334155;
     }
 
+    .plans-stack{
+      display:grid;
+      gap:18px;
+    }
+
+    .plan-offer{
+      display:grid;
+      gap:12px;
+    }
+
+    .plan-card.plan-popular{
+      background:#f6f8fb;
+      border-color:#d7deea;
+    }
+
+    .plan-card.plan-anual{
+      background:#edf9ef;
+      border-color:#8ed6a0;
+      box-shadow:0 18px 36px rgba(24,168,74,.14);
+      transform:scale(1.01);
+    }
+
+    .plan-card.plan-popular .plan-highlight{
+      background:#93a2b6;
+      color:#ffffff;
+    }
+
+    .plan-card.plan-anual .plan-highlight{
+      background:#18a84a;
+      color:#ffffff;
+    }
+
+    .price-pill .small-top{
+      font-size:14px;
+      margin-bottom:4px;
+      color:#64748b;
+      font-weight:800;
+    }
+
+    .price-pill .daily{
+      display:block;
+      font-size:12px;
+      margin-top:4px;
+      color:#64748b;
+      font-weight:700;
+    }
+
     .cta{
       display:block;
       width:100%;
@@ -362,6 +405,48 @@
       line-height:1.5;
       font-weight:800;
       border:1px solid var(--line);
+    }
+
+    .plan-recommendation{
+      text-align:center;
+      margin:6px 0 18px;
+    }
+
+    .plan-recommendation-text{
+      margin:0 0 14px;
+      font-size:18px;
+      line-height:1.4;
+      font-weight:800;
+      color:#475569;
+    }
+
+    .plan-recommendation-text strong{
+      color:#1f2937;
+    }
+
+    .plan-recommendation-image{
+      display:block;
+      width:100%;
+      max-width:420px;
+      margin:0 auto 12px;
+      height:auto;
+    }
+
+.plan-recommendation-timer{
+      background:#f4dada;
+      border:1px solid #e9bcbc;
+      border-radius:14px;
+      padding:16px 18px;
+      font-size:18px;
+      line-height:1.35;
+      color:#c81e1e;
+      text-align:center;
+      font-weight:500;
+    }
+
+    .plan-recommendation-timer strong{
+      font-weight:700;
+      color:#c81e1e;
     }
 
     .payment-box{
@@ -947,15 +1032,29 @@
       font-weight:900;
     }
 
-    .floating-cta{
-      position:sticky;
-      bottom:10px;
-      z-index:40;
-      margin-top:16px;
+    .annual-image-note{
+      display:flex;
+      justify-content:center;
+      margin-top:-4px;
+      margin-bottom:4px;
     }
 
-    .floating-cta .cta{
-      border-radius:16px;
+    .annual-image-note img{
+      width:100%;
+      max-width:420px;
+      height:auto;
+      display:block;
+    }
+
+    .annual-pulse{
+      animation: annualPulse 1.8s ease-in-out infinite;
+      transform-origin:center;
+    }
+
+    @keyframes annualPulse{
+      0%{transform:scale(1);box-shadow:0 6px 0 #14913f, 0 0 0 0 rgba(24,168,74,0.28)}
+      50%{transform:scale(1.035);box-shadow:0 6px 0 #14913f, 0 0 0 14px rgba(24,168,74,0)}
+      100%{transform:scale(1);box-shadow:0 6px 0 #14913f, 0 0 0 0 rgba(24,168,74,0)}
     }
 
     @media (max-width: 700px){
@@ -1048,31 +1147,94 @@
           <p>Não é assinatura, você paga somente uma vez.</p>
         </div>
 
-        <div class="plan-card section">
-          <div class="plan-highlight">⭐ OFERTA ESPECIAL DE HOJE</div>
-          <div class="plan-body">
-            <div class="plan-main">
-              <div class="radio"></div>
-              <div>
-                <h3 class="plan-name">Plano Completo</h3>
-                <span class="plan-old">De R$ 97,00</span>
-                <span class="plan-new">Por R$ 37,00</span>
+        <div class="plans-stack section">
+          <div class="plan-offer">
+            <div class="plan-card">
+              <div class="plan-body">
+                <div class="plan-main">
+                  <div class="radio"></div>
+                  <div>
+                    <h3 class="plan-name">Plano de 1 mês</h3>
+                    <span class="plan-old">De R$ 79,00</span>
+                    <span class="plan-new">Por R$ 37,00</span>
+                  </div>
+                </div>
+                <div class="price-pill">
+                  <span class="small-top">por dia</span>
+                  <strong>R$ 1,19</strong>
+                  <span class="daily">pagamento único</span>
+                </div>
               </div>
             </div>
-            <div class="price-pill">
-              <small>Apenas</small>
-              <strong>R$ 37,00</strong>
-              <small>pagamento único</small>
+
+            <a class="cta small buy-btn" href="https://pay.cakto.com.br/nyq6qjr_838922" data-buy-location="cta_topo_1_mes">
+              👉 QUERO O PLANO DE 1 MÊS →
+            </a>
+          </div>
+
+          <div class="plan-offer">
+            <div class="plan-card plan-popular">
+              <div class="plan-highlight">⭐ OPÇÃO INTERMEDIÁRIA</div>
+              <div class="plan-body">
+                <div class="plan-main">
+                  <div class="radio"></div>
+                  <div>
+                    <h3 class="plan-name">Plano de 3 meses</h3>
+                    <span class="plan-old">De R$ 299,00</span>
+                    <span class="plan-new">Por R$ 57,00</span>
+                  </div>
+                </div>
+                <div class="price-pill">
+                  <span class="small-top">por dia</span>
+                  <strong>R$ 0,61</strong>
+                  <span class="daily">pagamento único</span>
+                </div>
+              </div>
             </div>
+
+            <a class="cta small buy-btn" href="https://pay.cakto.com.br/mzvixm7" data-buy-location="cta_topo_3_meses">
+              👉 QUERO O PLANO DE 3 MESES →
+            </a>
+          </div>
+
+          <div class="plan-offer">
+            <div class="plan-card plan-anual">
+              <div class="plan-highlight">✅ PLANO MAIS INDICADO PARA SEGUIR ATÉ O RESULTADO</div>
+              <div class="plan-body">
+                <div class="plan-main">
+                  <div class="radio"></div>
+                  <div>
+                    <h3 class="plan-name">Plano anual</h3>
+                    <span class="plan-old">De R$ 999,00</span>
+                    <span class="plan-new">Por R$ 97,00</span>
+                  </div>
+                </div>
+                <div class="price-pill">
+                  <span class="small-top">por dia</span>
+                  <strong>R$ 0,32</strong>
+                  <span class="daily">pagamento único</span>
+                </div>
+              </div>
+            </div>
+
+            <a class="cta small buy-btn annual-pulse" href="https://pay.cakto.com.br/ap9skiw" data-buy-location="cta_topo_anual">
+              👉 QUERO O PLANO ANUAL →
+            </a>
           </div>
         </div>
 
-        <a class="cta small buy-btn section" href="https://pay.cakto.com.br/nyq6qjr_838922" data-buy-location="cta_topo">
-          👉 QUERO GARANTIR MEU ACESSO AGORA →
-        </a>
+        <div class="annual-image-note section">
+          <img src="melhorplano.png" alt="Melhor plano" />
+        </div>
+
+        <div class="plan-recommendation section">
+          <div class="plan-recommendation-timer">
+            Seu desconto acaba em: <strong class="countdown-sync">14:05</strong>
+          </div>
+        </div>
 
         <div class="notice soft-orange section">
-          ⬆️ Conforme análise do seu perfil, este é o plano mais indicado para atingir seu objetivo com segurança.
+          ⬆️ Conforme análise do seu perfil, o plano anual tende a entregar a melhor combinação entre constância, continuidade e melhor custo-benefício.
         </div>
 
         <div class="payment-box section">
@@ -1404,10 +1566,6 @@
       </section>
 
       <section class="section">
-        <div class="goal-image">
-          <img src="venda-objetivo.png" alt="Objetivo do programa" />
-        </div>
-
         <div class="goals-card">
           <ul class="goals-list">
             <li>✓ Reduzir barriga e medidas com mais constância</li>
@@ -1444,28 +1602,86 @@
       </section>
 
       <section class="section">
-        <div class="plan-card section">
-          <div class="plan-highlight">⭐ OFERTA ESPECIAL DE HOJE</div>
-          <div class="plan-body">
-            <div class="plan-main">
-              <div class="radio"></div>
-              <div>
-                <h3 class="plan-name">Plano Completo</h3>
-                <span class="plan-old">De R$ 97,00</span>
-                <span class="plan-new">Por R$ 37,00</span>
-              </div>
-            </div>
-            <div class="price-pill">
-              <small>Apenas</small>
-              <strong>R$ 37,00</strong>
-              <small>pagamento único</small>
-            </div>
-          </div>
+        <div class="section-title-box section">
+          <h2><span class="green">Escolha seu plano</span> 👇</h2>
+          <p>Selecione a opção que faz mais sentido para o seu momento.</p>
         </div>
 
-        <a class="cta small buy-btn section" href="https://pay.cakto.com.br/nyq6qjr_838922" data-buy-location="cta_meio">
-          👉 QUERO GARANTIR MEU ACESSO AGORA →
-        </a>
+        <div class="plans-stack section">
+          <div class="plan-offer">
+            <div class="plan-card">
+              <div class="plan-body">
+                <div class="plan-main">
+                  <div class="radio"></div>
+                  <div>
+                    <h3 class="plan-name">Plano de 1 mês</h3>
+                    <span class="plan-old">De R$ 79,00</span>
+                    <span class="plan-new">Por R$ 37,00</span>
+                  </div>
+                </div>
+                <div class="price-pill">
+                  <span class="small-top">por dia</span>
+                  <strong>R$ 1,19</strong>
+                  <span class="daily">pagamento único</span>
+                </div>
+              </div>
+            </div>
+
+            <a class="cta small buy-btn" href="https://pay.cakto.com.br/nyq6qjr_838922" data-buy-location="cta_meio_1_mes">
+              👉 QUERO O PLANO DE 1 MÊS →
+            </a>
+          </div>
+
+          <div class="plan-offer">
+            <div class="plan-card plan-popular">
+              <div class="plan-highlight">⭐ OPÇÃO INTERMEDIÁRIA</div>
+              <div class="plan-body">
+                <div class="plan-main">
+                  <div class="radio"></div>
+                  <div>
+                    <h3 class="plan-name">Plano de 3 meses</h3>
+                    <span class="plan-old">De R$ 299,00</span>
+                    <span class="plan-new">Por R$ 57,00</span>
+                  </div>
+                </div>
+                <div class="price-pill">
+                  <span class="small-top">por dia</span>
+                  <strong>R$ 0,61</strong>
+                  <span class="daily">pagamento único</span>
+                </div>
+              </div>
+            </div>
+
+            <a class="cta small buy-btn" href="https://pay.cakto.com.br/mzvixm7" data-buy-location="cta_meio_3_meses">
+              👉 QUERO O PLANO DE 3 MESES →
+            </a>
+          </div>
+
+          <div class="plan-offer">
+            <div class="plan-card plan-anual">
+              <div class="plan-highlight">✅ PLANO MAIS INDICADO PARA SEGUIR ATÉ O RESULTADO</div>
+              <div class="plan-body">
+                <div class="plan-main">
+                  <div class="radio"></div>
+                  <div>
+                    <h3 class="plan-name">Plano anual</h3>
+                    <span class="plan-old">De R$ 999,00</span>
+                    <span class="plan-new">Por R$ 97,00</span>
+                  </div>
+                </div>
+                <div class="price-pill">
+                  <span class="small-top">por dia</span>
+                  <strong>R$ 0,32</strong>
+                  <span class="daily">pagamento único</span>
+                </div>
+              </div>
+            </div>
+
+            <a class="cta small buy-btn annual-pulse" href="https://pay.cakto.com.br/ap9skiw" data-buy-location="cta_meio_anual">
+              👉 QUERO O PLANO ANUAL →
+            </a>
+          </div>
+        </div>
       </section>
 
       <h2 class="faq-title">Perguntas Frequentes</h2>
@@ -1524,12 +1740,6 @@
         </div>
       </section>
 
-      <div class="floating-cta">
-        <a class="cta buy-btn" href="https://pay.cakto.com.br/nyq6qjr_838922" data-buy-location="cta_flutuante">
-          👉 QUERO GARANTIR MEU ACESSO AGORA →
-        </a>
-      </div>
-
     </main>
   </div>
 
@@ -1538,7 +1748,7 @@
     const TRACKING_STORAGE_KEY = "taichiHarnoTracking";
     const SALES_STORAGE_KEY = "taichiHarnoSalesData";
     const TRACKING_CONTEXT_STORAGE_KEY = "taichiHarnoTrackingContext";
-    const CHECKOUT_BASE_URL = "https://pay.cakto.com.br/nyq6qjr_838922";
+    const DEFAULT_CHECKOUT_BASE_URL = "https://pay.cakto.com.br/ap9skiw";
 
     function safeParse(value, fallback) {
       try {
@@ -1879,13 +2089,18 @@
     }
 
     function startCountdown() {
-      let totalSeconds = 14 * 60 + 5;
+      let totalSeconds = 9 * 60 + 5;
       const countdownEl = document.getElementById("countdown");
+      const countdownMirrors = Array.from(document.querySelectorAll(".countdown-sync"));
 
       function tick() {
         const min = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
         const sec = String(totalSeconds % 60).padStart(2, "0");
-        if (countdownEl) countdownEl.textContent = `${min}:${sec}`;
+        const value = `${min}:${sec}`;
+        if (countdownEl) countdownEl.textContent = value;
+        countdownMirrors.forEach((el) => {
+          el.textContent = value;
+        });
         if (totalSeconds > 0) totalSeconds -= 1;
       }
 
@@ -1905,9 +2120,17 @@
       ].join("_");
     }
 
-    function buildCheckoutUrl(clickRef) {
+    function getButtonBaseUrl(button) {
+      const href = normalizeString(button && button.getAttribute("data-base-url"));
+      if (href) return href;
+
+      const currentHref = normalizeString(button && button.getAttribute("href"));
+      return currentHref || DEFAULT_CHECKOUT_BASE_URL;
+    }
+
+    function buildCheckoutUrl(baseUrl, clickRef) {
       const tracking = getTrackingContext();
-      const checkoutUrl = new URL(CHECKOUT_BASE_URL);
+      const checkoutUrl = new URL(baseUrl || DEFAULT_CHECKOUT_BASE_URL);
 
       if (tracking.utm_source) checkoutUrl.searchParams.set("utm_source", tracking.utm_source);
       if (tracking.utm_medium) checkoutUrl.searchParams.set("utm_medium", tracking.utm_medium);
@@ -1925,10 +2148,11 @@
 
     function prepareBuyButtons() {
       const buttons = Array.from(document.querySelectorAll(".buy-btn"));
-      const checkoutUrl = buildCheckoutUrl();
 
       buttons.forEach((button) => {
-        button.setAttribute("href", checkoutUrl);
+        const baseUrl = getButtonBaseUrl(button);
+        button.setAttribute("data-base-url", baseUrl);
+        button.setAttribute("href", buildCheckoutUrl(baseUrl));
       });
     }
 
@@ -1942,7 +2166,8 @@
           const tracking = getTrackingContext();
           const buyLocation = button.getAttribute("data-buy-location") || "cta";
           const clickRef = buildClickRef(buyLocation);
-          const checkoutUrl = buildCheckoutUrl(clickRef);
+          const baseUrl = getButtonBaseUrl(button);
+          const checkoutUrl = buildCheckoutUrl(baseUrl, clickRef);
 
           button.setAttribute("href", checkoutUrl);
 
