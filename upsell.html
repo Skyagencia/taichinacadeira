@@ -35,6 +35,9 @@
       --primary-dark:#1d4ed8;
       --success:#16a34a;
       --warning:#f97316;
+      --gold-1:#fff4bf;
+      --gold-2:#facc15;
+      --gold-3:#d4a514;
       --shadow:0 18px 50px rgba(15, 23, 42, .10);
       --container:780px;
     }
@@ -265,6 +268,152 @@
       font-weight:600;
     }
 
+    .bonus-block{
+      margin:0 0 18px;
+      padding:16px 12px 12px;
+      background:linear-gradient(180deg,#fffdf3 0%,#fff8df 100%);
+      border:1px solid #f4e1a1;
+      border-radius:22px;
+      box-shadow:0 12px 28px rgba(212,165,20,.08);
+    }
+
+    .bonus-header{
+      text-align:center;
+      margin-bottom:14px;
+    }
+
+    .bonus-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid #f3d46e;
+      color:#8a5a00;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      margin-bottom:10px;
+      box-shadow:0 8px 18px rgba(212,165,20,.12);
+    }
+
+    .bonus-title{
+      margin:0 0 8px;
+      font-size:21px;
+      line-height:1.15;
+      font-weight:900;
+      letter-spacing:-.02em;
+      color:#1f2937;
+    }
+
+    .bonus-subtitle{
+      margin:0 auto;
+      max-width:620px;
+      color:#5b6678;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:600;
+    }
+
+    .bonus-bump-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .bonus-bump{
+      display:grid;
+      grid-template-columns:98px 1fr;
+      gap:12px;
+      align-items:start;
+      background:#fff;
+      border:1px solid #e6e8ee;
+      border-radius:18px;
+      padding:12px;
+      box-shadow:0 8px 18px rgba(15,23,42,.04);
+    }
+
+    .bonus-bump-image{
+      position:relative;
+      width:98px;
+    }
+
+    .bonus-bump-image img{
+      width:98px;
+      height:98px;
+      object-fit:cover;
+      border-radius:12px;
+      background:#eef2f7;
+      border:1px solid #e5e7eb;
+    }
+
+    .bonus-seal{
+      position:absolute;
+      top:-10px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:3;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:linear-gradient(180deg,var(--gold-1),var(--gold-2));
+      color:#6b4d00;
+      border:1px solid #e3b81a;
+      box-shadow:0 10px 18px rgba(250,204,21,.24);
+      font-size:9px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      white-space:nowrap;
+      animation:floatSeal 2.8s ease-in-out infinite;
+    }
+
+    .bonus-seal .star{
+      font-size:11px;
+      line-height:1;
+    }
+
+    .bonus-bump-content h4{
+      margin:0 0 6px;
+      font-size:16px;
+      line-height:1.2;
+      font-weight:900;
+      color:#18212f;
+    }
+
+    .bonus-bump-content p{
+      margin:0 0 8px;
+      font-size:13px;
+      line-height:1.5;
+      color:#475569;
+      font-weight:500;
+    }
+
+    .bonus-bump-price{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .bonus-bump-old{
+      font-size:13px;
+      color:#94a3b8;
+      text-decoration:line-through;
+      font-weight:800;
+    }
+
+    .bonus-bump-free{
+      font-size:16px;
+      color:#16a34a;
+      font-weight:900;
+      line-height:1.1;
+    }
+
     .price-box{
       background:#fff;
       border:1px solid var(--line);
@@ -460,6 +609,11 @@
       display:block;
     }
 
+    @keyframes floatSeal{
+      0%,100%{transform:translateX(-50%) translateY(0)}
+      50%{transform:translateX(-50%) translateY(-5px)}
+    }
+
     @media (max-width: 640px){
       .page{
         padding-left:10px;
@@ -481,6 +635,33 @@
       .subheadline,
       .offer-copy{
         font-size:15px;
+      }
+
+      .bonus-bump{
+        grid-template-columns:88px 1fr;
+        gap:10px;
+        padding:10px;
+      }
+
+      .bonus-bump-image{
+        width:88px;
+      }
+
+      .bonus-bump-image img{
+        width:88px;
+        height:88px;
+      }
+
+      .bonus-title{
+        font-size:19px;
+      }
+
+      .bonus-bump-content h4{
+        font-size:15px;
+      }
+
+      .bonus-bump-content p{
+        font-size:12px;
       }
 
       .price-new{
@@ -556,22 +737,94 @@
                 <div class="bullet">✔ Perca até 10 kg em uma semana (causados pelos líquidos presos e retidos)</div>
               </div>
 
+              <div class="bonus-block">
+                <div class="bonus-header">
+                  <div class="bonus-kicker">⭐ bônus premium liberados</div>
+                  <h3 class="bonus-title">Além da oferta principal, você leva também estes 4 bônus:</h3>
+                  <p class="bonus-subtitle">
+                    Todos inclusos hoje sem custo adicional, que estava no produto principal, agora de brinde, porém somente hoje e agora até o tempo acabar  e se você ja adquiriu 1 desses produtos com a oferta principal não se preocupe agora terá todos de uma vez!.
+                  </p>
+                </div>
+
+                <div class="bonus-bump-list">
+                  <div class="bonus-bump">
+                    <div class="bonus-bump-image">
+                      <div class="bonus-seal"><span class="star">⭐</span> Bônus Premium</div>
+                      <img src="gorila.jpg" alt="Bônus 1" />
+                    </div>
+                    <div class="bonus-bump-content">
+                      <h4>MÉTODO PÊNIS DE GORILLA: Aumente em até 10 centímetros!</h4>
+                      <p>Método oculto, que aumenta em até 10 centímetros seu pênis, de forma totalmente segura deixando sua parceira(o) de boca aberta literalmente.</p>
+                      <div class="bonus-bump-price">
+                        <span class="bonus-bump-old">De R$ 19,90</span>
+                        <span class="bonus-bump-free">Hoje: Grátis</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bonus-bump">
+                    <div class="bonus-bump-image">
+                      <div class="bonus-seal"><span class="star">⭐</span> Bônus Premium</div>
+                      <img src="bananasplit.jpg" alt="Bônus 2" />
+                    </div>
+                    <div class="bonus-bump-content">
+                      <h4>Banana Split</h4>
+                      <p>Descrição curta do bônus. Mantém objetivo, direto e com cara de vantagem rápida.</p>
+                      <div class="bonus-bump-price">
+                        <span class="bonus-bump-old">De R$ 17,90</span>
+                        <span class="bonus-bump-free">Hoje: Grátis</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bonus-bump">
+                    <div class="bonus-bump-image">
+                      <div class="bonus-seal"><span class="star">⭐</span> Bônus Premium</div>
+                      <img src="spartano.png" alt="Bônus 3" />
+                    </div>
+                    <div class="bonus-bump-content">
+                      <h4>Chá Espartano para aumentar Testosterona em 10x vezes</h4>
+                      <p>Descrição curta do bônus. Tudo compacto, uma embaixo da outra, no tamanho de bump.</p>
+                      <div class="bonus-bump-price">
+                        <span class="bonus-bump-old">De R$ 12,90</span>
+                        <span class="bonus-bump-free">Hoje: Grátis</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bonus-bump">
+                    <div class="bonus-bump-image">
+                      <div class="bonus-seal"><span class="star">⭐</span> Bônus Premium</div>
+                      <img src="mounjaro.jpg" alt="Bônus 4" />
+                    </div>
+                    <div class="bonus-bump-content">
+                      <h4>Mounjaro Natural Masculino Exclusivo!</h4>
+                      <p>Descrição curta do bônus. Último campo pronto pra tu jogar imagem e copy.</p>
+                      <div class="bonus-bump-price">
+                        <span class="bonus-bump-old">De R$ 12,90</span>
+                        <span class="bonus-bump-free">Hoje: Grátis</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div class="price-box">
                 <div class="price-top">Somente nesta página</div>
                 <div class="price-old">De R$ 97,90</div>
                 <div class="price-new">R$ 3x de 6,63</div>
                 <div class="price-note">
-                  Agora não tem mais volta. O Tai Chi na cadeira vai ajudar, mas se você não eliminar esse inimigo silencioso talvez não tenha resultados satisfatórios.
+                  Agora é com você, você vai ter acesso ao pacote completo com esse mega desconto em todos os produtos para você poder ter 100% de resultado e ainda ter um desempenho de um Jovem de 20 anos denovo com nossas tecnicas milenares.
                 </div>
               </div>
 
               <div class="cta-stack">
                 <button id="addOfferBtn" class="cta-btn cta-primary" type="button">
-                  ⚡ QUERO ELIMINAR BARRIGA ESTUFADA
+                  ⚡ QUERO ELIMINAR BARRIGA ESTUFADA + BÔNUS!
                 </button>
 
                 <button id="declineBtn" class="cta-btn cta-secondary" type="button">
-                  Não, quero arriscar sem essa oferta.
+                  Não, quero arriscar sem essa oferta e bônus.
                 </button>
               </div>
 
@@ -582,7 +835,7 @@
               <div class="testimonials">
                 <h3 class="testimonials-title">Relatos de clientes</h3>
                 <p class="testimonials-subtitle">
-                  Veja oque quem está usando tem a dizer sobre o nosso bloqueador de fome:
+                  Veja oque nossos alunso dizem sobre nosso projeto completo.
                 </p>
 
                 <div class="testimonial-card">
