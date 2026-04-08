@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parabéns pela Compra</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --text: #ffffff;
+      --muted: #dce7f2;
+      --green: #19c15f;
+      --green-2: #25db72;
+      --green-3: #7dffae;
+      --red: #ff4d4f;
+      --red-2: #ff2d2f;
+      --yellow: #ffd54a;
+      --yellow-2: #ffbf00;
+      --card-border: rgba(255,255,255,0.16);
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, #2b1f5a 0%, #1d1847 26%, #111732 56%, #090f20 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    canvas#confetti-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    canvas#confetti-canvas.hidden {
+      opacity: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .hero-card,
+    .gift-card,
+    .offer-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card {
+      text-align: center;
+      padding: 34px 22px 28px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ffd54a, #ffef99);
+      color: #1f1f1f;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 30px rgba(255, 213, 74, 0.25);
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 6vw, 56px);
+      line-height: 1.02;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      text-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    }
+
+    .hero-title .highlight {
+      color: var(--green-3);
+      display: block;
+      margin-top: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(17px, 2.8vw, 22px);
+      line-height: 1.5;
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .gift-card {
+      text-align: center;
+      padding: 30px 20px 34px;
+      margin-bottom: 24px;
+    }
+
+    .gift-title {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .gift-text {
+      font-size: clamp(18px, 3vw, 24px);
+      color: #fff4c4;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .gift-image-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 12px 0 16px;
+    }
+
+    .gift-image {
+      width: min(100%, 280px);
+      max-width: 280px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.35));
+      animation: floatGift 2.8s ease-in-out infinite;
+    }
+
+    @keyframes floatGift {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .btn {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 16px;
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s ease;
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-green {
+      background: linear-gradient(180deg, #25db72, #16b957);
+      color: #ffffff;
+      box-shadow: 0 14px 34px rgba(25, 193, 95, 0.35);
+    }
+
+    .btn-red {
+      background: linear-gradient(180deg, #ff6668, #e63d40);
+      color: #ffffff;
+      box-shadow: 0 14px 34px rgba(230, 61, 64, 0.28);
+    }
+
+    .btn-big {
+      width: 100%;
+      max-width: 430px;
+      min-height: 66px;
+      padding: 18px 24px;
+      font-size: clamp(20px, 3vw, 26px);
+      margin: 0 auto;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      max-width: 430px;
+      min-height: 60px;
+      padding: 16px 22px;
+      font-size: clamp(18px, 2.8vw, 22px);
+    }
+
+    .pulse {
+      animation: pulseGlow 1.35s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 193, 95, 0.55), 0 14px 34px rgba(25, 193, 95, 0.35);
+      }
+      70% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 18px rgba(25, 193, 95, 0), 0 18px 38px rgba(25, 193, 95, 0.42);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 193, 95, 0), 0 14px 34px rgba(25, 193, 95, 0.35);
+      }
+    }
+
+    .offer-card {
+      display: none;
+      padding: 28px 20px 32px;
+      text-align: center;
+      animation: revealOffer 0.5s ease;
+    }
+
+    .offer-card.show {
+      display: block;
+    }
+
+    @keyframes revealOffer {
+      from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .offer-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      margin-bottom: 18px;
+      background: linear-gradient(90deg, #25db72, #b6ff72);
+      color: #0f2515;
+      font-size: 14px;
+      font-weight: 900;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .offer-title {
+      font-size: clamp(30px, 5.2vw, 48px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .offer-title span {
+      color: var(--green-3);
+    }
+
+    .product-image-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0 18px;
+    }
+
+    .product-neon-frame {
+      display: inline-block;
+      padding: 0;
+      border-radius: 22px;
+      border: 2px solid rgba(255, 213, 74, 0.95);
+      box-shadow:
+        0 0 8px rgba(255, 213, 74, 0.95),
+        0 0 18px rgba(255, 213, 74, 0.90),
+        0 0 30px rgba(255, 191, 0, 0.70),
+        0 0 48px rgba(255, 191, 0, 0.45);
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .product-image {
+      width: 100%;
+      max-width: 340px;
+      border-radius: 18px;
+      display: block;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.30);
+      background: #0c1520;
+    }
+
+    .price-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin: 8px 0 18px;
+    }
+
+    .price-label {
+      font-size: 14px;
+      font-weight: 800;
+      color: #dce7f2;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .old-price {
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 900;
+      color: var(--red);
+      text-decoration: line-through;
+      text-decoration-thickness: 4px;
+      text-decoration-color: var(--red-2);
+      line-height: 1;
+      opacity: 0.98;
+    }
+
+    .new-price {
+      font-size: clamp(44px, 6.8vw, 62px);
+      font-weight: 900;
+      color: var(--green-2);
+      line-height: 1;
+      text-shadow:
+        0 0 8px rgba(37, 219, 114, 0.55),
+        0 0 18px rgba(37, 219, 114, 0.35);
+    }
+
+    .offer-copy {
+      max-width: 760px;
+      margin: 0 auto 26px;
+      color: var(--muted);
+      font-size: clamp(17px, 2.6vw, 22px);
+      line-height: 1.65;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .offer-copy p {
+      margin-bottom: 12px;
+    }
+
+    .offer-copy .emoji-line {
+      font-weight: 700;
+    }
+
+    .offer-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .micro-note {
+      text-align: center;
+      color: rgba(255,255,255,0.70);
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 640px) {
+      .wrapper {
+        padding: 18px 14px 42px;
+      }
+
+      .hero-card,
+      .gift-card,
+      .offer-card {
+        border-radius: 22px;
+      }
+
+      .hero-card {
+        padding: 28px 16px 24px;
+      }
+
+      .gift-card,
+      .offer-card {
+        padding: 24px 16px 28px;
+      }
+
+      .btn-big,
+      .btn-secondary {
+        max-width: 100%;
+      }
+
+      .offer-copy {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="wrapper">
+    <section class="hero-card">
+      <div class="badge">✅ COMPRA APROVADA COM SUCESSO</div>
+      <h1 class="hero-title">
+        PARABÉNS PELA SUA COMPRA
+        <span class="highlight">VOCÊ AINDA TEM MAIS UM BENEFÍCIO</span>
+      </h1>
+      <p class="hero-subtitle">
+        Sua compra foi confirmada com sucesso. E por ter tomado essa decisão hoje,
+        você recebeu acesso a uma <strong>nova oportunidade exclusiva</strong> logo abaixo.
+      </p>
+    </section>
+
+    <section class="gift-card" id="giftSection">
+      <h2 class="gift-title">Você ganhou outro presente</h2>
+
+      <div class="gift-image-wrap">
+        <img src="caixa-presente.png" alt="Caixa de presente" class="gift-image">
+      </div>
+
+      <p class="gift-text">Abra agora e veja sua nova oferta especial</p>
+
+      <button class="btn btn-green btn-big pulse" id="openGiftBtn">
+        Abrir presente
+      </button>
+
+      <p class="micro-note">Esse benefício está disponível somente nesta página.</p>
+    </section>
+
+    <section class="offer-card" id="offerSection">
+      <div class="offer-badge">🎁 Segundo presente liberado para você</div>
+
+      <h2 class="offer-title">
+        Parabéns você ganhou desconto especial em
+        <span>"Alívio nas Articulações"</span>
+      </h2>
+
+      <div class="product-image-wrap">
+        <div class="product-neon-frame">
+          <img src="alivio-articulacoes.png" alt="Alívio nas Articulações" class="product-image">
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="price-label">De</div>
+        <div class="old-price">R$ 97,00</div>
+        <div class="price-label">Por apenas</div>
+        <div class="new-price">R$ 19,90</div>
+      </div>
+
+      <div class="offer-copy">
+        <p>Sentir dor no joelho ou no quadril a cada passo não é normal — e não precisa ser o seu futuro.</p>
+
+        <p>Com este guia rápido você aprende:</p>
+
+        <p class="emoji-line">✅ 3 exercícios simples (5 minutos por dia) que aliviam pressão nos joelhos e tornozelos</p>
+        <p class="emoji-line">✅ Truques caseiros naturais para desinflamar e reduzir inchaço</p>
+        <p class="emoji-line">✅ Como usar compressas e chás para acelerar o alívio sem remédios fortes</p>
+        <p class="emoji-line">✅ Rotina prática que cabe em qualquer idade e qualquer rotina</p>
+
+        <p>👉 Imagine caminhar mais leve, sem sentir peso nos joelhos ou rigidez nas pernas.</p>
+        <p>Esse guia é o primeiro passo para devolver liberdade de movimento e bem-estar no dia a dia.</p>
+      </div>
+
+      <div class="offer-buttons">
+        <a href="https://pay.cakto.com.br/3fhdqfn_558877" class="btn btn-green btn-big pulse">
+          Aceitar meu presente
+        </a>
+
+        <a href="downsell2.html" class="btn btn-red btn-secondary">
+          Não aceitar presente
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const openGiftBtn = document.getElementById('openGiftBtn');
+    const giftSection = document.getElementById('giftSection');
+    const offerSection = document.getElementById('offerSection');
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+
+    const confettiColors = ['#ff4d4f', '#ffd54a', '#25db72', '#4db8ff', '#ffffff', '#ff7de9'];
+    const confettiPieces = [];
+    let confettiAnimationId = null;
+    let burstAnimationId = null;
+    let confettiRunning = true;
+    let burstParticles = [];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createConfettiPiece(x = Math.random() * W, y = Math.random() * H - H) {
+      return {
+        x,
+        y,
+        w: random(6, 12),
+        h: random(10, 18),
+        color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+        speedY: random(1.5, 4.5),
+        speedX: random(-2, 2),
+        rotation: random(0, Math.PI * 2),
+        rotationSpeed: random(-0.15, 0.15),
+        opacity: random(0.7, 1)
+      };
+    }
+
+    for (let i = 0; i < 140; i++) {
+      confettiPieces.push(createConfettiPiece());
+    }
+
+    function renderBaseConfetti() {
+      ctx.clearRect(0, 0, W, H);
+
+      confettiPieces.forEach((p) => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotationSpeed;
+
+        if (p.y > H + 20) {
+          p.y = -20;
+          p.x = Math.random() * W;
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+    }
+
+    function drawConfetti() {
+      if (!confettiRunning) return;
+      renderBaseConfetti();
+      confettiAnimationId = requestAnimationFrame(drawConfetti);
+    }
+
+    function stopAllConfetti() {
+      confettiRunning = false;
+
+      if (confettiAnimationId) {
+        cancelAnimationFrame(confettiAnimationId);
+        confettiAnimationId = null;
+      }
+
+      if (burstAnimationId) {
+        cancelAnimationFrame(burstAnimationId);
+        burstAnimationId = null;
+      }
+
+      burstParticles = [];
+      canvas.classList.add('hidden');
+
+      setTimeout(() => {
+        ctx.clearRect(0, 0, W, H);
+        canvas.style.display = 'none';
+      }, 650);
+    }
+
+    function startInitialConfetti() {
+      confettiRunning = true;
+      canvas.style.display = 'block';
+      canvas.classList.remove('hidden');
+      drawConfetti();
+
+      setTimeout(() => {
+        stopAllConfetti();
+      }, 3000);
+    }
+
+    function explodeConfettiBurst() {
+      if (canvas.style.display === 'none') return;
+
+      const burstCount = 120;
+      burstParticles = [];
+
+      for (let i = 0; i < burstCount; i++) {
+        burstParticles.push({
+          x: W / 2,
+          y: Math.min(H * 0.35, 220),
+          size: random(5, 11),
+          color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+          angle: random(0, Math.PI * 2),
+          speed: random(4, 10),
+          life: 90,
+          opacity: 1,
+          gravity: 0.12,
+          vx: 0,
+          vy: 0,
+          rotation: random(0, Math.PI * 2),
+          rotationSpeed: random(-0.25, 0.25)
+        });
+      }
+
+      function animateBurst() {
+        if (!confettiRunning) return;
+
+        renderBaseConfetti();
+
+        for (let i = burstParticles.length - 1; i >= 0; i--) {
+          const p = burstParticles[i];
+          p.vx = Math.cos(p.angle) * p.speed;
+          p.vy = Math.sin(p.angle) * p.speed;
+
+          p.x += p.vx;
+          p.y += p.vy;
+          p.speed *= 0.97;
+          p.vy += p.gravity;
+          p.life--;
+          p.opacity = Math.max(0, p.life / 90);
+          p.rotation += p.rotationSpeed;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          ctx.globalAlpha = p.opacity;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.4);
+          ctx.restore();
+
+          if (p.life <= 0) {
+            burstParticles.splice(i, 1);
+          }
+        }
+
+        if (burstParticles.length > 0 && confettiRunning) {
+          burstAnimationId = requestAnimationFrame(animateBurst);
+        } else {
+          burstAnimationId = null;
+        }
+      }
+
+      if (burstAnimationId) {
+        cancelAnimationFrame(burstAnimationId);
+      }
+
+      animateBurst();
+    }
+
+    openGiftBtn.addEventListener('click', function () {
+      giftSection.style.display = 'none';
+      offerSection.classList.add('show');
+      offerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      explodeConfettiBurst();
+    });
+
+    window.addEventListener('resize', () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    });
+
+    startInitialConfetti();
+  </script>
+</body>
+</html>
