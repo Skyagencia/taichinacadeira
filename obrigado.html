@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Obrigado pela Compra</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --text: #ffffff;
+      --muted: #dbe7f2;
+      --green: #25db72;
+      --green-light: #7dffae;
+      --yellow: #ffd54a;
+      --card-border: rgba(255,255,255,0.16);
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, #18385c 0%, #102743 28%, #091626 58%, #050d16 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 780px;
+      text-align: center;
+      padding: 42px 24px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ffd54a, #ffef99);
+      color: #1f1f1f;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(255, 213, 74, 0.25);
+    }
+
+    .title {
+      font-size: clamp(34px, 6vw, 62px);
+      line-height: 1.02;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-shadow: 0 8px 25px rgba(0,0,0,0.35);
+      margin-bottom: 16px;
+    }
+
+    .title .highlight {
+      display: block;
+      color: var(--green-light);
+      margin-top: 8px;
+    }
+
+    .text {
+      max-width: 650px;
+      margin: 0 auto;
+      font-size: clamp(18px, 2.8vw, 24px);
+      line-height: 1.6;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .text strong {
+      color: #ffffff;
+    }
+
+    .check {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(37,219,114,0.28) 0%, rgba(37,219,114,0.12) 50%, rgba(37,219,114,0.04) 100%);
+      box-shadow:
+        0 0 0 10px rgba(37,219,114,0.06),
+        0 0 30px rgba(37,219,114,0.20);
+      font-size: 46px;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 34px 18px;
+        border-radius: 22px;
+      }
+
+      .check {
+        width: 82px;
+        height: 82px;
+        font-size: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="check">✅</div>
+
+    <div class="badge">Compra finalizada</div>
+
+    <h1 class="title">
+      Obrigado pela compra
+      <span class="highlight">Seu pedido foi concluído com sucesso</span>
+    </h1>
+
+    <p class="text">
+      Agradecemos pela sua confiança. Em breve você receberá no <strong>e-mail cadastrado</strong>
+      todas as informações necessárias de acesso e confirmação da sua compra.
+    </p>
+  </main>
+</body>
+</html>
