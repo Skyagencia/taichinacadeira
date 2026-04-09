@@ -2,7 +2,7 @@ window.FUNNEL_DATA = {
   meta: {
     id: "taichi-harno-funil-novo",
     name: "Tai Chi para Iniciantes",
-    totalSteps: 40
+    totalSteps: 41
   },
 
   steps: [
@@ -30,12 +30,28 @@ window.FUNNEL_DATA = {
           ]
         }
       ],
+      next: "step_01_nome"
+    },
+
+    {
+      id: "step_01_nome",
+      index: 2,
+      stepType: "text_input",
+      logo: "logo-harno.png",
+      texts: [
+        "Qual é o seu nome?",
+        "Queremos personalizar seu plano final com seu nome."
+      ],
+      field: "nome",
+      placeholder: "Digite seu primeiro nome",
+      maxLength: 40,
+      buttonLabel: "Continuar",
       next: "step_02"
     },
 
     {
       id: "step_02",
-      index: 2,
+      index: 3,
       stepType: "content",
       logo: "logo-harno.png",
       images: ["step-02-bem-vindo.png"],
@@ -52,7 +68,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_03",
-      index: 3,
+      index: 4,
       stepType: "question",
       logo: "logo-harno.png",
       texts: [
@@ -76,13 +92,12 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_04",
-      index: 4,
+      index: 5,
       stepType: "content",
       logo: "logo-harno.png",
       images: ["step-04a-40-mais.png", "step-04b-40-mais.png"],
       texts: [
         "A solução certa está aqui.",
-        
         "❌ A barriga começa a crescer\n❌ Os movimentos ficam limitados\n❌ A disposição diminui\n❌ As dores aparecem\n❌ O cansaço vira constante",
         "👉 Não é falta de esforço.",
         "É falta do estímulo certo para o corpo nessa fase da vida."
@@ -95,7 +110,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_05",
-      index: 5,
+      index: 6,
       stepType: "question",
       logo: "logo-harno.png",
       images: ["step-05-conhece-tai-chi.png"],
@@ -119,7 +134,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_06",
-      index: 6,
+      index: 7,
       stepType: "content",
       logo: "logo-harno.png",
       images: ["step-06-nao-e-treino-comum.png"],
@@ -138,7 +153,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_07",
-      index: 7,
+      index: 8,
       stepType: "question",
       logo: "logo-harno.png",
       layout: "image-grid",
@@ -162,7 +177,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_08",
-      index: 8,
+      index: 9,
       stepType: "question",
       logo: "logo-harno.png",
       texts: [
@@ -192,7 +207,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_09",
-      index: 9,
+      index: 10,
       stepType: "question",
       logo: "logo-harno.png",
       layout: "image-grid",
@@ -215,7 +230,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_10",
-      index: 10,
+      index: 11,
       stepType: "question",
       logo: "logo-harno.png",
       layout: "image-grid",
@@ -243,7 +258,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_11",
-      index: 11,
+      index: 12,
       stepType: "content",
       logo: "logo-harno.png",
       images: ["step-11-video-aulas.png"],
@@ -259,7 +274,7 @@ window.FUNNEL_DATA = {
 
     {
       id: "step_12",
-      index: 12,
+      index: 13,
       stepType: "question",
       logo: "logo-harno.png",
       topNote: "Agora vamos conhecer um pouco melhor seu corpo...",
@@ -270,28 +285,6 @@ window.FUNNEL_DATA = {
       optionSets: [
         {
           name: "rigidez_pescoco",
-          multiple: false,
-          options: [
-            { label: "✅ Sim" },
-            { label: "🚫 Não" }
-          ]
-        }
-      ],
-      next: "step_13"
-    },
-
-    {
-      id: "step_13",
-      index: 13,
-      stepType: "question",
-      logo: "logo-harno.png",
-      images: ["step-13-bracos-20-segundos.png"],
-      texts: [
-        "E você aguenta estender os braços por 20 segundos?"
-      ],
-      optionSets: [
-        {
-          name: "aguenta_bracos",
           multiple: false,
           options: [
             { label: "✅ Sim" },
@@ -318,28 +311,6 @@ window.FUNNEL_DATA = {
             { label: "Fico a maior parte do tempo parado" },
             { label: "Me movimento pouco" },
             { label: "Sou ativo na maior parte do tempo" }
-          ]
-        }
-      ],
-      next: "step_15"
-    },
-
-    {
-      id: "step_15",
-      index: 15,
-      stepType: "question",
-      logo: "logo-harno.png",
-      texts: [
-        "Como seu peso costuma mudar?"
-      ],
-      optionSets: [
-        {
-          name: "peso_costuma_mudar",
-          multiple: false,
-          options: [
-            { label: "Engordo com facilidade, mas tenho dificuldade para emagrecer" },
-            { label: "Meu peso sobe e desce com facilidade" },
-            { label: "Tenho dificuldade em ganhar peso ou músculos" }
           ]
         }
       ],
@@ -500,22 +471,6 @@ window.FUNNEL_DATA = {
             { label: "Prefiro que vocês decidam" }
           ]
         }
-      ],
-      next: "step_23"
-    },
-
-    {
-      id: "step_23",
-      index: 23,
-      stepType: "content",
-      logo: "logo-harno.png",
-      images: ["step-23-intensidade-media.png"],
-      texts: [
-        "Ótimo, a intensidade do seu treino será:",
-        "Média"
-      ],
-      buttons: [
-        { label: "Continuar", kind: "next", destination: "next" }
       ],
       next: "step_24"
     },
@@ -685,29 +640,6 @@ window.FUNNEL_DATA = {
           ]
         }
       ],
-      next: "step_33"
-    },
-
-    {
-      id: "step_33",
-      index: 33,
-      stepType: "question",
-      logo: "logo-harno.png",
-      texts: [
-        "Quantas horas de sono você costuma dormir?"
-      ],
-      optionSets: [
-        {
-          name: "horas_sono",
-          multiple: false,
-          options: [
-            { label: "😐 Menos de 5 horas" },
-            { label: "🥱 5 - 6 horas" },
-            { label: "🌙 7 - 8 horas" },
-            { label: "😴 Mais de 8 horas" }
-          ]
-        }
-      ],
       next: "step_34"
     },
 
@@ -751,28 +683,6 @@ window.FUNNEL_DATA = {
       ],
       buttons: [
         { label: "Continuar", kind: "next", destination: "next" }
-      ],
-      next: "step_37"
-    },
-
-    {
-      id: "step_37",
-      index: 37,
-      stepType: "question",
-      logo: "logo-harno.png",
-      texts: [
-        "Está pronto para começar sua transformação ainda hoje?"
-      ],
-      optionSets: [
-        {
-          name: "pronto_para_comecar",
-          multiple: false,
-          options: [
-            { label: "✅ Sim, vou fazer meu primeiro treino hoje" },
-            { label: "✅ Sim, mas começo amanhã" },
-            { label: "💪 Não tenho certeza, mas quero tentar" }
-          ]
-        }
       ],
       next: "step_38"
     },
