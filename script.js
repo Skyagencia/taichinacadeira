@@ -98,26 +98,26 @@
   }
 
   function getOrCreateStorageValue(storage, key, prefix) {
-  try {
-    const existing = storage.getItem(key);
-    if (existing) return existing;
+    try {
+      const existing = storage.getItem(key);
+      if (existing) return existing;
 
-    const created = generateId(prefix);
-    storage.setItem(key, created);
-    return created;
-  } catch (error) {
-    console.warn(`Não foi possível acessar ${key}.`, error);
-    return generateId(prefix);
+      const created = generateId(prefix);
+      storage.setItem(key, created);
+      return created;
+    } catch (error) {
+      console.warn(`Não foi possível acessar ${key}.`, error);
+      return generateId(prefix);
+    }
   }
-}
 
-function getOrCreateLocalStorageValue(key, prefix) {
-  return getOrCreateStorageValue(window.localStorage, key, prefix);
-}
+  function getOrCreateLocalStorageValue(key, prefix) {
+    return getOrCreateStorageValue(window.localStorage, key, prefix);
+  }
 
-function getOrCreateSessionStorageValue(key, prefix) {
-  return getOrCreateStorageValue(window.sessionStorage, key, prefix);
-}
+  function getOrCreateSessionStorageValue(key, prefix) {
+    return getOrCreateStorageValue(window.sessionStorage, key, prefix);
+  }
 
   function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
@@ -159,41 +159,41 @@ function getOrCreateSessionStorageValue(key, prefix) {
   }
 
   function buildTrackingContext() {
-  const urlData = getUrlParams();
-  const storedTracking = getStoredTrackingContext();
+    const urlData = getUrlParams();
+    const storedTracking = getStoredTrackingContext();
 
-  const leadId =
-    normalizeTrackingValue(storedTracking.lead_id) ||
-    getOrCreateLocalStorageValue(LEAD_STORAGE_KEY, "lead");
+    const leadId =
+      normalizeTrackingValue(storedTracking.lead_id) ||
+      getOrCreateLocalStorageValue(LEAD_STORAGE_KEY, "lead");
 
-  const sessionId = getOrCreateSessionStorageValue(SESSION_STORAGE_KEY, "sess");
+    const sessionId = getOrCreateSessionStorageValue(SESSION_STORAGE_KEY, "sess");
 
-  return {
-    lead_id: leadId,
-    session_id: sessionId,
-    utm_source:
-      normalizeTrackingValue(urlData.utm_source) ||
-      normalizeTrackingValue(storedTracking.utm_source),
-    utm_medium:
-      normalizeTrackingValue(urlData.utm_medium) ||
-      normalizeTrackingValue(storedTracking.utm_medium),
-    utm_campaign:
-      normalizeTrackingValue(urlData.utm_campaign) ||
-      normalizeTrackingValue(storedTracking.utm_campaign),
-    utm_content:
-      normalizeTrackingValue(urlData.utm_content) ||
-      normalizeTrackingValue(storedTracking.utm_content),
-    utm_term:
-      normalizeTrackingValue(urlData.utm_term) ||
-      normalizeTrackingValue(storedTracking.utm_term),
-    fbp:
-      normalizeTrackingValue(urlData.fbp) ||
-      normalizeTrackingValue(storedTracking.fbp),
-    fbc:
-      normalizeTrackingValue(urlData.fbc) ||
-      normalizeTrackingValue(storedTracking.fbc)
-  };
-}
+    return {
+      lead_id: leadId,
+      session_id: sessionId,
+      utm_source:
+        normalizeTrackingValue(urlData.utm_source) ||
+        normalizeTrackingValue(storedTracking.utm_source),
+      utm_medium:
+        normalizeTrackingValue(urlData.utm_medium) ||
+        normalizeTrackingValue(storedTracking.utm_medium),
+      utm_campaign:
+        normalizeTrackingValue(urlData.utm_campaign) ||
+        normalizeTrackingValue(storedTracking.utm_campaign),
+      utm_content:
+        normalizeTrackingValue(urlData.utm_content) ||
+        normalizeTrackingValue(storedTracking.utm_content),
+      utm_term:
+        normalizeTrackingValue(urlData.utm_term) ||
+        normalizeTrackingValue(storedTracking.utm_term),
+      fbp:
+        normalizeTrackingValue(urlData.fbp) ||
+        normalizeTrackingValue(storedTracking.fbp),
+      fbc:
+        normalizeTrackingValue(urlData.fbc) ||
+        normalizeTrackingValue(storedTracking.fbc)
+    };
+  }
 
   function loadTrackingContext() {
     state.tracking = buildTrackingContext();
@@ -347,34 +347,34 @@ function getOrCreateSessionStorageValue(key, prefix) {
   }
 
   function trackPageEntryOnce() {
-  try {
-    if (!window.sessionStorage.getItem(PAGE_VIEW_KEY)) {
-      trackEvent("page_view");
-      window.sessionStorage.setItem(PAGE_VIEW_KEY, "1");
-    }
+    try {
+      if (!window.sessionStorage.getItem(PAGE_VIEW_KEY)) {
+        trackEvent("page_view");
+        window.sessionStorage.setItem(PAGE_VIEW_KEY, "1");
+      }
 
-    if (!window.sessionStorage.getItem(VIEW_CONTENT_KEY)) {
-      trackEvent("view_content", {
-        content_name: funnel.meta?.name || "Tai Chi para Iniciantes",
-        content_category: "Funil",
-        content_type: "product"
-      });
-      window.sessionStorage.setItem(VIEW_CONTENT_KEY, "1");
-    }
+      if (!window.sessionStorage.getItem(VIEW_CONTENT_KEY)) {
+        trackEvent("view_content", {
+          content_name: funnel.meta?.name || "Tai Chi para Iniciantes",
+          content_category: "Funil",
+          content_type: "product"
+        });
+        window.sessionStorage.setItem(VIEW_CONTENT_KEY, "1");
+      }
 
-    if (!window.sessionStorage.getItem(SESSION_STARTED_KEY)) {
-      trackEvent("session_start");
-      window.sessionStorage.setItem(SESSION_STARTED_KEY, "1");
-    }
+      if (!window.sessionStorage.getItem(SESSION_STARTED_KEY)) {
+        trackEvent("session_start");
+        window.sessionStorage.setItem(SESSION_STARTED_KEY, "1");
+      }
 
-    if (!window.sessionStorage.getItem(QUIZ_START_KEY)) {
-      trackEvent("quiz_start");
-      window.sessionStorage.setItem(QUIZ_START_KEY, "1");
+      if (!window.sessionStorage.getItem(QUIZ_START_KEY)) {
+        trackEvent("quiz_start");
+        window.sessionStorage.setItem(QUIZ_START_KEY, "1");
+      }
+    } catch (error) {
+      console.warn("Não foi possível marcar eventos iniciais.", error);
     }
-  } catch (error) {
-    console.warn("Não foi possível marcar eventos iniciais.", error);
   }
-}
 
   function trackStepView(step) {
     if (!step) return;
@@ -442,14 +442,76 @@ function getOrCreateSessionStorageValue(key, prefix) {
     return `${num} kg`;
   }
 
+  function getNumericAnswer(key, fallback = 0) {
+    const value = Number(state.answers[key]);
+    return Number.isFinite(value) && value > 0 ? value : fallback;
+  }
+
+  function getArrayAnswer(key) {
+    const value = state.answers[key];
+    return Array.isArray(value) ? value : [];
+  }
+
+  function getStringAnswer(key, fallback = "") {
+    const value = state.answers[key];
+    return value != null ? String(value) : fallback;
+  }
+
+  function normalizeSleepScore(label) {
+    if (/menos de 5/i.test(label)) return 2;
+    if (/5\s*-\s*6/i.test(label)) return 5;
+    if (/7\s*-\s*8/i.test(label)) return 8;
+    if (/mais de 8/i.test(label)) return 7;
+    return 5;
+  }
+
+  function normalizeEnergyScore(label) {
+    if (/exausto/i.test(label)) return 2;
+    if (/variam/i.test(label)) return 5;
+    if (/enérgico|ener[gé]tico|ativo/i.test(label)) return 8;
+    return 5;
+  }
+
   function calculateTrainingIntensity() {
     const preferencia = getStringAnswer("preferencia_inicio_treino", "");
+    const dores = getArrayAnswer("areas_desconforto");
+    const energyLabel = getStringAnswer("nivel_energia", "");
+    const rotinaLabel = getStringAnswer("dia_normal", "");
+    const subirEscadasLabel = getStringAnswer("subir_escadas", "");
+    const rigidezLabel = getStringAnswer("rigidez_pescoco", "");
+    const idadeLabel = getStringAnswer("faixa_etaria", "50 - 59 anos");
+    const tipoCorpo = getStringAnswer("tipo_corpo_atual", "");
 
-    if (/bem leve/i.test(preferencia)) return "Leve";
-    if (/intermedi[áa]rio/i.test(preferencia)) return "Média";
-    if (/mais ativo/i.test(preferencia)) return "Alta";
-    if (/voc[êe]s decidam/i.test(preferencia)) return "Média";
+    let score = 0;
 
+    if (/bem leve/i.test(preferencia)) score -= 2;
+    else if (/intermedi[áa]rio/i.test(preferencia)) score += 0;
+    else if (/mais ativo/i.test(preferencia)) score += 2;
+    else if (/voc[êe]s decidam/i.test(preferencia)) score += 0;
+
+    if (dores.length >= 3) score -= 3;
+    else if (dores.length === 2) score -= 2;
+    else if (dores.length === 1) score -= 1;
+
+    if (/exausto/i.test(energyLabel)) score -= 2;
+    else if (/variam/i.test(energyLabel)) score -= 1;
+    else if (/enérgico|ener[gé]tico|ativo/i.test(energyLabel)) score += 1;
+
+    if (/maior parte do tempo parado/i.test(rotinaLabel)) score -= 2;
+    else if (/movimento pouco/i.test(rotinaLabel)) score -= 1;
+    else if (/ativo na maior parte do tempo/i.test(rotinaLabel)) score += 1;
+
+    if (/não consigo subir/i.test(subirEscadasLabel)) score -= 2;
+    else if (/sem fôlego/i.test(subirEscadasLabel)) score -= 1;
+    else if (/com tranquilidade/i.test(subirEscadasLabel)) score += 1;
+
+    if (/sim/i.test(rigidezLabel)) score -= 1;
+    if (/bem acima do peso/i.test(tipoCorpo)) score -= 2;
+    else if (/acima do peso/i.test(tipoCorpo)) score -= 1;
+    if (/\+70/.test(idadeLabel)) score -= 1;
+
+    if (score <= -3) return "Leve";
+    if (score >= 2) return "Alta";
     return "Média";
   }
 
@@ -458,8 +520,381 @@ function getOrCreateSessionStorageValue(key, prefix) {
     return normalizeLabel(objetivo, "Melhorar condicionamento e mobilidade");
   }
 
+  function getObjectiveCategory() {
+    const objetivo = getPrimaryObjectiveLabel().toLowerCase();
+
+    if (objetivo.includes("perder barriga") || objetivo.includes("emagrecer")) {
+      return "emagrecimento";
+    }
+    if (objetivo.includes("dor")) {
+      return "dores";
+    }
+    if (objetivo.includes("força") || objetivo.includes("músculo")) {
+      return "fortalecimento";
+    }
+    if (objetivo.includes("testosterona")) {
+      return "vitalidade";
+    }
+    return "longevidade";
+  }
+
+  function getProfileName(profile) {
+    const objectiveCategory = getObjectiveCategory();
+
+    if (objectiveCategory === "emagrecimento") {
+      return profile.doresCount > 0
+        ? "Queima de gordura com proteção articular"
+        : "Queima de gordura progressiva 40+";
+    }
+
+    if (objectiveCategory === "dores") {
+      return "Recuperação articular e mobilidade";
+    }
+
+    if (objectiveCategory === "fortalecimento") {
+      return profile.intensityLabel === "Alta"
+        ? "Fortalecimento progressivo e definição"
+        : "Fortalecimento com baixo impacto";
+    }
+
+    if (objectiveCategory === "vitalidade") {
+      return "Vitalidade masculina com ativação segura";
+    }
+
+    return "Longevidade ativa com mobilidade";
+  }
+
+  function getInitialFocus(profile) {
+    const objectiveCategory = getObjectiveCategory();
+
+    if (objectiveCategory === "emagrecimento") {
+      return profile.doresCount > 0
+        ? "destravar o corpo, reduzir sobrecarga e aumentar constância"
+        : "ativar a queima de gordura com progressão segura";
+    }
+
+    if (objectiveCategory === "dores") {
+      return "reduzir travamento, recuperar mobilidade e proteger articulações";
+    }
+
+    if (objectiveCategory === "fortalecimento") {
+      return "ganhar firmeza corporal sem sobrecarregar articulações";
+    }
+
+    if (objectiveCategory === "vitalidade") {
+      return "acordar o corpo, melhorar disposição e recuperar presença física";
+    }
+
+    return "criar consistência, mobilidade e energia para envelhecer bem";
+  }
+
+  function getInitialRestriction(profile) {
+    if (profile.doresCount >= 2) {
+      return "sem impacto e sem sobrecarga nas articulações mais sensíveis";
+    }
+    if (profile.intensityLabel === "Leve") {
+      return "começar sem excesso de esforço para evitar travamento e desistência";
+    }
+    if (/exausto/i.test(profile.energiaLabel) || /5\s*-\s*6|menos de 5/i.test(profile.sonoLabel)) {
+      return "priorizar constância antes de aumentar intensidade";
+    }
+    return "evoluir com segurança antes de avançar para estímulos mais fortes";
+  }
+
+  function getDurationRecommendation(profile) {
+    const preferencia = getStringAnswer("duracao_rotina", "");
+
+    if (profile.intensityLabel === "Leve") {
+      return "7 minutos por dia nas primeiras 2 semanas";
+    }
+
+    if (/30 minutos/i.test(preferencia) && profile.intensityLabel !== "Alta") {
+      return "começar com 15 minutos por dia e subir depois";
+    }
+
+    if (/15 minutos/i.test(preferencia)) {
+      return "15 minutos por dia com progressão gradual";
+    }
+
+    if (/30 minutos/i.test(preferencia) && profile.intensityLabel === "Alta") {
+      return "30 minutos por dia com progressão controlada";
+    }
+
+    return "7 minutos por dia para consolidar constância";
+  }
+
+  function getWhyPlanItems(profile) {
+    const items = [
+      `seu objetivo principal é ${getPrimaryObjectiveLabel().toLowerCase()}`,
+      `sua intensidade inicial ideal hoje é ${profile.intensityLabel.toLowerCase()}`
+    ];
+
+    if (profile.doresCount > 0) {
+      items.push(`você relatou desconforto em ${profile.doresCount} área(s) do corpo`);
+    }
+
+    if (profile.energyScore <= 5) {
+      items.push("seu nível de energia pede um começo mais inteligente e progressivo");
+    }
+
+    if (profile.sleepScore <= 5) {
+      items.push("seu sono atual indica que o corpo precisa de constância antes de intensidade");
+    }
+
+    items.push(`sua meta atual é sair de ${formatKg(profile.pesoAtual)} em direção a ${formatKg(profile.pesoMeta)}`);
+
+    return items.slice(0, 5);
+  }
+
+  function getTimeline(profile) {
+    const objectiveCategory = getObjectiveCategory();
+
+    if (objectiveCategory === "dores") {
+      return [
+        "Semana 1-2: menos travamento e mais confiança para se mover",
+        "Semana 3-4: melhora de mobilidade e redução de desconfortos",
+        "Semana 5-6: mais estabilidade corporal e menos rigidez",
+        "Semana 7-8: sensação de corpo mais solto, seguro e funcional"
+      ];
+    }
+
+    if (objectiveCategory === "fortalecimento") {
+      return [
+        "Semana 1-2: ativação corporal e retomada do ritmo",
+        "Semana 3-4: mais firmeza e controle dos movimentos",
+        "Semana 5-6: evolução visível em postura e consistência",
+        "Semana 7-8: corpo mais forte, definido e responsivo"
+      ];
+    }
+
+    if (objectiveCategory === "vitalidade") {
+      return [
+        "Semana 1-2: corpo mais desperto e menos cansaço no dia a dia",
+        "Semana 3-4: melhora na disposição e na presença física",
+        "Semana 5-6: mais vigor, ritmo e sensação de controle",
+        "Semana 7-8: energia mais estável e corpo mais firme"
+      ];
+    }
+
+    if (objectiveCategory === "longevidade") {
+      return [
+        "Semana 1-2: criação do hábito sem sofrimento",
+        "Semana 3-4: mais leveza e segurança nos movimentos",
+        "Semana 5-6: ganho perceptível de mobilidade e equilíbrio",
+        "Semana 7-8: rotina sustentável para manter o corpo ativo"
+      ];
+    }
+
+    return [
+      "Semana 1-2: destravar o corpo e criar constância",
+      "Semana 3-4: reduzir retenção, sobrecarga e sensação de peso",
+      "Semana 5-6: notar cintura mais leve e mais disposição",
+      "Semana 7-8: consolidar perda de medidas com segurança"
+    ];
+  }
+
+  function buildDynamicHeadline(profile, nomeLead) {
+    const prefixo = nomeLead ? `${nomeLead}, ` : "";
+    return `${prefixo}com base nas suas respostas, identificamos que seu foco principal é ${getPrimaryObjectiveLabel().toLowerCase()}, com intensidade ${profile.intensityLabel.toLowerCase()} e um início pensado para ${profile.focusInitial}.`;
+  }
+
+  function buildDynamicResumo(profile, nomeLead) {
+    const prefixo = nomeLead ? `${nomeLead}, ` : "";
+    const partes = [
+      `${prefixo}seu perfil mostra que o melhor caminho para você hoje é começar com um plano ${profile.intensityLabel.toLowerCase()}, ${profile.restrictionInitial}.`,
+      `O foco inicial será ${profile.focusInitial}.`,
+      `Sua recomendação de ritmo é ${profile.durationRecommendation}.`
+    ];
+
+    if (profile.doresCount > 0) {
+      partes.push(`Como você relatou desconforto em ${profile.doresCount} área(s), seu plano foi configurado para proteger essas regiões enquanto você evolui.`);
+    }
+
+    return partes.join(" ");
+  }
+
+  function getCompatibilityPercent(profile) {
+    let percent = 89;
+    if (profile.intensityLabel === "Leve") percent += 2;
+    if (profile.doresCount > 0) percent += 1;
+    if (profile.energyScore <= 5) percent += 1;
+    return Math.min(97, Math.max(88, percent));
+  }
+
+  function calculateProfile() {
+    const idadeLabel = getStringAnswer("faixa_etaria", "50 - 59 anos");
+    const alturaCm = getNumericAnswer("altura_cm", 170);
+    const pesoAtual = getNumericAnswer("peso_atual", 82);
+    const pesoMeta = getNumericAnswer("peso_meta", Math.max(70, pesoAtual - 8));
+    const alturaM = alturaCm / 100;
+
+    const imc = +(pesoAtual / (alturaM * alturaM)).toFixed(1);
+    const targetImc = +(pesoMeta / (alturaM * alturaM)).toFixed(1);
+
+    let faixa = "Normal";
+    let faixaColor = "#16a34a";
+    let faixaPercent = 40;
+
+    if (imc < 18.5) {
+      faixa = "Abaixo do peso";
+      faixaColor = "#0ea5e9";
+      faixaPercent = 10;
+    } else if (imc < 25) {
+      faixa = "Normal";
+      faixaColor = "#16a34a";
+      faixaPercent = 35;
+    } else if (imc < 30) {
+      faixa = "Sobrepeso";
+      faixaColor = "#f59e0b";
+      faixaPercent = 67;
+    } else {
+      faixa = "Obesidade";
+      faixaColor = "#ef4444";
+      faixaPercent = 87;
+    }
+
+    const sonoLabel = getStringAnswer("horas_sono", "5 - 6 horas");
+    const energiaLabel = getStringAnswer("nivel_energia", "Meus níveis de energia variam ao longo do dia");
+    const dores = getArrayAnswer("areas_desconforto");
+    const incomodos = getArrayAnswer("incomodos_hoje");
+    const gorduraFreq = getStringAnswer("alimentos_gordurosos", "3 - 5 vezes por semana");
+
+    const sleepScore = normalizeSleepScore(sonoLabel);
+    const energyScore = normalizeEnergyScore(energiaLabel);
+    const dorScore = dores.length >= 3 ? 3 : dores.length === 2 ? 5 : dores.length === 1 ? 7 : 8;
+    const mobilityScore =
+      getStringAnswer("rigidez_pescoco").includes("Sim") || getStringAnswer("aguenta_bracos").includes("Não") ? 4 : 7;
+    const metabolismoScore = /quase todos/i.test(gorduraFreq) ? 4 : /3\s*-\s*5/i.test(gorduraFreq) ? 6 : 8;
+
+    const diferencaPeso = Math.max(0, +(pesoAtual - pesoMeta).toFixed(1));
+    const objetivo = diferencaPeso > 0 ? `${diferencaPeso} kg até a meta` : "manutenção e definição";
+    const motivacao = incomodos.length >= 3 ? "Alta" : incomodos.length === 2 ? "Boa" : "Moderada";
+
+    let resumo = "";
+    if (imc >= 30) {
+      resumo =
+        "Seu resultado indica uma faixa de obesidade, com tendência maior a sobrecarga articular, fadiga e dificuldade para manter constância em treinos comuns.";
+    } else if (imc >= 25) {
+      resumo =
+        "Seu resultado indica sobrepeso, o que já costuma aumentar cansaço, rigidez e desconfortos articulares no dia a dia.";
+    } else {
+      resumo =
+        "Seu resultado está fora da faixa de sobrepeso, mas ainda mostra espaço claro para melhorar mobilidade, disposição e composição corporal.";
+    }
+
+    if (sleepScore <= 5) {
+      resumo += " Seu sono também parece estar abaixo do ideal, o que reduz recuperação, energia e controle do apetite.";
+    }
+
+    if (energyScore <= 5) {
+      resumo += " Além disso, seu nível de energia sugere que o corpo está trabalhando com mais desgaste do que deveria.";
+    }
+
+    if (dores.length > 0) {
+      resumo += ` Como você relatou desconforto em ${dores.length} área(s), a estratégia precisa respeitar articulações e focar progresso sem impacto excessivo.`;
+    }
+
+    const ageText = idadeLabel.replace(/\s+/g, " ").trim();
+    const intensityLabel = calculateTrainingIntensity();
+    const objectiveCategory = getObjectiveCategory();
+
+    const profileBase = {
+      idadeLabel: ageText,
+      alturaCm,
+      pesoAtual,
+      pesoMeta,
+      imc,
+      targetImc,
+      faixa,
+      faixaColor,
+      faixaPercent,
+      objetivo,
+      motivacao,
+      sonoLabel,
+      energiaLabel,
+      resumo,
+      doresCount: dores.length,
+      sleepScore,
+      energyScore,
+      intensityLabel,
+      objectiveCategory
+    };
+
+    const profileName = getProfileName(profileBase);
+    const focusInitial = getInitialFocus({ ...profileBase, profileName });
+    const restrictionInitial = getInitialRestriction({ ...profileBase, profileName, focusInitial });
+    const durationRecommendation = getDurationRecommendation({
+      ...profileBase,
+      profileName,
+      focusInitial,
+      restrictionInitial
+    });
+    const compatibilityPercent = getCompatibilityPercent({
+      ...profileBase,
+      profileName,
+      focusInitial,
+      restrictionInitial,
+      durationRecommendation
+    });
+    const whyPlanItems = getWhyPlanItems({
+      ...profileBase,
+      profileName,
+      focusInitial,
+      restrictionInitial,
+      durationRecommendation,
+      compatibilityPercent
+    });
+    const timeline = getTimeline({
+      ...profileBase,
+      profileName,
+      focusInitial,
+      restrictionInitial,
+      durationRecommendation,
+      compatibilityPercent
+    });
+    const planWhy = `Seu plano foi escolhido porque seu objetivo hoje é ${getPrimaryObjectiveLabel().toLowerCase()}, sua intensidade ideal de entrada é ${intensityLabel.toLowerCase()} e o melhor caminho para o seu corpo neste momento é ${focusInitial}.`;
+
+    return {
+      idadeLabel: ageText,
+      alturaCm,
+      pesoAtual,
+      pesoMeta,
+      imc,
+      targetImc,
+      faixa,
+      faixaColor,
+      faixaPercent,
+      objetivo,
+      motivacao,
+      sonoLabel,
+      energiaLabel,
+      resumo,
+      doresCount: dores.length,
+      sleepScore,
+      energyScore,
+      intensityLabel,
+      objectiveCategory,
+      profileName,
+      focusInitial,
+      restrictionInitial,
+      durationRecommendation,
+      compatibilityPercent,
+      whyPlanItems,
+      timeline,
+      planWhy,
+      scores: {
+        energia: energyScore,
+        sono: sleepScore,
+        dor: dorScore,
+        mobilidade: mobilityScore,
+        metabolismo: metabolismoScore
+      }
+    };
+  }
+
   function buildSalesPayload() {
     const profile = calculateProfile();
+    const nomeLead = normalizeLabel(state.answers.nome || "", "");
 
     return {
       generatedAt: new Date().toISOString(),
@@ -476,6 +911,7 @@ function getOrCreateSessionStorageValue(key, prefix) {
         fbc: state.tracking?.fbc || ""
       },
       profile: {
+        nome: nomeLead,
         idadeLabel: profile.idadeLabel,
         alturaCm: profile.alturaCm,
         pesoAtual: profile.pesoAtual,
@@ -490,11 +926,24 @@ function getOrCreateSessionStorageValue(key, prefix) {
         sonoLabel: profile.sonoLabel,
         energiaLabel: profile.energiaLabel,
         resumo: profile.resumo,
+        profileName: profile.profileName,
+        focusInitial: profile.focusInitial,
+        restrictionInitial: profile.restrictionInitial,
+        durationRecommendation: profile.durationRecommendation,
+        compatibilityPercent: profile.compatibilityPercent,
+        whyPlanItems: profile.whyPlanItems,
+        timeline: profile.timeline,
+        planWhy: profile.planWhy,
+        doresCount: profile.doresCount,
+        intensityLabel: profile.intensityLabel,
+        objectiveCategory: profile.objectiveCategory,
         scores: profile.scores
       },
       salesView: {
+        nome: nomeLead,
+        saudacaoNome: nomeLead ? `${nomeLead},` : "",
         objetivo: getPrimaryObjectiveLabel(),
-        intensidade: calculateTrainingIntensity(),
+        intensidade: profile.intensityLabel,
         pesoAtual: formatKg(profile.pesoAtual),
         pesoMeta: formatKg(profile.pesoMeta),
         imc: String(profile.imc),
@@ -502,8 +951,16 @@ function getOrCreateSessionStorageValue(key, prefix) {
         motivacao: profile.motivacao,
         energia: profile.energiaLabel,
         sono: profile.sonoLabel,
-        headlineResumo: `Com base nas suas respostas, identificamos que seu foco principal é ${getPrimaryObjectiveLabel().toLowerCase()} com uma intensidade ${calculateTrainingIntensity().toLowerCase()} e um plano progressivo para sair de ${formatKg(profile.pesoAtual).replace(" kg", "kg")} em direção a ${formatKg(profile.pesoMeta).replace(" kg", "kg")} com segurança.`,
-        resumo: profile.resumo
+        headlineResumo: buildDynamicHeadline(profile, nomeLead),
+        resumo: buildDynamicResumo(profile, nomeLead),
+        profileName: profile.profileName,
+        focusInitial: profile.focusInitial,
+        restrictionInitial: profile.restrictionInitial,
+        durationRecommendation: profile.durationRecommendation,
+        compatibilityPercent: String(profile.compatibilityPercent),
+        whyPlanItems: profile.whyPlanItems,
+        timeline: profile.timeline,
+        planWhy: profile.planWhy
       }
     };
   }
@@ -843,6 +1300,7 @@ function getOrCreateSessionStorageValue(key, prefix) {
       if (continueBtn) {
         continueBtn.addEventListener("click", function () {
           state.answers[fieldName] = currentValues;
+          persistSalesPayload();
           goNext(step);
         });
       }
@@ -854,6 +1312,7 @@ function getOrCreateSessionStorageValue(key, prefix) {
       btn.addEventListener("click", function () {
         const value = btn.getAttribute("data-value");
         state.answers[fieldName] = value;
+        persistSalesPayload();
         goNext(step);
       });
     });
@@ -899,6 +1358,7 @@ function getOrCreateSessionStorageValue(key, prefix) {
 
       error.classList.add("hidden");
       state.answers[fieldName] = current;
+      persistSalesPayload();
       goNext(step);
     }
 
@@ -944,6 +1404,7 @@ function getOrCreateSessionStorageValue(key, prefix) {
 
     button.addEventListener("click", function () {
       state.answers[fieldName] = Number(input.value);
+      persistSalesPayload();
       goNext(step);
     });
   }
@@ -973,138 +1434,9 @@ function getOrCreateSessionStorageValue(key, prefix) {
 
     button.addEventListener("click", function () {
       state.answers[fieldName] = Number(input.value || 0);
+      persistSalesPayload();
       goNext(step);
     });
-  }
-
-  function getNumericAnswer(key, fallback = 0) {
-    const value = Number(state.answers[key]);
-    return Number.isFinite(value) && value > 0 ? value : fallback;
-  }
-
-  function getArrayAnswer(key) {
-    const value = state.answers[key];
-    return Array.isArray(value) ? value : [];
-  }
-
-  function getStringAnswer(key, fallback = "") {
-    const value = state.answers[key];
-    return value != null ? String(value) : fallback;
-  }
-
-  function normalizeSleepScore(label) {
-    if (/menos de 5/i.test(label)) return 2;
-    if (/5\s*-\s*6/i.test(label)) return 5;
-    if (/7\s*-\s*8/i.test(label)) return 8;
-    if (/mais de 8/i.test(label)) return 7;
-    return 5;
-  }
-
-  function normalizeEnergyScore(label) {
-    if (/exausto/i.test(label)) return 2;
-    if (/variam/i.test(label)) return 5;
-    if (/enérgico|ener[gé]tico|ativo/i.test(label)) return 8;
-    return 5;
-  }
-
-  function calculateProfile() {
-    const idadeLabel = getStringAnswer("faixa_etaria", "50 - 59 anos");
-    const alturaCm = getNumericAnswer("altura_cm", 170);
-    const pesoAtual = getNumericAnswer("peso_atual", 82);
-    const pesoMeta = getNumericAnswer("peso_meta", Math.max(70, pesoAtual - 8));
-    const alturaM = alturaCm / 100;
-
-    const imc = +(pesoAtual / (alturaM * alturaM)).toFixed(1);
-    const targetImc = +(pesoMeta / (alturaM * alturaM)).toFixed(1);
-
-    let faixa = "Normal";
-    let faixaColor = "#16a34a";
-    let faixaPercent = 40;
-
-    if (imc < 18.5) {
-      faixa = "Abaixo do peso";
-      faixaColor = "#0ea5e9";
-      faixaPercent = 10;
-    } else if (imc < 25) {
-      faixa = "Normal";
-      faixaColor = "#16a34a";
-      faixaPercent = 35;
-    } else if (imc < 30) {
-      faixa = "Sobrepeso";
-      faixaColor = "#f59e0b";
-      faixaPercent = 67;
-    } else {
-      faixa = "Obesidade";
-      faixaColor = "#ef4444";
-      faixaPercent = 87;
-    }
-
-    const sonoLabel = getStringAnswer("horas_sono", "5 - 6 horas");
-    const energiaLabel = getStringAnswer("nivel_energia", "Meus níveis de energia variam ao longo do dia");
-    const dores = getArrayAnswer("areas_desconforto");
-    const incomodos = getArrayAnswer("incomodos_hoje");
-    const gorduraFreq = getStringAnswer("alimentos_gordurosos", "3 - 5 vezes por semana");
-
-    const sleepScore = normalizeSleepScore(sonoLabel);
-    const energyScore = normalizeEnergyScore(energiaLabel);
-    const dorScore = dores.length >= 3 ? 3 : dores.length === 2 ? 5 : dores.length === 1 ? 7 : 8;
-    const mobilityScore =
-      getStringAnswer("rigidez_pescoco").includes("Sim") || getStringAnswer("aguenta_bracos").includes("Não") ? 4 : 7;
-    const metabolismoScore = /quase todos/i.test(gorduraFreq) ? 4 : /3\s*-\s*5/i.test(gorduraFreq) ? 6 : 8;
-
-    const diferencaPeso = Math.max(0, +(pesoAtual - pesoMeta).toFixed(1));
-    const objetivo = diferencaPeso > 0 ? `${diferencaPeso} kg até a meta` : "manutenção e definição";
-    const motivacao = incomodos.length >= 3 ? "Alta" : incomodos.length === 2 ? "Boa" : "Moderada";
-
-    let resumo = "";
-    if (imc >= 30) {
-      resumo =
-        "Seu resultado indica uma faixa de obesidade, com tendência maior a sobrecarga articular, fadiga e dificuldade para manter constância em treinos comuns.";
-    } else if (imc >= 25) {
-      resumo =
-        "Seu resultado indica sobrepeso, o que já costuma aumentar cansaço, rigidez e desconfortos articulares no dia a dia.";
-    } else {
-      resumo =
-        "Seu resultado está fora da faixa de sobrepeso, mas ainda mostra espaço claro para melhorar mobilidade, disposição e composição corporal.";
-    }
-
-    if (sleepScore <= 5) {
-      resumo += " Seu sono também parece estar abaixo do ideal, o que reduz recuperação, energia e controle do apetite.";
-    }
-
-    if (energyScore <= 5) {
-      resumo += " Além disso, seu nível de energia sugere que o corpo está trabalhando com mais desgaste do que deveria.";
-    }
-
-    if (dores.length > 0) {
-      resumo += ` Como você relatou desconforto em ${dores.length} área(s), a estratégia precisa respeitar articulações e focar progresso sem impacto excessivo.`;
-    }
-
-    const ageText = idadeLabel.replace(/\s+/g, " ").trim();
-
-    return {
-      idadeLabel: ageText,
-      alturaCm,
-      pesoAtual,
-      pesoMeta,
-      imc,
-      targetImc,
-      faixa,
-      faixaColor,
-      faixaPercent,
-      objetivo,
-      motivacao,
-      sonoLabel,
-      energiaLabel,
-      resumo,
-      scores: {
-        energia: energyScore,
-        sono: sleepScore,
-        dor: dorScore,
-        mobilidade: mobilityScore,
-        metabolismo: metabolismoScore
-      }
-    };
   }
 
   function renderSimpleLoadingBar(label, percent, id) {
@@ -1278,92 +1610,65 @@ function getOrCreateSessionStorageValue(key, prefix) {
         ${renderSimpleLoadingBar("Analisando suas respostas", 100, "analise")}
         ${renderSimpleLoadingBar("Organizando sequência das aulas", 82, "sequencia")}
         ${renderSimpleLoadingBar("Ajustando o nível de intensidade", 91, "intensidade")}
-        ${renderSimpleLoadingBar("Criando seu treino personalizado", 100, "treino")}
+        ${renderSimpleLoadingBar("Finalizando seu plano", 100, "final")}
       </div>
 
-      <p style="text-align:center;font-size:30px;font-weight:900;line-height:1.15;margin-bottom:4px;">O corpo muda por completo.</p>
-      <p style="text-align:center;font-size:28px;font-weight:900;line-height:1.15;color:#18a84a;margin-bottom:12px;">Emagrecer é só o começo.</p>
-      <p style="text-align:center;font-size:22px;letter-spacing:3px;margin-bottom:8px;">⭐ ⭐ ⭐ ⭐ ⭐</p>
-      <p style="text-align:center;font-weight:700;margin-bottom:14px;">Nota 4,9 baseada em 42.489 avaliações</p>
-
-      ${renderCarousel(step)}
-
-      <div class="stage-actions">
-        <button type="button" class="primary-btn action-btn" id="analysisContinueBtn" data-destination="next" data-kind="next" disabled style="opacity:.65;cursor:not-allowed;">
-          Continuar
-        </button>
+      <div style="background:#fff;border:1px solid #dfe5e7;border-radius:18px;padding:16px;margin-bottom:16px;box-shadow:0 10px 24px rgba(0,0,0,.05);">
+        <p style="font-size:15px;line-height:1.65;color:#243042;margin:0;">
+          Com base no seu peso atual, no objetivo informado e no nível de energia que você descreveu, a projeção indica espaço real para reduzir medidas e sobrecarga corporal nas próximas semanas, desde que você siga um plano progressivo e consistente.
+        </p>
       </div>
+
+      ${renderButtons(step)}
     `;
 
     animateProgressSequence(() => {
-      const btn = document.getElementById("analysisContinueBtn");
-      if (btn) {
-        btn.disabled = false;
-        btn.style.opacity = "1";
-        btn.style.cursor = "pointer";
-      }
+      bindActionButtons(step);
     });
-
-    bindActionButtons(step);
   }
 
   function createProjectionSvg(currentWeight, targetWeight) {
-    const w = 360;
-    const h = 220;
-    const padding = 24;
+    const maxWeight = Math.max(currentWeight + 4, targetWeight + 8);
+    const minWeight = Math.min(targetWeight - 4, currentWeight - 6, 55);
+    const yScale = (weight) => {
+      const ratio = (weight - minWeight) / (maxWeight - minWeight || 1);
+      return 178 - ratio * 120;
+    };
+
     const points = [
-      { x: padding, y: 44 },
-      { x: 110, y: 92 },
-      { x: 185, y: 152 },
-      { x: 260, y: 168 },
-      { x: 320, y: 166 }
+      { x: 64, y: yScale(currentWeight) },
+      { x: 134, y: yScale(currentWeight - (currentWeight - targetWeight) * 0.35) },
+      { x: 204, y: yScale(currentWeight - (currentWeight - targetWeight) * 0.65) },
+      { x: 274, y: yScale(targetWeight) }
     ];
 
-    const path = `
-      M ${points[0].x} ${points[0].y}
-      C 80 60, 92 88, ${points[1].x} ${points[1].y}
-      S 160 156, ${points[2].x} ${points[2].y}
-      S 236 170, ${points[3].x} ${points[3].y}
-      S 300 170, ${points[4].x} ${points[4].y}
-    `;
+    const polyline = points.map((point) => `${point.x},${point.y}`).join(" ");
 
     return `
-      <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" aria-label="Gráfico de projeção">
-        <defs>
-          <linearGradient id="areaFill" x1="0" x2="1">
-            <stop offset="0%" stop-color="#ef4444" stop-opacity=".35"></stop>
-            <stop offset="55%" stop-color="#f59e0b" stop-opacity=".28"></stop>
-            <stop offset="100%" stop-color="#22c55e" stop-opacity=".22"></stop>
-          </linearGradient>
-          <linearGradient id="lineStroke" x1="0" x2="1">
-            <stop offset="0%" stop-color="#ef4444"></stop>
-            <stop offset="55%" stop-color="#f59e0b"></stop>
-            <stop offset="100%" stop-color="#22c55e"></stop>
-          </linearGradient>
-        </defs>
+      <svg viewBox="0 0 340 220" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="340" height="220" rx="18" fill="#ffffff" />
+        <line x1="42" y1="26" x2="42" y2="188" stroke="#cbd5e1" stroke-width="2" />
+        <line x1="42" y1="188" x2="304" y2="188" stroke="#cbd5e1" stroke-width="2" />
 
-        <g stroke="#d1d5db" stroke-dasharray="4 4">
-          <line x1="24" y1="44" x2="336" y2="44"></line>
-          <line x1="24" y1="88" x2="336" y2="88"></line>
-          <line x1="24" y1="132" x2="336" y2="132"></line>
-          <line x1="24" y1="176" x2="336" y2="176"></line>
-          <line x1="80" y1="24" x2="80" y2="190"></line>
-          <line x1="150" y1="24" x2="150" y2="190"></line>
-          <line x1="220" y1="24" x2="220" y2="190"></line>
-          <line x1="290" y1="24" x2="290" y2="190"></line>
-        </g>
+        <polyline
+          fill="none"
+          stroke="#18a84a"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          points="${polyline}"
+        />
 
-        <path d="${path} L 320 190 L 24 190 Z" fill="url(#areaFill)"></path>
-        <path d="${path}" fill="none" stroke="url(#lineStroke)" stroke-width="4" stroke-linecap="round"></path>
+        ${points
+          .map(
+            (point) => `
+          <circle cx="${point.x}" cy="${point.y}" r="7" fill="#18a84a" />
+        `
+          )
+          .join("")}
 
-        <circle cx="${points[0].x}" cy="${points[0].y}" r="7" fill="#ef4444"></circle>
-        <circle cx="${points[3].x}" cy="${points[3].y}" r="7" fill="#eab308"></circle>
-
-        <rect x="${points[0].x - 12}" y="${points[0].y - 38}" rx="8" ry="8" width="72" height="28" fill="#ef4444"></rect>
-        <text x="${points[0].x + 24}" y="${points[0].y - 19}" fill="#fff" font-size="14" text-anchor="middle" font-weight="700">Agora ${currentWeight}</text>
-
-        <rect x="${points[3].x - 14}" y="${points[3].y - 40}" rx="8" ry="8" width="42" height="28" fill="#facc15"></rect>
-        <text x="${points[3].x + 7}" y="${points[3].y - 21}" fill="#111827" font-size="14" text-anchor="middle" font-weight="800">${targetWeight}</text>
+        <text x="${points[0].x}" y="${points[0].y - 18}" fill="#111827" font-size="14" text-anchor="middle" font-weight="800">${currentWeight}</text>
+        <text x="${points[3].x}" y="${points[3].y - 18}" fill="#111827" font-size="14" text-anchor="middle" font-weight="800">${targetWeight}</text>
 
         <text x="64" y="212" font-size="12" fill="#374151">Sem 1</text>
         <text x="134" y="212" font-size="12" fill="#374151">Sem 4</text>
@@ -1466,6 +1771,7 @@ function getOrCreateSessionStorageValue(key, prefix) {
   function init() {
     loadTrackingContext();
     trackPageEntryOnce();
+    persistSalesPayload();
     renderCurrentStep();
   }
 
