@@ -2,8 +2,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parabéns pela Compra</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <title>Upsell - Barriga chapada 40+</title>
+
   <style>
     * {
       margin: 0;
@@ -12,644 +16,1057 @@
     }
 
     :root {
-      --bg1: #07131f;
-      --bg2: #0d2238;
-      --card: rgba(255,255,255,0.08);
-      --card-border: rgba(255,255,255,0.16);
-      --text: #ffffff;
-      --muted: #d7e3ef;
-      --green: #19c15f;
-      --green-dark: #10a24d;
-      --red: #ff4d4f;
+      --red: #d90f1f;
+      --red-dark: #a50714;
+      --black: #0c0c0d;
+      --white: #ffffff;
       --yellow: #ffd54a;
-      --gold: #ffd54a;
-      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --yellow-strong: #ffbf00;
+      --green: #18c964;
+      --green-dark: #0f9d4b;
+      --gray-bg: #f5f5f7;
+      --gray-line: #e8e8ed;
+      --text: #171717;
+      --muted: #646464;
+      --shadow: 0 12px 34px rgba(0, 0, 0, 0.12);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+
+      /* controle da pulsação do contador */
+      --expire-pulse-duration: 2.6s;
+      --expire-pulse-min-opacity: 0.90;
+      --expire-pulse-max-opacity: 1;
+      --expire-pulse-scale: 1.01;
+      --expire-pulse-shadow: 0 4px 14px rgba(0,0,0,0.16);
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--gray-bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
     }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top, #1d3f66 0%, #0f2740 28%, #081523 58%, #050d16 100%);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    canvas#confetti-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 1;
-      transition: opacity 0.6s ease;
-    }
-
-    canvas#confetti-canvas.hidden {
-      opacity: 0;
-    }
-
-    .wrapper {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 28px 18px 60px;
-    }
-
-    .hero-card,
-    .gift-card,
-    .offer-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
-      border: 1px solid var(--card-border);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-
-    .hero-card {
-      text-align: center;
-      padding: 34px 22px 28px;
-      margin-bottom: 24px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #ffd54a, #ffef99);
-      color: #1f1f1f;
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.4px;
-      margin-bottom: 18px;
-      box-shadow: 0 10px 30px rgba(255, 213, 74, 0.25);
-    }
-
-    .hero-title {
-      font-size: clamp(32px, 6vw, 56px);
-      line-height: 1.02;
-      font-weight: 900;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-      text-shadow: 0 8px 25px rgba(0,0,0,0.35);
-    }
-
-    .hero-title .highlight {
-      color: #7dffae;
-      display: block;
-      margin-top: 8px;
-    }
-
-    .hero-subtitle {
-      font-size: clamp(17px, 2.8vw, 22px);
-      line-height: 1.5;
-      color: var(--muted);
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .gift-card {
-      text-align: center;
-      padding: 30px 20px 34px;
-      margin-bottom: 24px;
-    }
-
-    .gift-image-wrap {
-      width: 100%;
       display: flex;
       justify-content: center;
-      margin: 12px 0 14px;
     }
 
-    .gift-image {
-      width: min(100%, 280px);
-      max-width: 280px;
-      height: auto;
+    img {
+      max-width: 100%;
       display: block;
-      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.35));
-      animation: floatGift 2.8s ease-in-out infinite;
+      height: auto;
     }
 
-    @keyframes floatGift {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
+    a {
+      text-decoration: none;
     }
 
-    .gift-title {
-      font-size: clamp(28px, 5vw, 42px);
+    .page {
+      width: 100%;
+      max-width: 860px;
+      background: #fff;
+      min-height: 100vh;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.02);
+    }
+
+    .expire-bar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      width: 100%;
+      max-width: 860px;
+      background: linear-gradient(180deg, #d91422 0%, #b70c18 100%);
+      color: #fff;
+      text-align: center;
+      padding: 16px 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      font-size: 22px;
+      box-shadow: var(--expire-pulse-shadow);
+      will-change: opacity, transform, box-shadow;
+      animation: urgencyPulse var(--expire-pulse-duration) ease-in-out infinite;
+      transform-origin: center center;
+    }
+
+    @keyframes urgencyPulse {
+      0% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        box-shadow: var(--expire-pulse-shadow);
+      }
+      50% {
+        opacity: var(--expire-pulse-min-opacity);
+        transform: translateX(-50%) scale(var(--expire-pulse-scale));
+        box-shadow: 0 8px 22px rgba(217, 15, 31, 0.28);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        box-shadow: var(--expire-pulse-shadow);
+      }
+    }
+
+    .top-space {
+      height: 96px;
+      background: #fff;
+    }
+
+    .divider {
+      width: min(calc(100% - 36px), 760px);
+      height: 4px;
+      background: var(--red);
+      margin: 0 auto 28px;
+      border-radius: 999px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 18px 40px;
+    }
+
+    .step-bar {
+      background: #0f0f10;
+      color: #ffd54a;
+      text-align: center;
+      font-weight: 900;
+      padding: 18px 16px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      line-height: 1.35;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    .hero-alert {
+      background: linear-gradient(180deg, #ff1b32 0%, #d90f1f 100%);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 26px 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .hero-alert .icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .hero-alert h1 {
+      font-size: 40px;
+      line-height: 1.2;
       font-weight: 900;
       margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .hero-alert p {
+      font-size: 26px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .lead-text {
+      font-size: 24px;
+      line-height: 1.6;
+      color: #2b2b2b;
+      margin-bottom: 18px;
+    }
+
+    .highlight-yellow {
+      background: linear-gradient(transparent 58%, #ffe66a 58%);
+      font-weight: 900;
+    }
+
+    .confirm-box {
+      background: #fafafa;
+      border-left: 4px solid var(--green);
+      color: #5b5b5b;
+      padding: 16px 18px;
+      font-size: 18px;
+      line-height: 1.6;
+      border-radius: 8px;
+      margin-bottom: 34px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius-xl);
+      padding: 34px 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid #f0f0f0;
+      margin-bottom: 26px;
+    }
+
+    .card-outline-yellow {
+      border: 3px solid #f0d469;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.09);
+    }
+
+    .card-dark {
+      background: #0c0c0d;
+      color: #fff;
+      border-radius: var(--radius-xl);
+      padding: 34px 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .icon-top {
+      font-size: 50px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .section-title {
+      font-size: 42px;
+      line-height: 1.18;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      font-size: 24px;
+      line-height: 1.55;
+      color: #2d2d2d;
+    }
+
+    .card-dark .section-subtitle {
+      color: #e8e8e8;
+    }
+
+    .mini-divider {
+      width: 110px;
+      height: 4px;
+      background: #efc24d;
+      border-radius: 999px;
+      margin: 22px auto;
+    }
+
+    .notice-box {
+      background: #fff;
+      border-left: 5px solid var(--red);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px 18px;
+      margin-bottom: 28px;
+      font-size: 24px;
+      line-height: 1.6;
+      color: #2b2b2b;
+    }
+
+    .list-title-red {
+      color: #d30f20;
+      font-size: 34px;
+      line-height: 1.25;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .loss-list,
+    .benefit-list,
+    .check-list,
+    .pain-list {
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+
+    .loss-list li,
+    .benefit-list li,
+    .check-list li,
+    .pain-list li {
+      font-size: 24px;
+      line-height: 1.5;
+      padding: 0 0 14px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .card-dark .pain-list li,
+    .card-dark .benefit-list li {
+      border-bottom-color: rgba(255,255,255,0.08);
+    }
+
+    .loss-list li:last-child,
+    .benefit-list li:last-child,
+    .check-list li:last-child,
+    .pain-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .loss-list strong,
+    .benefit-list strong,
+    .pain-list strong,
+    .check-list strong {
+      font-weight: 900;
+    }
+
+    .red-box {
+      background: linear-gradient(180deg, #ff2240 0%, #d71021 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 24px 18px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.4;
+      font-weight: 900;
+      margin-top: 10px;
+      margin-bottom: 18px;
+    }
+
+    .yellow-box {
+      background: #ffdb2f;
+      color: #111;
+      border-radius: 16px;
+      padding: 22px 18px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.4;
+      font-weight: 900;
+      margin-top: 12px;
+    }
+
+    .arrow-down {
+      text-align: center;
+      color: var(--red);
+      font-size: 38px;
+      font-weight: 900;
+      margin: 16px 0 8px;
+    }
+
+    .continue-reading {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #161616;
+      margin-bottom: 20px;
+    }
+
+    .dark-headline {
+      font-size: 40px;
+      line-height: 1.2;
+      font-weight: 900;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .dark-copy {
+      font-size: 24px;
+      line-height: 1.65;
+      color: #f0f0f0;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .dark-copy .yellow {
+      color: #ffd24b;
+      font-weight: 900;
+    }
+
+    .dark-copy .green {
+      color: #27df75;
+      font-weight: 900;
+    }
+
+    .pain-grid {
+      background: #141415;
+      border: 2px solid rgba(255, 40, 70, 0.55);
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin-top: 22px;
+    }
+
+    .pain-grid h3 {
+      color: #ffd54a;
+      font-size: 32px;
+      line-height: 1.25;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .pain-list li {
       color: #fff;
     }
 
-    .gift-text {
-      font-size: clamp(18px, 3vw, 24px);
-      color: #fff4c4;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
-
-    .btn {
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 16px;
-      font-weight: 900;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s ease;
-      text-align: center;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn-green {
-      background: linear-gradient(180deg, #25db72, #16b957);
-      color: #ffffff;
-      box-shadow: 0 14px 34px rgba(25, 193, 95, 0.35);
-    }
-
-    .btn-red {
-      background: linear-gradient(180deg, #ff6668, #e63d40);
-      color: #ffffff;
-      box-shadow: 0 14px 34px rgba(230, 61, 64, 0.28);
-    }
-
-    .btn-big {
-      width: 100%;
-      max-width: 430px;
-      min-height: 66px;
-      padding: 18px 24px;
-      font-size: clamp(20px, 3vw, 26px);
-      margin: 0 auto;
-    }
-
-    .pulse {
-      animation: pulseGlow 1.35s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 193, 95, 0.55), 0 14px 34px rgba(25, 193, 95, 0.35);
-      }
-      70% {
-        transform: scale(1.03);
-        box-shadow: 0 0 0 18px rgba(25, 193, 95, 0), 0 18px 38px rgba(25, 193, 95, 0.42);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 193, 95, 0), 0 14px 34px rgba(25, 193, 95, 0.35);
-      }
-    }
-
-    .offer-card {
-      display: none;
-      padding: 28px 20px 32px;
-      text-align: center;
-      animation: revealOffer 0.5s ease;
-    }
-
-    .offer-card.show {
-      display: block;
-    }
-
-    @keyframes revealOffer {
-      from {
-        opacity: 0;
-        transform: translateY(22px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .offer-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 16px;
-      margin-bottom: 18px;
-      background: linear-gradient(90deg, #25db72, #b6ff72);
-      color: #0f2515;
-      font-size: 14px;
-      font-weight: 900;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .offer-title {
-      font-size: clamp(30px, 5.2vw, 48px);
-      font-weight: 900;
-      line-height: 1.05;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-    }
-
-    .offer-title span {
-      color: #7dffae;
-    }
-
-    .product-image-wrap {
-      display: flex;
-      justify-content: center;
-      margin: 12px 0 18px;
-    }
-
-    .product-neon-frame {
-      display: inline-block;
-      padding: 0;
-      border-radius: 22px;
-      border: 2px solid rgba(255, 213, 74, 0.95);
-      box-shadow:
-        0 0 8px rgba(255, 213, 74, 0.95),
-        0 0 18px rgba(255, 213, 74, 0.90),
-        0 0 30px rgba(255, 191, 0, 0.70),
-        0 0 48px rgba(255, 191, 0, 0.45);
-      overflow: hidden;
-      background: transparent;
-    }
-
-    .product-image {
-      width: 100%;
-      max-width: 340px;
-      border-radius: 18px;
-      display: block;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.30);
-      background: #0c1520;
-    }
-
-    .price-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      margin: 10px 0 18px;
-    }
-
-    .old-price {
-      font-size: clamp(26px, 4vw, 34px);
-      font-weight: 900;
-      color: #ff4d4f;
-      text-decoration: line-through;
-      text-decoration-thickness: 4px;
-      text-decoration-color: #ff2020;
-      opacity: 0.95;
-      line-height: 1;
-    }
-
-    .new-price {
-      font-size: clamp(38px, 6vw, 58px);
-      font-weight: 900;
-      color: #25db72;
-      line-height: 1;
-      text-shadow:
-        0 0 8px rgba(37, 219, 114, 0.55),
-        0 0 18px rgba(37, 219, 114, 0.35);
-    }
-
-    .price-label {
-      font-size: 14px;
-      font-weight: 700;
-      color: #cfe7d5;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-    }
-
-    .offer-copy {
-      max-width: 720px;
-      margin: 0 auto 26px;
-      color: var(--muted);
-      font-size: clamp(17px, 2.7vw, 22px);
-      line-height: 1.65;
-      font-weight: 500;
-    }
-
-    .offer-buttons {
-      display: flex;
-      flex-direction: column;
+    .gold-list {
+      display: grid;
       gap: 14px;
-      align-items: center;
-      justify-content: center;
-      margin-top: 8px;
-    }
-
-    .btn-secondary {
-      width: 100%;
-      max-width: 430px;
-      min-height: 60px;
-      padding: 16px 22px;
-      font-size: clamp(18px, 2.8vw, 22px);
-    }
-
-    .micro-note {
-      text-align: center;
-      color: rgba(255,255,255,0.70);
-      font-size: 13px;
       margin-top: 18px;
     }
 
-    @media (max-width: 640px) {
-      .wrapper {
-        padding: 18px 14px 42px;
+    .gold-item {
+      background: rgba(255, 200, 54, 0.08);
+      border-left: 4px solid #ffca38;
+      padding: 16px 16px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 22px;
+      line-height: 1.5;
+    }
+
+    .purple-section {
+      background: linear-gradient(180deg, #f2ddff 0%, #ead2ff 100%);
+      border-radius: var(--radius-xl);
+      padding: 32px 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+
+    .purple-section .lead {
+      color: #4f2772;
+      font-size: 32px;
+      line-height: 1.35;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .soft-check {
+      display: grid;
+      gap: 14px;
+    }
+
+    .soft-check-item {
+      background: rgba(255,255,255,0.58);
+      border-radius: 14px;
+      padding: 18px 16px;
+      font-size: 23px;
+      line-height: 1.45;
+      color: #262626;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .soft-check-icon {
+      color: #19c865;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .offer-card {
+      background: linear-gradient(180deg, #1ad669 0%, #0eba57 100%);
+      color: #fff;
+      border-radius: 26px;
+      padding: 28px 22px 24px;
+      box-shadow: 0 18px 36px rgba(16, 150, 74, 0.28);
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .offer-title {
+      font-size: 42px;
+      line-height: 1.15;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .offer-box {
+      background: rgba(255,255,255,0.14);
+      border-radius: 20px;
+      padding: 24px 16px;
+      margin: 14px 0 18px;
+    }
+
+    .normal-price {
+      font-size: 26px;
+      line-height: 1.3;
+      font-weight: 800;
+      margin-bottom: 10px;
+      opacity: 0.95;
+    }
+
+    .normal-price s {
+      opacity: 0.8;
+    }
+
+    .today-price {
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .offer-expire {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, #ffcc24 0%, #ffb400 100%);
+      color: #111;
+      text-align: center;
+      font-size: 32px;
+      line-height: 1.25;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 24px 16px;
+      border-radius: 18px;
+      box-shadow: 0 14px 28px rgba(255, 180, 0, 0.32);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
+    }
+
+    .cta-meta {
+      text-align: center;
+      color: #f0fff4;
+      font-size: 19px;
+      line-height: 1.5;
+      margin-top: 14px;
+      font-weight: 700;
+    }
+
+    .icon-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .icon-info {
+      text-align: center;
+      font-size: 17px;
+      line-height: 1.35;
+      color: #404040;
+      font-weight: 700;
+    }
+
+    .icon-info span {
+      display: block;
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .decline-link {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      font-size: 18px;
+      color: #666;
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 12px 18px 34px;
+      color: #6a6a6a;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .red {
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .green {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .yellow {
+      color: var(--yellow-strong);
+      font-weight: 900;
+    }
+
+    .bold {
+      font-weight: 900;
+    }
+
+    @media (max-width: 768px) {
+      .expire-bar {
+        font-size: 17px;
+        padding: 14px 10px;
       }
 
-      .hero-card,
-      .gift-card,
-      .offer-card {
-        border-radius: 22px;
+      .top-space {
+        height: 84px;
       }
 
-      .hero-card {
-        padding: 28px 16px 24px;
+      .divider {
+        width: calc(100% - 24px);
+        margin-bottom: 20px;
       }
 
-      .gift-card,
-      .offer-card {
-        padding: 24px 16px 28px;
+      .container {
+        padding: 0 12px 28px;
       }
 
-      .btn-big,
-      .btn-secondary {
-        max-width: 100%;
+      .step-bar {
+        font-size: 16px;
+        padding: 14px 12px;
+      }
+
+      .hero-alert {
+        padding: 22px 14px;
+      }
+
+      .hero-alert h1,
+      .section-title,
+      .dark-headline,
+      .offer-title {
+        font-size: 30px;
+      }
+
+      .hero-alert p,
+      .section-subtitle,
+      .lead-text,
+      .notice-box,
+      .dark-copy,
+      .loss-list li,
+      .benefit-list li,
+      .check-list li,
+      .pain-list li,
+      .soft-check-item {
+        font-size: 19px;
+      }
+
+      .card,
+      .card-dark,
+      .purple-section {
+        padding: 24px 16px;
+      }
+
+      .list-title-red,
+      .purple-section .lead,
+      .today-price {
+        font-size: 26px;
+      }
+
+      .red-box,
+      .yellow-box {
+        font-size: 22px;
+      }
+
+      .cta-button {
+        font-size: 24px;
+        padding: 20px 14px;
+      }
+
+      .cta-meta {
+        font-size: 15px;
+      }
+
+      .icon-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .icon-info {
+        font-size: 14px;
+      }
+
+      .icon-info span {
+        font-size: 28px;
+      }
+
+      .offer-box {
+        padding: 18px 12px;
+      }
+
+      .normal-price {
+        font-size: 20px;
+      }
+
+      .offer-expire {
+        font-size: 17px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .hero-alert h1,
+      .section-title,
+      .dark-headline,
+      .offer-title {
+        font-size: 25px;
+      }
+
+      .hero-alert p,
+      .section-subtitle,
+      .lead-text,
+      .notice-box,
+      .dark-copy,
+      .loss-list li,
+      .benefit-list li,
+      .check-list li,
+      .pain-list li,
+      .soft-check-item {
+        font-size: 17px;
+      }
+
+      .list-title-red,
+      .purple-section .lead {
+        font-size: 23px;
+      }
+
+      .red-box,
+      .yellow-box {
+        font-size: 19px;
+      }
+
+      .today-price {
+        font-size: 50px;
+      }
+
+      .cta-button {
+        font-size: 21px;
+      }
+
+      .top-space {
+        height: 78px;
       }
     }
   </style>
 </head>
 <body>
-  <canvas id="confetti-canvas"></canvas>
+  <main class="page">
+    <div class="expire-bar" id="expireBar">
+      ⏰ ESTA PÁGINA EXPIRA EM: <span id="topTimer">10:00</span>
+    </div>
 
-  <div class="wrapper">
-    <section class="hero-card">
-      <div class="badge">✅ COMPRA APROVADA COM SUCESSO</div>
-      <h1 class="hero-title">
-        PARABÉNS PELA SUA COMPRA
-        <span class="highlight">SEU ACESSO ESTÁ A CAMINHO</span>
-      </h1>
-      <p class="hero-subtitle">
-        Sua compra será encaminhada para o <strong>e-mail cadastrado na compra</strong> e o acesso será liberado de forma
-        <strong>imediata</strong>. Verifique também sua caixa de spam ou promoções.
+    <div class="top-space"></div>
+    <div class="divider"></div>
+
+    <div class="container">
+      <section class="step-bar">
+        ⚠️ PASSO 1 de 2: NÃO FECHE NEM ATUALIZE ESTA PÁGINA...
+      </section>
+
+      <section class="hero-alert">
+        <span class="icon">🚨</span>
+        <h1>ATENÇÃO: SUA COMPRA DO TAI CHI NA CADEIRA AINDA NÃO ESTÁ COMPLETA...</h1>
+        <p>
+          Antes de ir para a página de confirmação, você precisa ver isso porque
+          <span class="bold">pode ser a diferença entre reduzir sua barriga mais rápido</span>
+          ou continuar sentindo que seu corpo responde devagar justamente na parte que mais incomoda.
+        </p>
+      </section>
+
+      <p class="lead-text">
+        <span class="highlight-yellow">Não se preocupe:</span> seu pedido do <strong>Tai Chi na Cadeira</strong> já está
+        <strong>confirmado e seguro</strong>. Esta página existe apenas para garantir que você leve junto
+        o que pode <strong>potencializar</strong> seu resultado na barriga, aliviar a sobrecarga nas costas
+        e fazer você sentir mais energia já nos primeiros dias.
       </p>
-    </section>
 
-    <section class="gift-card" id="giftSection">
-      <h2 class="gift-title">Você ganhou um presente especial</h2>
-
-      <div class="gift-image-wrap">
-        <img src="caixa-presente.png" alt="Caixa de presente" class="gift-image">
+      <div class="confirm-box">
+        ✅ O Tai Chi na Cadeira já é o método principal da sua transformação. <strong>Mas existe um complemento secreto</strong>,
+        liberado somente agora para novos alunos, criado para acelerar exatamente a dor número 1 da maioria dos homens 40+:
+        <strong>a barriga grande</strong>.
       </div>
 
-      <p class="gift-text">Você acabou de ganhar um presente</p>
+      <section class="card card-outline-yellow center">
+        <span class="icon-top">✅</span>
+        <h2 class="section-title">Você acaba de dar um passo INCRÍVEL para recuperar seu corpo, sua mobilidade e sua disposição...</h2>
+        <div class="mini-divider"></div>
+        <p class="section-subtitle">
+          Nos próximos dias, o <strong>Tai Chi na Cadeira</strong> vai começar a reorganizar seu corpo por completo.
+          <br /><br />
+          Mas precisamos ser honestos com você:
+        </p>
+      </section>
 
-      <button class="btn btn-green btn-big pulse" id="openGiftBtn">
-        Abrir presente
-      </button>
+      <section class="notice-box">
+        Sair desta página <span class="red">AGORA</span> pode fazer você perder a única oportunidade de adicionar ao seu plano
+        o <strong>protocolo secreto que acelera a resposta da barriga</strong>, reduz a sensação de peso nas costas
+        e ajuda seu corpo a recuperar <strong>leveza e energia</strong> mais rápido.
+      </section>
 
-      <p class="micro-note">Toque no botão para revelar seu presente.</p>
-    </section>
+      <section class="card">
+        <h3 class="list-title-red">❌ O que você perde se sair agora:</h3>
+        <ul class="loss-list">
+          <li>🔥 Levar junto o protocolo que ajuda seu corpo a <strong>desinchar a barriga</strong> com mais rapidez</li>
+          <li>🔥 Começar o Tai Chi na Cadeira com uma <strong>vantagem real</strong> sobre a parte mais difícil de todas: a gordura abdominal</li>
+          <li>🔥 Reduzir a <strong>sobrecarga na lombar e nas costas</strong> causada pela barriga pesada e pelo corpo travado</li>
+          <li>🔥 Sentir mais <strong>disposição, leveza e energia</strong> já no início do processo</li>
+          <li>🔥 Entrar no método completo, e não apenas com <strong>metade da estratégia</strong></li>
+        </ul>
+      </section>
 
-    <section class="offer-card" id="offerSection">
-      <div class="offer-badge">🎁 Presente liberado para você</div>
+      <section class="card card-outline-yellow center">
+        <span class="icon-top">🔒</span>
+        <h2 class="section-title">E se você pudesse “desbloquear” a parte secreta do Tai Chi que acelera a redução da barriga?</h2>
+        <div class="mini-divider"></div>
+        <p class="section-subtitle">
+          Porque não se trata apenas de fazer exercício...
+          <br /><br />
+          Trata-se de dar ao corpo masculino depois dos 40 o <span class="red">estímulo certo</span> para ele voltar a responder.
+        </p>
+      </section>
 
-      <h2 class="offer-title">
-        Parabéns você ganhou <span>80% de desconto</span><br>
-        no produto <span>"Tadalafila Natural"</span>
-      </h2>
+      <section class="card">
+        <ul class="benefit-list">
+          <li>🧠 É o <strong>empurrão estratégico</strong> que potencializa o Tai Chi na Cadeira justamente na região abdominal</li>
+          <li>⚡ É o complemento que ajuda você a se sentir <strong>mais leve, menos inchado e com mais energia</strong></li>
+          <li>🦴 É o apoio extra para aliviar a <strong>pressão que a barriga joga sobre as costas e a lombar</strong></li>
+          <li>🔥 É a diferença entre começar o processo com o corpo travado e começar já sentindo que <strong>algo está mudando</strong></li>
+        </ul>
 
-      <div class="product-image-wrap">
-        <div class="product-neon-frame">
-          <img src="tadalafila-natural.jpg" alt="Tadalafila Natural" class="product-image">
+        <h3 class="list-title-red center" style="margin-top: 26px;">Agora responda com TOTAL HONESTIDADE:</h3>
+
+        <div class="red-box">
+          Você quer esperar semanas para notar sua barriga diminuir...
+          <br /><br />
+          ou prefere começar o Tai Chi na Cadeira já com um acelerador focado justamente no que mais te incomoda?
+        </div>
+
+        <p class="lead-text center" style="margin-bottom: 0;">
+          Porque existe um problema silencioso que derruba muitos homens no começo:
+        </p>
+
+        <div class="yellow-box">
+          Fazer tudo certo nos primeiros dias...
+          <br />
+          e não enxergar nenhuma mudança visível na barriga, no espelho e na disposição.
+        </div>
+      </section>
+
+      <div class="arrow-down">⬇️</div>
+      <div class="continue-reading">CONTINUAR LENDO</div>
+      <div class="arrow-down">⬇️</div>
+
+      <section class="card-dark">
+        <h2 class="dark-headline">A verdade que quase ninguém te conta sobre diminuir a barriga depois dos 40...</h2>
+        <div class="mini-divider"></div>
+        <p class="dark-copy">
+          Não se trata só de se movimentar e comer melhor.
+          <br /><br />
+          Se trata de <span class="yellow">DESBLOQUEAR</span> um corpo que está há anos acumulando tensão, inchaço, excesso abdominal e cansaço.
+          <br /><br />
+          Se trata de dar ao seu organismo o <span class="green">EMPURRÃO CERTO</span> para voltar a responder com mais velocidade.
+        </p>
+
+        <div class="pain-grid">
+          <h3>As 5 frustrações mais comuns dos homens 40+:</h3>
+          <ul class="pain-list">
+            <li><strong>1.</strong> Barriga dura, estufada e difícil de diminuir</li>
+            <li><strong>2.</strong> Costas e lombar pesando por causa do excesso abdominal</li>
+            <li><strong>3.</strong> Sensação de “faço tudo certo”, mas o espelho não muda</li>
+            <li><strong>4.</strong> Corpo travado, sem leveza e sem energia ao longo do dia</li>
+            <li><strong>5.</strong> Desânimo nas primeiras semanas por não perceber resposta rápida</li>
+          </ul>
+        </div>
+
+        <div class="gold-list">
+          <div class="gold-item">💪 Imagine começar o Tai Chi já com mais chance de ver a barriga responder antes</div>
+          <div class="gold-item">🪑 Imagine se mover com menos peso e menos pressão nas costas</div>
+          <div class="gold-item">⚡ Imagine acordar se sentindo menos inchado e com mais disposição para seguir o método</div>
+          <div class="gold-item">🔥 Essa é a diferença entre apenas “tentar melhorar” e entrar com a estratégia completa</div>
+        </div>
+      </section>
+
+      <section class="purple-section">
+        <div class="lead">
+          Aqui não importa se você tem 40, 50, 60 ou mais.
+          <br />
+          Não importa se você nunca treinou de verdade.
+          <br />
+          Não importa se você já tentou antes e parou no meio.
+        </div>
+
+        <div class="card" style="margin-bottom: 0; box-shadow: none; border: 1px solid rgba(79,39,114,0.10);">
+          <h3 class="list-title-red center" style="color:#4f2772;">✨ O único ponto que importa é este:</h3>
+          <div class="soft-check">
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>Você está pronto para <strong>parar de tentar</strong> e começar a transformar seu corpo com o método completo</div>
+            </div>
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>Você merece ver sua barriga diminuir sem depender de treinos pesados e sofrimento desnecessário</div>
+            </div>
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>Seu corpo pode mudar, mas para isso ele precisa do <strong>estímulo certo</strong>, no momento certo</div>
+            </div>
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>O <strong>Barriga chapada 40+</strong> foi criado exatamente para potencializar o Tai Chi na Cadeira onde a maioria dos homens mais sofre</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="offer-card">
+        <div class="offer-title">Barriga chapada 40+</div>
+        <div style="font-size: 24px; font-weight: 800; line-height: 1.45;">
+          O <strong>Protocolo Secreto do Tai Chi</strong> para acelerar os resultados na barriga, aliviar a pressão nas costas e aumentar sua sensação de energia.
+        </div>
+
+        <div class="offer-box">
+          <div class="normal-price">Preço normal: <s>R$ 197,00</s></div>
+          <div style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Somente nesta página:</div>
+          <div class="today-price">R$ 37,00</div>
+          <div class="offer-expire">⏰ Oferta expira em: <span id="offerTimer">10:00</span></div>
+        </div>
+
+        <a href="https://pay.cakto.com.br/8ymd62t_848376" class="cta-button">
+          SIM, QUERO ADICIONAR O BARRIGA CHAPADA 40+ AO MEU PLANO →
+        </a>
+
+        <div class="cta-meta">
+          🔒 Pagamento 100% seguro &nbsp;|&nbsp; ✅ Garantia de 30 dias &nbsp;|&nbsp; 📲 Acesso imediato
+        </div>
+      </section>
+
+      <div class="icon-row">
+        <div class="icon-info">
+          <span>🔒</span>
+          Pagamento seguro
+        </div>
+        <div class="icon-info">
+          <span>✅</span>
+          Garantia
+        </div>
+        <div class="icon-info">
+          <span>⚡</span>
+          Acesso imediato
+        </div>
+        <div class="icon-info">
+          <span>🔥</span>
+          Oferta única
         </div>
       </div>
 
-      <div class="price-box">
-        <div class="price-label">De</div>
-        <div class="old-price">R$ 115,00</div>
-        <div class="price-label">Por apenas</div>
-        <div class="new-price">R$ 23,00</div>
-      </div>
+      <a href="https://taichinacadeira.onrender.com/downsell.html" class="decline-link">
+        Não, quero continuar apenas com o Tai Chi na Cadeira
+      </a>
+    </div>
 
-      <p class="offer-copy">
-        Chega de depender de remédio de farmácia que agride seu coração para deixar você algumas horinhas duro,
-        nossa fórmula faz isso de forma natural sem forçar seu sistema cardiovascular e totalmente natural tenha dias
-        de ereção contínua sem por sua saúde em risco e deixe sua parceira(o) de boca aberta sem entender oque você fez!
-      </p>
-
-      <div class="offer-buttons">
-        <a href="https://pay.cakto.com.br/39wdnsv_841485" class="btn btn-green btn-big pulse">
-          Aceitar meu presente
-        </a>
-
-        <a href="https://taichinacadeira.onrender.com/downsell.html" class="btn btn-red btn-secondary">
-          Não aceitar presente
-        </a>
-      </div>
-    </section>
-  </div>
+    <footer class="footer">
+      <p><strong>Aviso:</strong> o Barriga Chapada 40+ é um complemento digital de apoio ao seu plano principal.</p>
+      <p>Copyright 2026 © Todos os direitos reservados.</p>
+      <p>Política de Privacidade • Termos de Uso • Aviso Legal</p>
+    </footer>
+  </main>
 
   <script>
-    const openGiftBtn = document.getElementById('openGiftBtn');
-    const giftSection = document.getElementById('giftSection');
-    const offerSection = document.getElementById('offerSection');
-    const canvas = document.getElementById('confetti-canvas');
-    const ctx = canvas.getContext('2d');
+    /*
+      ============================
+      CONFIGURAÇÕES RÁPIDAS
+      ============================
+      1) Troque o link do botão principal:
+         href="SEU_LINK_DO_CHECKOUT_UPSELL_AQUI"
 
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
+      2) Troque o link de recusa, se quiser:
+         href="pagina-obrigado.html"
 
-    const confettiColors = ['#ff4d4f', '#ffd54a', '#25db72', '#4db8ff', '#ffffff', '#ff7de9'];
-    const confettiPieces = [];
-    let confettiAnimationId = null;
-    let burstAnimationId = null;
-    let confettiRunning = true;
-    let burstParticles = [];
+      3) Troque o tempo da oferta aqui embaixo:
+    */
+    const COUNTDOWN_MINUTES = 10;
 
-    function random(min, max) {
-      return Math.random() * (max - min) + min;
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = seconds % 60;
+      return String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
     }
 
-    function createConfettiPiece(x = Math.random() * W, y = Math.random() * H - H) {
-      return {
-        x,
-        y,
-        w: random(6, 12),
-        h: random(10, 18),
-        color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-        speedY: random(1.5, 4.5),
-        speedX: random(-2, 2),
-        rotation: random(0, Math.PI * 2),
-        rotationSpeed: random(-0.15, 0.15),
-        opacity: random(0.7, 1)
-      };
+    function updateUrgencyPulse(remaining, totalSeconds) {
+      const root = document.documentElement;
+      const progress = 1 - (remaining / totalSeconds);
+
+      let duration = 2.6;
+      let minOpacity = 0.90;
+      let scale = 1.01;
+      let shadow = "0 4px 14px rgba(0,0,0,0.16)";
+
+      if (progress >= 0.25) {
+        duration = 2.2;
+        minOpacity = 0.86;
+        scale = 1.012;
+        shadow = "0 6px 18px rgba(217, 15, 31, 0.20)";
+      }
+
+      if (progress >= 0.50) {
+        duration = 1.8;
+        minOpacity = 0.80;
+        scale = 1.015;
+        shadow = "0 8px 22px rgba(217, 15, 31, 0.26)";
+      }
+
+      if (progress >= 0.75) {
+        duration = 1.35;
+        minOpacity = 0.72;
+        scale = 1.018;
+        shadow = "0 10px 28px rgba(217, 15, 31, 0.34)";
+      }
+
+      if (remaining <= 60) {
+        duration = 0.95;
+        minOpacity = 0.64;
+        scale = 1.022;
+        shadow = "0 12px 34px rgba(217, 15, 31, 0.42)";
+      }
+
+      root.style.setProperty("--expire-pulse-duration", duration + "s");
+      root.style.setProperty("--expire-pulse-min-opacity", minOpacity);
+      root.style.setProperty("--expire-pulse-scale", scale);
+      root.style.setProperty("--expire-pulse-shadow", shadow);
     }
 
-    for (let i = 0; i < 140; i++) {
-      confettiPieces.push(createConfettiPiece());
-    }
+    function startCountdown(initialMinutes) {
+      const totalSeconds = initialMinutes * 60;
+      let remaining = totalSeconds;
 
-    function renderBaseConfetti() {
-      ctx.clearRect(0, 0, W, H);
+      const topTimer = document.getElementById("topTimer");
+      const offerTimer = document.getElementById("offerTimer");
 
-      confettiPieces.forEach((p) => {
-        p.y += p.speedY;
-        p.x += p.speedX;
-        p.rotation += p.rotationSpeed;
+      function render() {
+        const safeRemaining = Math.max(remaining, 0);
+        const formatted = formatTime(safeRemaining);
 
-        if (p.y > H + 20) {
-          p.y = -20;
-          p.x = Math.random() * W;
+        if (topTimer) topTimer.textContent = formatted;
+        if (offerTimer) offerTimer.textContent = formatted;
+
+        updateUrgencyPulse(safeRemaining, totalSeconds);
+      }
+
+      render();
+
+      const interval = setInterval(() => {
+        remaining--;
+        render();
+
+        if (remaining <= 0) {
+          clearInterval(interval);
         }
-
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rotation);
-        ctx.globalAlpha = p.opacity;
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
-      });
+      }, 1000);
     }
 
-    function drawConfetti() {
-      if (!confettiRunning) return;
-      renderBaseConfetti();
-      confettiAnimationId = requestAnimationFrame(drawConfetti);
-    }
-
-    function stopAllConfetti() {
-      confettiRunning = false;
-
-      if (confettiAnimationId) {
-        cancelAnimationFrame(confettiAnimationId);
-        confettiAnimationId = null;
-      }
-
-      if (burstAnimationId) {
-        cancelAnimationFrame(burstAnimationId);
-        burstAnimationId = null;
-      }
-
-      burstParticles = [];
-      canvas.classList.add('hidden');
-
-      setTimeout(() => {
-        ctx.clearRect(0, 0, W, H);
-        canvas.style.display = 'none';
-      }, 650);
-    }
-
-    function startInitialConfetti() {
-      confettiRunning = true;
-      canvas.style.display = 'block';
-      canvas.classList.remove('hidden');
-      drawConfetti();
-
-      setTimeout(() => {
-        stopAllConfetti();
-      }, 3000);
-    }
-
-    function explodeConfettiBurst() {
-      if (canvas.style.display === 'none') return;
-
-      const burstCount = 120;
-      burstParticles = [];
-
-      for (let i = 0; i < burstCount; i++) {
-        burstParticles.push({
-          x: W / 2,
-          y: Math.min(H * 0.35, 220),
-          size: random(5, 11),
-          color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-          angle: random(0, Math.PI * 2),
-          speed: random(4, 10),
-          life: 90,
-          opacity: 1,
-          gravity: 0.12,
-          vx: 0,
-          vy: 0,
-          rotation: random(0, Math.PI * 2),
-          rotationSpeed: random(-0.25, 0.25)
-        });
-      }
-
-      function animateBurst() {
-        if (!confettiRunning) return;
-
-        renderBaseConfetti();
-
-        for (let i = burstParticles.length - 1; i >= 0; i--) {
-          const p = burstParticles[i];
-          p.vx = Math.cos(p.angle) * p.speed;
-          p.vy = Math.sin(p.angle) * p.speed;
-
-          p.x += p.vx;
-          p.y += p.vy;
-          p.speed *= 0.97;
-          p.vy += p.gravity;
-          p.life--;
-          p.opacity = Math.max(0, p.life / 90);
-          p.rotation += p.rotationSpeed;
-
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.rotation);
-          ctx.globalAlpha = p.opacity;
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.4);
-          ctx.restore();
-
-          if (p.life <= 0) {
-            burstParticles.splice(i, 1);
-          }
-        }
-
-        if (burstParticles.length > 0 && confettiRunning) {
-          burstAnimationId = requestAnimationFrame(animateBurst);
-        } else {
-          burstAnimationId = null;
-        }
-      }
-
-      if (burstAnimationId) {
-        cancelAnimationFrame(burstAnimationId);
-      }
-
-      animateBurst();
-    }
-
-    openGiftBtn.addEventListener('click', function () {
-      giftSection.style.display = 'none';
-      offerSection.classList.add('show');
-      offerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      explodeConfettiBurst();
+    document.addEventListener("DOMContentLoaded", function () {
+      startCountdown(COUNTDOWN_MINUTES);
     });
-
-    window.addEventListener('resize', () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    });
-
-    startInitialConfetti();
   </script>
 </body>
 </html>
