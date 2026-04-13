@@ -2,8 +2,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Última Chance - Alívio nas Articulações</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <title>Downsell - Protocolo Completo da Barriga</title>
+
   <style>
     * {
       margin: 0;
@@ -12,475 +16,1046 @@
     }
 
     :root {
-      --text: #ffffff;
-      --muted: #dce7f2;
-      --green: #19c15f;
-      --green-2: #25db72;
-      --green-3: #7dffae;
-      --red: #ff4d4f;
-      --red-2: #ff2d2f;
+      --red: #d90f1f;
+      --red-dark: #a50714;
+      --black: #0c0c0d;
+      --white: #ffffff;
       --yellow: #ffd54a;
-      --yellow-2: #ffbf00;
-      --card-border: rgba(255,255,255,0.16);
-      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --yellow-strong: #ffbf00;
+      --green: #18c964;
+      --green-dark: #0f9d4b;
+      --gray-bg: #f5f5f7;
+      --gray-line: #e8e8ed;
+      --text: #171717;
+      --muted: #646464;
+      --shadow: 0 12px 34px rgba(0, 0, 0, 0.12);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+
+      --expire-pulse-duration: 2.6s;
+      --expire-pulse-min-opacity: 0.90;
+      --expire-pulse-max-opacity: 1;
+      --expire-pulse-scale: 1.01;
+      --expire-pulse-shadow: 0 4px 14px rgba(0,0,0,0.16);
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--gray-bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
     }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top, #1e295a 0%, #172042 26%, #111731 56%, #090f1f 100%);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
+      display: flex;
+      justify-content: center;
     }
 
-    canvas#confetti-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 1;
-      transition: opacity 0.6s ease;
+    img {
+      max-width: 100%;
+      display: block;
+      height: auto;
     }
 
-    canvas#confetti-canvas.hidden {
-      opacity: 0;
+    a {
+      text-decoration: none;
     }
 
-    .wrapper {
-      position: relative;
-      z-index: 2;
+    .page {
       width: 100%;
       max-width: 860px;
-      margin: 0 auto;
-      padding: 28px 18px 60px;
+      background: #fff;
+      min-height: 100vh;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.02);
     }
 
-    .main-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
-      border: 1px solid var(--card-border);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-      text-align: center;
-      padding: 34px 22px 34px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #ffd54a, #ffef99);
-      color: #1f1f1f;
-      font-weight: 900;
-      font-size: 14px;
-      letter-spacing: 0.4px;
-      margin-bottom: 18px;
-      box-shadow: 0 10px 30px rgba(255, 213, 74, 0.25);
-      text-transform: uppercase;
-    }
-
-    .headline {
-      font-size: clamp(30px, 5.5vw, 54px);
-      line-height: 1.06;
-      font-weight: 900;
-      text-transform: uppercase;
-      text-shadow: 0 8px 25px rgba(0,0,0,0.35);
-      margin-bottom: 18px;
-    }
-
-    .headline .green {
-      color: var(--green-3);
-    }
-
-    .subcopy {
-      max-width: 760px;
-      margin: 0 auto 24px;
-      font-size: clamp(18px, 2.7vw, 24px);
-      line-height: 1.6;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .subcopy .green {
-      color: var(--green-3);
-      font-weight: 900;
-    }
-
-    .product-image-wrap {
-      display: flex;
-      justify-content: center;
-      margin: 14px 0 20px;
-    }
-
-    .product-neon-frame {
-      display: inline-block;
-      padding: 0;
-      border-radius: 22px;
-      border: 2px solid rgba(255, 213, 74, 0.95);
-      box-shadow:
-        0 0 8px rgba(255, 213, 74, 0.95),
-        0 0 18px rgba(255, 213, 74, 0.90),
-        0 0 30px rgba(255, 191, 0, 0.70),
-        0 0 48px rgba(255, 191, 0, 0.45);
-      overflow: hidden;
-      background: transparent;
-    }
-
-    .product-image {
+    .expire-bar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
       width: 100%;
-      max-width: 340px;
-      border-radius: 18px;
-      display: block;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.30);
-      background: #0c1520;
-    }
-
-    .price-stack {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin: 8px 0 20px;
-    }
-
-    .price-label {
-      font-size: 13px;
-      font-weight: 800;
-      color: #dce7f2;
+      max-width: 860px;
+      background: linear-gradient(180deg, #d91422 0%, #b70c18 100%);
+      color: #fff;
+      text-align: center;
+      padding: 16px 10px;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.2px;
+      font-size: 22px;
+      box-shadow: var(--expire-pulse-shadow);
+      will-change: opacity, transform, box-shadow;
+      animation: urgencyPulse var(--expire-pulse-duration) ease-in-out infinite;
+      transform-origin: center center;
     }
 
-    .old-price,
-    .mid-price {
-      font-weight: 900;
-      color: var(--red);
-      text-decoration: line-through;
-      text-decoration-thickness: 4px;
-      text-decoration-color: var(--red-2);
-      line-height: 1;
-      text-shadow: 0 0 12px rgba(255, 77, 79, 0.18);
+    @keyframes urgencyPulse {
+      0% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        box-shadow: var(--expire-pulse-shadow);
+      }
+      50% {
+        opacity: var(--expire-pulse-min-opacity);
+        transform: translateX(-50%) scale(var(--expire-pulse-scale));
+        box-shadow: 0 8px 22px rgba(217, 15, 31, 0.28);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        box-shadow: var(--expire-pulse-shadow);
+      }
     }
 
-    .old-price {
-      font-size: clamp(28px, 4vw, 38px);
+    .top-space {
+      height: 96px;
+      background: #fff;
     }
 
-    .mid-price {
-      font-size: clamp(32px, 4.7vw, 44px);
+    .divider {
+      width: min(calc(100% - 36px), 760px);
+      height: 4px;
+      background: var(--red);
+      margin: 0 auto 28px;
+      border-radius: 999px;
     }
 
-    .final-price-box {
-      margin-top: 6px;
-      padding: 14px 18px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(37,219,114,0.14), rgba(37,219,114,0.06));
-      border: 1px solid rgba(37,219,114,0.24);
-      box-shadow:
-        0 0 0 1px rgba(37,219,114,0.10) inset,
-        0 16px 40px rgba(0,0,0,0.22);
-    }
-
-    .final-price-label {
-      font-size: 14px;
-      font-weight: 900;
-      color: #d7ffe8;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      margin-bottom: 6px;
-    }
-
-    .final-price {
-      font-size: clamp(44px, 8vw, 72px);
-      font-weight: 900;
-      color: var(--green-2);
-      line-height: 1;
-      text-shadow:
-        0 0 8px rgba(37, 219, 114, 0.55),
-        0 0 18px rgba(37, 219, 114, 0.35),
-        0 0 32px rgba(37, 219, 114, 0.20);
-    }
-
-    .offer-copy {
+    .container {
+      width: 100%;
       max-width: 760px;
-      margin: 22px auto 26px;
-      color: var(--muted);
-      font-size: clamp(17px, 2.5vw, 22px);
-      line-height: 1.65;
-      font-weight: 500;
-      text-align: left;
+      margin: 0 auto;
+      padding: 0 18px 40px;
     }
 
-    .offer-copy p {
+    .step-bar {
+      background: #0f0f10;
+      color: #ffd54a;
+      text-align: center;
+      font-weight: 900;
+      padding: 18px 16px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      line-height: 1.35;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    .hero-alert {
+      background: linear-gradient(180deg, #ff1b32 0%, #d90f1f 100%);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 26px 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .hero-alert .icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .hero-alert h1 {
+      font-size: 40px;
+      line-height: 1.2;
+      font-weight: 900;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .hero-alert p {
+      font-size: 26px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .lead-text {
+      font-size: 24px;
+      line-height: 1.6;
+      color: #2b2b2b;
+      margin-bottom: 18px;
+    }
+
+    .highlight-yellow {
+      background: linear-gradient(transparent 58%, #ffe66a 58%);
+      font-weight: 900;
+    }
+
+    .confirm-box {
+      background: #fafafa;
+      border-left: 4px solid var(--green);
+      color: #5b5b5b;
+      padding: 16px 18px;
+      font-size: 18px;
+      line-height: 1.6;
+      border-radius: 8px;
+      margin-bottom: 34px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius-xl);
+      padding: 34px 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid #f0f0f0;
+      margin-bottom: 26px;
+    }
+
+    .card-outline-yellow {
+      border: 3px solid #f0d469;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.09);
+    }
+
+    .card-dark {
+      background: #0c0c0d;
+      color: #fff;
+      border-radius: var(--radius-xl);
+      padding: 34px 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .icon-top {
+      font-size: 50px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .section-title {
+      font-size: 42px;
+      line-height: 1.18;
+      font-weight: 900;
       margin-bottom: 12px;
     }
 
-    .offer-copy .green {
-      color: var(--green-3);
-      font-weight: 900;
+    .section-subtitle {
+      font-size: 24px;
+      line-height: 1.55;
+      color: #2d2d2d;
     }
 
-    .buttons {
-      display: flex;
-      flex-direction: column;
+    .card-dark .section-subtitle {
+      color: #e8e8e8;
+    }
+
+    .mini-divider {
+      width: 110px;
+      height: 4px;
+      background: #efc24d;
+      border-radius: 999px;
+      margin: 22px auto;
+    }
+
+    .notice-box {
+      background: #fff;
+      border-left: 5px solid var(--red);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px 18px;
+      margin-bottom: 28px;
+      font-size: 24px;
+      line-height: 1.6;
+      color: #2b2b2b;
+    }
+
+    .list-title-red {
+      color: #d30f20;
+      font-size: 34px;
+      line-height: 1.25;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .loss-list,
+    .benefit-list,
+    .check-list,
+    .pain-list {
+      list-style: none;
+      display: grid;
       gap: 14px;
-      align-items: center;
-      justify-content: center;
-      margin-top: 8px;
     }
 
-    .btn {
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 16px;
+    .loss-list li,
+    .benefit-list li,
+    .check-list li,
+    .pain-list li {
+      font-size: 24px;
+      line-height: 1.5;
+      padding: 0 0 14px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .card-dark .pain-list li,
+    .card-dark .benefit-list li {
+      border-bottom-color: rgba(255,255,255,0.08);
+    }
+
+    .loss-list li:last-child,
+    .benefit-list li:last-child,
+    .check-list li:last-child,
+    .pain-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .loss-list strong,
+    .benefit-list strong,
+    .pain-list strong,
+    .check-list strong {
       font-weight: 900;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s ease;
+    }
+
+    .red-box {
+      background: linear-gradient(180deg, #ff2240 0%, #d71021 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 24px 18px;
       text-align: center;
-      width: 100%;
-      max-width: 470px;
-      min-height: 66px;
-      padding: 18px 24px;
-      font-size: clamp(19px, 3vw, 26px);
+      font-size: 28px;
+      line-height: 1.4;
+      font-weight: 900;
+      margin-top: 10px;
+      margin-bottom: 18px;
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn-green {
-      background: linear-gradient(180deg, #25db72, #16b957);
-      color: #ffffff;
-      box-shadow: 0 14px 34px rgba(25, 193, 95, 0.35);
-    }
-
-    .btn-red {
-      background: linear-gradient(180deg, #ff6668, #e63d40);
-      color: #ffffff;
-      box-shadow: 0 14px 34px rgba(230, 61, 64, 0.28);
-      min-height: 60px;
-      font-size: clamp(18px, 2.8vw, 22px);
-    }
-
-    .pulse {
-      animation: pulseGlow 1.35s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 193, 95, 0.55), 0 14px 34px rgba(25, 193, 95, 0.35);
-      }
-      70% {
-        transform: scale(1.03);
-        box-shadow: 0 0 0 18px rgba(25, 193, 95, 0), 0 18px 38px rgba(25, 193, 95, 0.42);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 193, 95, 0), 0 14px 34px rgba(25, 193, 95, 0.35);
-      }
-    }
-
-    .micro-note {
+    .yellow-box {
+      background: #ffdb2f;
+      color: #111;
+      border-radius: 16px;
+      padding: 22px 18px;
       text-align: center;
-      color: rgba(255,255,255,0.70);
-      font-size: 13px;
+      font-size: 28px;
+      line-height: 1.4;
+      font-weight: 900;
+      margin-top: 12px;
+    }
+
+    .arrow-down {
+      text-align: center;
+      color: var(--red);
+      font-size: 38px;
+      font-weight: 900;
+      margin: 16px 0 8px;
+    }
+
+    .continue-reading {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #161616;
+      margin-bottom: 20px;
+    }
+
+    .dark-headline {
+      font-size: 40px;
+      line-height: 1.2;
+      font-weight: 900;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .dark-copy {
+      font-size: 24px;
+      line-height: 1.65;
+      color: #f0f0f0;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .dark-copy .yellow {
+      color: #ffd24b;
+      font-weight: 900;
+    }
+
+    .dark-copy .green {
+      color: #27df75;
+      font-weight: 900;
+    }
+
+    .pain-grid {
+      background: #141415;
+      border: 2px solid rgba(255, 40, 70, 0.55);
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin-top: 22px;
+    }
+
+    .pain-grid h3 {
+      color: #ffd54a;
+      font-size: 32px;
+      line-height: 1.25;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .pain-list li {
+      color: #fff;
+    }
+
+    .gold-list {
+      display: grid;
+      gap: 14px;
       margin-top: 18px;
     }
 
-    @media (max-width: 640px) {
-      .wrapper {
-        padding: 18px 14px 42px;
+    .gold-item {
+      background: rgba(255, 200, 54, 0.08);
+      border-left: 4px solid #ffca38;
+      padding: 16px 16px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 22px;
+      line-height: 1.5;
+    }
+
+    .purple-section {
+      background: linear-gradient(180deg, #f2ddff 0%, #ead2ff 100%);
+      border-radius: var(--radius-xl);
+      padding: 32px 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+
+    .purple-section .lead {
+      color: #4f2772;
+      font-size: 32px;
+      line-height: 1.35;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .soft-check {
+      display: grid;
+      gap: 14px;
+    }
+
+    .soft-check-item {
+      background: rgba(255,255,255,0.58);
+      border-radius: 14px;
+      padding: 18px 16px;
+      font-size: 23px;
+      line-height: 1.45;
+      color: #262626;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .soft-check-icon {
+      color: #19c865;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .offer-card {
+      background: linear-gradient(180deg, #1ad669 0%, #0eba57 100%);
+      color: #fff;
+      border-radius: 26px;
+      padding: 28px 22px 24px;
+      box-shadow: 0 18px 36px rgba(16, 150, 74, 0.28);
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .offer-title {
+      font-size: 42px;
+      line-height: 1.15;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .offer-box {
+      background: rgba(255,255,255,0.14);
+      border-radius: 20px;
+      padding: 24px 16px;
+      margin: 14px 0 18px;
+    }
+
+    .normal-price {
+      font-size: 26px;
+      line-height: 1.3;
+      font-weight: 800;
+      margin-bottom: 10px;
+      opacity: 0.95;
+    }
+
+    .normal-price s {
+      opacity: 0.8;
+    }
+
+    .today-price {
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .offer-expire {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, #ffcc24 0%, #ffb400 100%);
+      color: #111;
+      text-align: center;
+      font-size: 32px;
+      line-height: 1.25;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 24px 16px;
+      border-radius: 18px;
+      box-shadow: 0 14px 28px rgba(255, 180, 0, 0.32);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
+    }
+
+    .cta-meta {
+      text-align: center;
+      color: #f0fff4;
+      font-size: 19px;
+      line-height: 1.5;
+      margin-top: 14px;
+      font-weight: 700;
+    }
+
+    .icon-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .icon-info {
+      text-align: center;
+      font-size: 17px;
+      line-height: 1.35;
+      color: #404040;
+      font-weight: 700;
+    }
+
+    .icon-info span {
+      display: block;
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .decline-link {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      font-size: 18px;
+      color: #666;
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 12px 18px 34px;
+      color: #6a6a6a;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .red {
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .green {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .yellow {
+      color: var(--yellow-strong);
+      font-weight: 900;
+    }
+
+    .bold {
+      font-weight: 900;
+    }
+
+    @media (max-width: 768px) {
+      .expire-bar {
+        font-size: 17px;
+        padding: 14px 10px;
       }
 
-      .main-card {
-        border-radius: 22px;
-        padding: 26px 16px 28px;
+      .top-space {
+        height: 84px;
       }
 
-      .btn {
-        max-width: 100%;
+      .divider {
+        width: calc(100% - 24px);
+        margin-bottom: 20px;
       }
 
-      .offer-copy {
-        text-align: left;
+      .container {
+        padding: 0 12px 28px;
+      }
+
+      .step-bar {
+        font-size: 16px;
+        padding: 14px 12px;
+      }
+
+      .hero-alert {
+        padding: 22px 14px;
+      }
+
+      .hero-alert h1,
+      .section-title,
+      .dark-headline,
+      .offer-title {
+        font-size: 30px;
+      }
+
+      .hero-alert p,
+      .section-subtitle,
+      .lead-text,
+      .notice-box,
+      .dark-copy,
+      .loss-list li,
+      .benefit-list li,
+      .check-list li,
+      .pain-list li,
+      .soft-check-item {
+        font-size: 19px;
+      }
+
+      .card,
+      .card-dark,
+      .purple-section {
+        padding: 24px 16px;
+      }
+
+      .list-title-red,
+      .purple-section .lead,
+      .today-price {
+        font-size: 26px;
+      }
+
+      .red-box,
+      .yellow-box {
+        font-size: 22px;
+      }
+
+      .cta-button {
+        font-size: 24px;
+        padding: 20px 14px;
+      }
+
+      .cta-meta {
+        font-size: 15px;
+      }
+
+      .icon-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .icon-info {
+        font-size: 14px;
+      }
+
+      .icon-info span {
+        font-size: 28px;
+      }
+
+      .offer-box {
+        padding: 18px 12px;
+      }
+
+      .normal-price {
+        font-size: 20px;
+      }
+
+      .offer-expire {
+        font-size: 17px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .hero-alert h1,
+      .section-title,
+      .dark-headline,
+      .offer-title {
+        font-size: 25px;
+      }
+
+      .hero-alert p,
+      .section-subtitle,
+      .lead-text,
+      .notice-box,
+      .dark-copy,
+      .loss-list li,
+      .benefit-list li,
+      .check-list li,
+      .pain-list li,
+      .soft-check-item {
+        font-size: 17px;
+      }
+
+      .list-title-red,
+      .purple-section .lead {
+        font-size: 23px;
+      }
+
+      .red-box,
+      .yellow-box {
+        font-size: 19px;
+      }
+
+      .today-price {
+        font-size: 50px;
+      }
+
+      .cta-button {
+        font-size: 21px;
+      }
+
+      .top-space {
+        height: 78px;
       }
     }
   </style>
 </head>
 <body>
-  <canvas id="confetti-canvas"></canvas>
+  <main class="page">
+    <div class="expire-bar" id="expireBar">
+      ⏰ ESTA OPORTUNIDADE FINAL EXPIRA EM: <span id="topTimer">10:00</span>
+    </div>
 
-  <div class="wrapper">
-    <section class="main-card">
-      <div class="badge">⚠️ DESCONTO EXTRA LIBERADO</div>
+    <div class="top-space"></div>
+    <div class="divider"></div>
 
-      <h1 class="headline">
-        ANTES DE FECHAR, EU AINDA QUERO<br>
-        TE ENTREGAR ESSE <span class="green">PRESENTE</span>
-      </h1>
+    <div class="container">
+      <section class="step-bar">
+        ⚠️ ÚLTIMA CHANCE: NÃO FECHE ESTA PÁGINA ANTES DE VER ISSO...
+      </section>
 
-      <p class="subcopy">
-        Como você já chegou até aqui, resolvi liberar uma <span class="green">condição ainda menor</span> para não deixar esse material de fora.
-        Não é a oferta principal, é só uma última oportunidade para você levar esse <span class="green">guia</span> praticamente sem custo.
+      <section class="hero-alert">
+        <span class="icon">🙏</span>
+        <h1>ANTES DE VOCÊ IR... QUEREMOS TE ENTREGAR O PLANO COMPLETO PELO MENOR PREÇO POSSÍVEL</h1>
+        <p>
+          Você já se tornou nosso aluno, e isso por si só <span class="bold">já vale muito para nós</span>.
+          Por isso, decidimos <span class="bold">reduzir drasticamente o valor</span> deste protocolo para que você não comece sua jornada sem a parte mais importante para atacar o ponto mais difícil: <span class="bold">a barriga</span>.
+        </p>
+      </section>
+
+      <p class="lead-text">
+        <span class="highlight-yellow">Queremos ser transparentes com você:</span> o <strong>Tai Chi na Cadeira</strong> já vai ajudar muito no seu corpo, mobilidade e disposição.
+        <br /><br />
+        Mas quando falamos da <strong>gordura abdominal</strong>, da sensação de barriga pesada e daquela região que costuma responder mais devagar, o ideal é que você entre com o <strong>protocolo completo</strong>.
       </p>
 
-      <div class="product-image-wrap">
-        <div class="product-neon-frame">
-          <img src="alivio-articulacoes.png" alt="Alívio nas Articulações" class="product-image">
+      <div class="confirm-box">
+        ✅ Você já é nosso aluno. <strong>Não precisamos ganhar nada em cima disso agora.</strong> O motivo real desta condição especial é simples:
+        queremos que você tenha o resultado completo, especialmente na área que mais trava a confiança de muitos homens 40+, 50+, 60+: <strong>a barriga</strong>.
+      </div>
+
+      <section class="card card-outline-yellow center">
+        <span class="icon-top">🎯</span>
+        <h2 class="section-title">A barriga é quase sempre a parte mais difícil de mudar...</h2>
+        <div class="mini-divider"></div>
+        <p class="section-subtitle">
+          E é justamente por isso que não queremos que você comece pela metade.
+          <br /><br />
+          Se existe uma região que merece um apoio extra desde o início, é essa.
+        </p>
+      </section>
+
+      <section class="notice-box">
+        Se você sair desta página agora, vai continuar apenas com o plano principal.
+        <br /><br />
+        Mas <span class="red">vai perder a chance de levar o complemento que deixa a estratégia mais completa</span>, mais focada e mais alinhada com o ponto em que a maioria dos homens demora mais para ver resultado:
+        <strong>a redução da barriga</strong>.
+      </section>
+
+      <section class="card">
+        <h3 class="list-title-red">❌ O que pode acontecer se você seguir sem esse protocolo:</h3>
+        <ul class="loss-list">
+          <li>🔥 Ver melhora no corpo, mas sentir que a <strong>barriga continua sendo a última a responder</strong></li>
+          <li>🔥 Demorar mais para notar aquela sensação de <strong>leveza, desinchaço e cintura diminuindo</strong></li>
+          <li>🔥 Começar animado, mas perder força porque o espelho ainda não mostrou a mudança que você queria ver</li>
+          <li>🔥 Sentir que faltou justamente o <strong>empurrão extra</strong> na região mais difícil do corpo masculino</li>
+          <li>🔥 Fazer o método principal sem o complemento que deixa o plano mais <strong>completo e estratégico</strong></li>
+        </ul>
+      </section>
+
+      <section class="card card-outline-yellow center">
+        <span class="icon-top">🔓</span>
+        <h2 class="section-title">É por isso que estamos te liberando uma condição de exceção</h2>
+        <div class="mini-divider"></div>
+        <p class="section-subtitle">
+          Não porque esse protocolo vale pouco.
+          <br /><br />
+          Mas porque <span class="red">o seu resultado vale muito</span> e queremos que você entre com a estrutura certa desde o começo.
+        </p>
+      </section>
+
+      <section class="card">
+        <ul class="benefit-list">
+          <li>🧠 Ele ajuda seu plano a ficar <strong>mais completo</strong> justamente na parte que costuma ser mais teimosa</li>
+          <li>⚡ Aumenta sua percepção de avanço logo no início, o que fortalece sua confiança para continuar</li>
+          <li>🔥 Faz você sentir que está cuidando da barriga com uma estratégia mais séria e direcionada</li>
+          <li>💪 É o complemento ideal para não deixar o seu resultado depender só do tempo e da paciência</li>
+        </ul>
+
+        <h3 class="list-title-red center" style="margin-top: 26px;">Pensa com sinceridade por alguns segundos:</h3>
+
+        <div class="red-box">
+          Se a barriga é o lugar mais difícil...
+          <br /><br />
+          então faz sentido começar sem o protocolo que foi criado justamente para dar suporte nessa parte?
+        </div>
+
+        <p class="lead-text center" style="margin-bottom: 0;">
+          A verdade é simples:
+        </p>
+
+        <div class="yellow-box">
+          Você já deu o passo principal.
+          <br />
+          Agora só falta garantir que esse passo venha com o máximo de resultado possível.
+        </div>
+      </section>
+
+      <div class="arrow-down">⬇️</div>
+      <div class="continue-reading">LEIA ISSO ANTES DE DECIDIR</div>
+      <div class="arrow-down">⬇️</div>
+
+      <section class="card-dark">
+        <h2 class="dark-headline">Nós poderíamos simplesmente te deixar seguir... mas isso não seria o melhor para você</h2>
+        <div class="mini-divider"></div>
+        <p class="dark-copy">
+          Você já entrou para o Tai Chi na Cadeira.
+          <br /><br />
+          E sinceramente? <span class="yellow">isso já seria suficiente para nós.</span>
+          <br /><br />
+          Só que nós sabemos que muitos alunos querem um resultado mais visível justamente na barriga.
+          <br /><br />
+          Então preferimos abrir mão da margem agora e liberar esse protocolo por um valor simbólico, porque o que mais importa é você sentir que fez a escolha certa e ter um caminho <span class="green">mais completo</span>.
+        </p>
+
+        <div class="pain-grid">
+          <h3>Por que essa oferta final faz sentido:</h3>
+          <ul class="pain-list">
+            <li><strong>1.</strong> A barriga tende a ser a região mais resistente para a maioria dos homens</li>
+            <li><strong>2.</strong> Quando ela responde, a motivação do aluno sobe muito mais rápido</li>
+            <li><strong>3.</strong> Ver resultado nessa área aumenta a sensação de que o método está funcionando</li>
+            <li><strong>4.</strong> O protocolo entra como apoio extra exatamente nesse ponto</li>
+            <li><strong>5.</strong> Por isso queremos que você leve agora, e não depois</li>
+          </ul>
+        </div>
+
+        <div class="gold-list">
+          <div class="gold-item">🙏 Estamos reduzindo o valor porque você já confiou na gente</div>
+          <div class="gold-item">🎁 É uma forma de agradecer sua entrada no método principal</div>
+          <div class="gold-item">🔥 Queremos que você tenha mais chance de ver a barriga responder antes</div>
+          <div class="gold-item">✅ Nosso foco agora não é lucro: é te entregar o plano completo</div>
+        </div>
+      </section>
+
+      <section class="purple-section">
+        <div class="lead">
+          Você já começou sua transformação.
+          <br />
+          E isso merece respeito.
+          <br />
+          Agora deixe a gente te ajudar a começar do jeito certo.
+        </div>
+
+        <div class="card" style="margin-bottom: 0; box-shadow: none; border: 1px solid rgba(79,39,114,0.10);">
+          <h3 class="list-title-red center" style="color:#4f2772;">✨ Por que vale a pena aceitar agora:</h3>
+          <div class="soft-check">
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>Você leva o <strong>protocolo completo</strong> e não começa sua jornada com sensação de “falta alguma coisa”</div>
+            </div>
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>Você ataca com mais inteligência justamente a região em que a maioria dos homens sente mais dificuldade</div>
+            </div>
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>Você aproveita um valor muito abaixo do normal, liberado apenas porque já se tornou nosso aluno</div>
+            </div>
+            <div class="soft-check-item">
+              <div class="soft-check-icon">✔</div>
+              <div>Você entra no método com mais segurança, mais estrutura e mais chance de se sentir satisfeito com a decisão</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="offer-card">
+        <div class="offer-title">PROTOCOLO COMPLETO DA BARRIGA</div>
+        <div style="font-size: 24px; font-weight: 800; line-height: 1.45;">
+          O complemento ideal para deixar seu plano mais forte, mais estratégico e mais focado em acelerar a resposta da região mais difícil do corpo masculino.
+        </div>
+
+        <div class="offer-box">
+          <div class="normal-price">Preço normal: <s>R$ 197,00</s></div>
+          <div style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">
+            Como agradecimento por você já ser nosso aluno:
+          </div>
+          <div class="today-price">R$ 17,90</div>
+          <div class="offer-expire">⏰ Esta condição final expira em: <span id="offerTimer">10:00</span></div>
+        </div>
+
+        <a href="SEU_LINK_DO_CHECKOUT_DOWNSELL_AQUI" class="cta-button">
+          SIM, QUERO GARANTIR O PROTOCOLO COMPLETO POR R$ 17,90 →
+        </a>
+
+        <div class="cta-meta">
+          🔒 Pagamento 100% seguro &nbsp;|&nbsp; ✅ Garantia de 30 dias &nbsp;|&nbsp; 📲 Acesso imediato
+        </div>
+      </section>
+
+      <div class="icon-row">
+        <div class="icon-info">
+          <span>🔒</span>
+          Pagamento seguro
+        </div>
+        <div class="icon-info">
+          <span>✅</span>
+          Garantia
+        </div>
+        <div class="icon-info">
+          <span>⚡</span>
+          Acesso imediato
+        </div>
+        <div class="icon-info">
+          <span>🎁</span>
+          Valor especial
         </div>
       </div>
 
-      <h2 class="headline" style="font-size: clamp(26px, 4.6vw, 42px); margin-bottom: 12px;">
-        <span class="green">ALÍVIO NAS ARTICULAÇÕES</span>
-      </h2>
+      <a href="https://taichinacadeira.onrender.com/downsell2.html" class="decline-link">
+        Não, quero continuar apenas com o plano principal
+      </a>
+    </div>
 
-      <div class="price-stack">
-        <div class="price-label">Valor original</div>
-        <div class="old-price">R$ 97,00</div>
-
-        <div class="price-label">Oferta anterior</div>
-        <div class="mid-price">R$ 19,90</div>
-
-        <div class="final-price-box">
-          <div class="final-price-label">Última condição para levar hoje</div>
-          <div class="final-price">R$ 9,90</div>
-        </div>
-      </div>
-
-      <div class="offer-copy">
-        <p>Sentir desconforto no joelho, no quadril ou nas pernas todos os dias vai tirando sua liberdade sem você perceber.</p>
-
-        <p>Esse guia foi pensado para ser simples, direto e fácil de aplicar, mesmo para quem não tem tempo ou não sabe por onde começar.</p>
-
-        <p>Você vai encontrar orientações rápidas para aliviar pressão nas articulações, reduzir inchaço e começar a sentir mais leveza ao caminhar.</p>
-
-        <p>Por esse valor, fica muito mais fácil aproveitar agora e já ter em mãos um passo prático para recuperar bem-estar no dia a dia.</p>
-      </div>
-
-      <div class="buttons">
-        <a href="https://pay.cakto.com.br/344yopt" class="btn btn-green pulse">Pegar meu presente com mais desconto!</a>
-        <a href="https://taichinacadeira.onrender.com/obrigado.html" class="btn btn-red">Não pegar presente</a>
-      </div>
-
-      <p class="https://taichinacadeira.onrender.com/obrigado.html">
-        Essa condição aparece somente nesta página.
-      </p>
-    </section>
-  </div>
+    <footer class="footer">
+      <p><strong>Aviso:</strong> este é um complemento digital de apoio ao seu plano principal.</p>
+      <p>Copyright 2026 © Todos os direitos reservados.</p>
+      <p>Política de Privacidade • Termos de Uso • Aviso Legal</p>
+    </footer>
+  </main>
 
   <script>
-    const canvas = document.getElementById('confetti-canvas');
-    const ctx = canvas.getContext('2d');
+    const COUNTDOWN_MINUTES = 10;
 
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-
-    const confettiColors = ['#ff4d4f', '#ffd54a', '#25db72', '#4db8ff', '#ffffff', '#ff7de9'];
-    const confettiPieces = [];
-    let confettiAnimationId = null;
-    let confettiRunning = true;
-
-    function random(min, max) {
-      return Math.random() * (max - min) + min;
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = seconds % 60;
+      return String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
     }
 
-    function createConfettiPiece(x = Math.random() * W, y = Math.random() * H - H) {
-      return {
-        x,
-        y,
-        w: random(6, 12),
-        h: random(10, 18),
-        color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-        speedY: random(1.5, 4.5),
-        speedX: random(-2, 2),
-        rotation: random(0, Math.PI * 2),
-        rotationSpeed: random(-0.15, 0.15),
-        opacity: random(0.7, 1)
-      };
-    }
+    function updateUrgencyPulse(remaining, totalSeconds) {
+      const root = document.documentElement;
+      const progress = 1 - (remaining / totalSeconds);
 
-    for (let i = 0; i < 140; i++) {
-      confettiPieces.push(createConfettiPiece());
-    }
+      let duration = 2.6;
+      let minOpacity = 0.90;
+      let scale = 1.01;
+      let shadow = "0 4px 14px rgba(0,0,0,0.16)";
 
-    function renderBaseConfetti() {
-      ctx.clearRect(0, 0, W, H);
-
-      confettiPieces.forEach((p) => {
-        p.y += p.speedY;
-        p.x += p.speedX;
-        p.rotation += p.rotationSpeed;
-
-        if (p.y > H + 20) {
-          p.y = -20;
-          p.x = Math.random() * W;
-        }
-
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rotation);
-        ctx.globalAlpha = p.opacity;
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
-      });
-    }
-
-    function drawConfetti() {
-      if (!confettiRunning) return;
-      renderBaseConfetti();
-      confettiAnimationId = requestAnimationFrame(drawConfetti);
-    }
-
-    function stopConfetti() {
-      confettiRunning = false;
-
-      if (confettiAnimationId) {
-        cancelAnimationFrame(confettiAnimationId);
-        confettiAnimationId = null;
+      if (progress >= 0.25) {
+        duration = 2.2;
+        minOpacity = 0.86;
+        scale = 1.012;
+        shadow = "0 6px 18px rgba(217, 15, 31, 0.20)";
       }
 
-      canvas.classList.add('hidden');
+      if (progress >= 0.50) {
+        duration = 1.8;
+        minOpacity = 0.80;
+        scale = 1.015;
+        shadow = "0 8px 22px rgba(217, 15, 31, 0.26)";
+      }
 
-      setTimeout(() => {
-        ctx.clearRect(0, 0, W, H);
-        canvas.style.display = 'none';
-      }, 650);
+      if (progress >= 0.75) {
+        duration = 1.35;
+        minOpacity = 0.72;
+        scale = 1.018;
+        shadow = "0 10px 28px rgba(217, 15, 31, 0.34)";
+      }
+
+      if (remaining <= 60) {
+        duration = 0.95;
+        minOpacity = 0.64;
+        scale = 1.022;
+        shadow = "0 12px 34px rgba(217, 15, 31, 0.42)";
+      }
+
+      root.style.setProperty("--expire-pulse-duration", duration + "s");
+      root.style.setProperty("--expire-pulse-min-opacity", minOpacity);
+      root.style.setProperty("--expire-pulse-scale", scale);
+      root.style.setProperty("--expire-pulse-shadow", shadow);
     }
 
-    function startInitialConfetti() {
-      confettiRunning = true;
-      canvas.style.display = 'block';
-      canvas.classList.remove('hidden');
-      drawConfetti();
+    function startCountdown(initialMinutes) {
+      const totalSeconds = initialMinutes * 60;
+      let remaining = totalSeconds;
 
-      setTimeout(() => {
-        stopConfetti();
-      }, 3000);
+      const topTimer = document.getElementById("topTimer");
+      const offerTimer = document.getElementById("offerTimer");
+
+      function render() {
+        const safeRemaining = Math.max(remaining, 0);
+        const formatted = formatTime(safeRemaining);
+
+        if (topTimer) topTimer.textContent = formatted;
+        if (offerTimer) offerTimer.textContent = formatted;
+
+        updateUrgencyPulse(safeRemaining, totalSeconds);
+      }
+
+      render();
+
+      const interval = setInterval(() => {
+        remaining--;
+        render();
+
+        if (remaining <= 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
     }
 
-    window.addEventListener('resize', () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
+    document.addEventListener("DOMContentLoaded", function () {
+      startCountdown(COUNTDOWN_MINUTES);
     });
-
-    startInitialConfetti();
   </script>
 </body>
 </html>
