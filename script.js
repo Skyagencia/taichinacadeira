@@ -21,12 +21,18 @@
   const VIEW_CONTENT_KEY = "taichiHarnoViewContentViewed";
   const QUIZ_START_KEY = "taichiHarnoQuizStarted";
 
+  const BACK_REDIRECT_URL = "venda.html";
+  const BACK_REDIRECT_ARMED_KEY = "taichiHarnoBackRedirectArmed";
+
   const state = {
     currentStepId: funnel.steps[0].id,
     answers: {},
     timeouts: [],
     intervals: [],
-    tracking: null
+    tracking: null,
+    backRedirectArmed: false,
+    backRedirectRedirecting: false,
+    backRedirectBound: false
   };
 
   function clearPendingTimeouts() {
@@ -409,6 +415,107 @@
       step_number: Number(current?.index || 0),
       step_label: current?.index ? `Etapa ${current.index}` : ""
     });
+  }
+
+  function buildBackRedirectUrl() {
+    if (!state.tracking) loadTrackingContext();
+
+    const url = new URL(BACK_REDIRECT_URL, window.location.origin);
+
+    const params = {
+      lead_id: state.tracking?.lead_id || "",
+      session_id: state.tracking?.session_id || "",
+      utm_source: state.tracking?.utm_source || "",
+      utm_medium: state.tracking?.utm_medium || "",
+      utm_campaign: state.tracking?.utm_campaign || "",
+      utm_content: state.tracking?.utm_content || "",
+      utm_term: state.tracking?.utm_term || "",
+      fbp: state.tracking?.fbp || "",
+      fbc: state.tracking?.fbc || "",
+      src: "backredirect"
+    };
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (String(value || "").trim()) {
+        url.searchParams.set(key, value);
+      }
+    });
+
+    return url.toString();
+  }
+
+  function redirectToPitchFromBack() {
+    if (state.backRedirectRedirecting) return;
+
+    state.backRedirectRedirecting = true;
+
+    const currentStep = getCurrentStep();
+
+    try {
+      persistSalesPayload();
+      trackEvent("backredirect_to_pitch", {
+        step_id: currentStep?.id || "",
+        step_number: Number(currentStep?.index || 0),
+        step_type: currentStep?.stepType || "",
+        step_label: currentStep?.index ? `Etapa ${currentStep.index}` : "",
+        destination_step_id: "venda_html",
+        destination_step_number: 999,
+        destination_url: buildBackRedirectUrl()
+      });
+    } catch (error) {
+      console.warn("Não foi possível registrar o backredirect.", error);
+    }
+
+    window.location.replace(buildBackRedirectUrl());
+  }
+
+  function markBackRedirectAsArmed() {
+    try {
+      window.sessionStorage.setItem(BACK_REDIRECT_ARMED_KEY, "1");
+    } catch (error) {}
+  }
+
+  function loadBackRedirectState() {
+    try {
+      state.backRedirectArmed = window.sessionStorage.getItem(BACK_REDIRECT_ARMED_KEY) === "1";
+    } catch (error) {
+      state.backRedirectArmed = false;
+    }
+  }
+
+  function armBackRedirect() {
+    if (state.backRedirectArmed) return;
+
+    state.backRedirectArmed = true;
+    markBackRedirectAsArmed();
+
+    try {
+      window.history.pushState({ taichiBackRedirectGuard: 1 }, "", window.location.href);
+      window.history.pushState({ taichiBackRedirectGuard: 2 }, "", window.location.href);
+    } catch (error) {
+      console.warn("Não foi possível preparar o histórico do backredirect.", error);
+    }
+  }
+
+  function bindBackRedirect() {
+    if (state.backRedirectBound) return;
+    state.backRedirectBound = true;
+
+    window.addEventListener("popstate", function () {
+      if (!state.backRedirectArmed) return;
+      redirectToPitchFromBack();
+    });
+
+    const activateOnFirstInteraction = function () {
+      armBackRedirect();
+      window.removeEventListener("click", activateOnFirstInteraction, true);
+      window.removeEventListener("touchstart", activateOnFirstInteraction, true);
+      window.removeEventListener("keydown", activateOnFirstInteraction, true);
+    };
+
+    window.addEventListener("click", activateOnFirstInteraction, true);
+    window.addEventListener("touchstart", activateOnFirstInteraction, true);
+    window.addEventListener("keydown", activateOnFirstInteraction, true);
   }
 
   function goToStep(stepId) {
@@ -1050,6 +1157,8 @@
 
     buttons.forEach((btn) => {
       btn.addEventListener("click", function () {
+        armBackRedirect();
+
         const destination = btn.getAttribute("data-destination") || "";
         const kind = btn.getAttribute("data-kind") || "next";
 
@@ -1281,6 +1390,8 @@
 
       buttons.forEach((btn) => {
         btn.addEventListener("click", function () {
+          armBackRedirect();
+
           const value = btn.getAttribute("data-value");
           const exists = currentValues.includes(value);
           const check = btn.querySelector(".option-check, .image-option-arrow");
@@ -1299,6 +1410,7 @@
 
       if (continueBtn) {
         continueBtn.addEventListener("click", function () {
+          armBackRedirect();
           state.answers[fieldName] = currentValues;
           persistSalesPayload();
           goNext(step);
@@ -1310,6 +1422,7 @@
 
     buttons.forEach((btn) => {
       btn.addEventListener("click", function () {
+        armBackRedirect();
         const value = btn.getAttribute("data-value");
         state.answers[fieldName] = value;
         persistSalesPayload();
@@ -1356,6 +1469,7 @@
         return;
       }
 
+      armBackRedirect();
       error.classList.add("hidden");
       state.answers[fieldName] = current;
       persistSalesPayload();
@@ -1403,6 +1517,7 @@
     });
 
     button.addEventListener("click", function () {
+      armBackRedirect();
       state.answers[fieldName] = Number(input.value);
       persistSalesPayload();
       goNext(step);
@@ -1433,6 +1548,7 @@
     const button = document.getElementById("saveMetricBtn");
 
     button.addEventListener("click", function () {
+      armBackRedirect();
       state.answers[fieldName] = Number(input.value || 0);
       persistSalesPayload();
       goNext(step);
@@ -1770,6 +1886,8 @@
 
   function init() {
     loadTrackingContext();
+    loadBackRedirectState();
+    bindBackRedirect();
     trackPageEntryOnce();
     persistSalesPayload();
     renderCurrentStep();
